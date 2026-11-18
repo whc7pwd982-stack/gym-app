@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { CalendarDays, ChevronLeft, ChevronRight, ClipboardList, Dumbbell, Plus, Scale } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { db } from '../db';
+import { db, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { allExerciseFeedback, inRange, muscleSets, weekStart } from '../lib/feedback';
 import { createLog, dateKey, dayStartOf, sessionStats } from '../lib/session';
@@ -37,7 +37,8 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
   const weekly = useMemo(() => muscleSets(thisWeek, map), [thisWeek, map]);
   // 지난주 같은 요일·시점까지와 비교
   const lastWeek = useMemo(() => muscleSets(inRange(sessions, ws - 7 * DAY, Date.now() - 7 * DAY), map), [sessions, ws, map]);
-  const fb = useMemo(() => allExerciseFeedback(sessions, map).filter((f) => f.kind !== 'reps').slice(0, 3), [sessions, map]);
+  const settings = useSettings();
+  const fb = useMemo(() => allExerciseFeedback(sessions, map, { goal: settings.goal, level: settings.level }).slice(0, 4), [sessions, map, settings.goal, settings.level]);
 
   const start = async (routineId: number | null) => {
     const r = routineId == null ? null : routines.find((x) => x.id === routineId) ?? null;

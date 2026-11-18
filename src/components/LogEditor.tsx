@@ -71,7 +71,8 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
 }) {
   const prev = useMemo(() => lastEntryFor(all, ex.id, session.startedAt, session.id), [all, ex.id, session.startedAt, session.id]);
   const best = useMemo(() => bestBefore(all, ex.id, session.startedAt + 1, session.id), [all, ex.id, session.startedAt, session.id]);
-  const sug: Suggestion = useMemo(() => suggestNext(ex, en.repMin, en.repMax, prev?.entry ?? null, best), [ex, en.repMin, en.repMax, prev, best]);
+  const settings = useSettings();
+  const sug: Suggestion = useMemo(() => suggestNext(ex, en.repMin, en.repMax, prev?.entry ?? null, best, { goal: settings.goal, level: settings.level }), [ex, en.repMin, en.repMax, prev, best, settings.goal, settings.level]);
   const stalled = useMemo(() => isStalled(all.filter((x) => x.id !== session.id), ex.id, session.startedAt), [all, ex.id, session.id, session.startedAt]);
   const m = ex.metric;
   const hasW = m === 'weight_reps' || m === 'assisted' || m === 'bodyweight' || m === 'carry';

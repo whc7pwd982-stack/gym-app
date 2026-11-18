@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { BarChart3, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { db, useBodyweight } from '../db';
+import { db, useBodyweight, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { addMonths, allExerciseFeedback, monthStart, summarize, weekStart } from '../lib/feedback';
 import { workingSets } from '../lib/progression';
@@ -58,7 +58,8 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
 
   const cur = useMemo(() => summarize(sessions, map, range.from, range.to), [sessions, map, range]);
   const prev = useMemo(() => summarize(sessions, map, range.prevFrom, isCurrent ? range.prevFrom + (Date.now() - range.from) : range.from), [sessions, map, range, isCurrent]);
-  const exFb = useMemo(() => (isCurrent ? allExerciseFeedback(sessions, map) : []), [isCurrent, sessions, map]);
+  const settings = useSettings();
+  const exFb = useMemo(() => (isCurrent ? allExerciseFeedback(sessions, map, { goal: settings.goal, level: settings.level }) : []), [isCurrent, sessions, map, settings.goal, settings.level]);
   const prevLabel = `${mode === 'week' ? '지난주' : '지난달'}${isCurrent ? ' 같은 시점' : ''}`;
 
   return (

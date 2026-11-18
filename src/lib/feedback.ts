@@ -1,7 +1,7 @@
 import { MUSCLE_ORDER } from '../data/muscles';
 import type { Exercise, MuscleCode, Session } from '../types';
 import { credits } from './exercises';
-import { isStalled, lastEntryFor, suggestNext, workingSets } from './progression';
+import { fmt1, isStalled, lastEntryFor, suggestNext, workingSets, type ProgressOpts } from './progression';
 import { e1rmOf } from './strength';
 
 /**
@@ -52,7 +52,7 @@ export function muscleSets(sessions: Session[], map: Map<string, Exercise>) {
   return v;
 }
 
-export function exerciseFeedback(all: Session[], map: Map<string, Exercise>, exerciseId: string): ExerciseFeedback | null {
+export function exerciseFeedback(all: Session[], map: Map<string, Exercise>, exerciseId: string, opts?: ProgressOpts): ExerciseFeedback | null {
   const ex = map.get(exerciseId);
   const last = lastEntryFor(all, exerciseId);
   if (!ex || !last) return null;
@@ -60,29 +60,23 @@ export function exerciseFeedback(all: Session[], map: Map<string, Exercise>, exe
   const name = ex.name;
   const ws = workingSets(en);
   if (isStalled(all, exerciseId)) {
-    return { exerciseId, name, kind: 'sets', text: `최근 3번 기록이 그대로예요. 다음엔 세트를 1개 늘려서(${ws.length}→${ws.length + 1}세트) 총 볼륨을 올려보세요.` };
+    return { exerciseId, name, kind: 'sets', text: `최근 3번 추정 1RM이 그대로예요. 다음엔 같은 무게로 세트를 1개 늘려서(${ws.length}→${ws.length + 1}세트) 총 볼륨을 올려보세요.` };
   }
-  const rirs = ws.map((x) => x.rir).filter((x): x is number => x != null);
-  const easy = rirs.length >= 2 && rirs.every((r) => r >= 4);
-  const sug = suggestNext(ex, en.repMin, en.repMax, en);
-  if (easy && (ex.metric === 'weight_reps') && sug.kind !== 'increase') {
+  const sug = suggestNext(ex, en.repMin, en.repMax, en, 0, opts);
+  if (ex.metric === 'weight_reps' && sug.weight != null) {
     const top = Math.max(0, ...ws.map((x) => x.weight ?? 0));
-    return { exerciseId, name, kind: 'weight', text: `모든 세트가 RIR 4 이상으로 여유 있었어요. 다음엔 ${top + ex.increment}kg로 올려보세요.` };
+    const target = `${sug.weight}kg × ${sug.reps}회${sug.rir != null ? ` (${sug.rir}개 남기고)` : ''}`;
+    const e = sug.e1rmFrom && sug.e1rmTo ? ` · 추정 1RM ${fmt1(sug.e1rmFrom)}→${fmt1(sug.e1rmTo)}kg` : '';
+    return { exerciseId, name, kind: sug.weight > top ? 'weight' : 'reps', text: `다음 목표 ${target}${e}` };
   }
-  if (sug.kind === 'increase') {
-    return { exerciseId, name, kind: 'weight', text: sug.weight != null ? `지난번 모든 세트를 해냈어요! 다음엔 ${sug.weight}kg로 올려보세요(${sug.reps}회 목표, 조금 줄어도 괜찮아요).` : sug.note };
-  }
-  if (ex.metric === 'bodyweight' || ex.metric === 'hold' || ex.metric === 'carry' || ex.metric === 'cardio') {
-    return { exerciseId, name, kind: 'reps', text: sug.note };
-  }
-  return { exerciseId, name, kind: 'reps', text: `${sug.weight}kg 그대로, 다음엔 세트마다 ${sug.reps}회를 목표로 해보세요. ${en.repMax}회를 다 채우면 무게를 올려요.` };
+  return { exerciseId, name, kind: sug.kind === 'increase' ? 'weight' : 'reps', text: sug.note };
 }
 
 /** 최근 4주 동안 훈련한 종목 전체의 다음 할 일 */
-export function allExerciseFeedback(all: Session[], map: Map<string, Exercise>, since = Date.now() - 28 * DAY) {
+export function allExerciseFeedback(all: Session[], map: Map<string, Exercise>, opts?: ProgressOpts, since = Date.now() - 28 * DAY) {
   const ids = new Set<string>();
   for (const s of done(all)) if (s.startedAt >= since) for (const en of s.entries) if (workingSets(en).length) ids.add(en.exerciseId);
-  return [...ids].map((id) => exerciseFeedback(all, map, id)).filter(Boolean) as ExerciseFeedback[];
+  return [...ids].map((id) => exerciseFeedback(all, map, id, opts)).filter(Boolean) as ExerciseFeedback[];
 }
 
 
