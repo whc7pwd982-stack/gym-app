@@ -33,7 +33,7 @@ export interface Suggestion {
   rir?: number;
 }
 
-export type ProgressOpts = { goal: Goal; level: Level } & Partial<Pick<Settings, 'plateSide' | 'dumbbellStep' | 'machineStep' | 'cableStep'>>;
+export type ProgressOpts = { goal: Goal; level: Level } & Partial<Pick<Settings, 'plateSide' | 'dumbbellStep' | 'machineStep' | 'cableStep' | 'barKg' | 'barPrefs'>>;
 
 /**
  * 목표별 "근비대·근력에 효과적인 구간"

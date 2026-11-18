@@ -1,10 +1,10 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { ChevronDown, ChevronUp, Copy, Plus, Target, Trash2, TrendingUp, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Copy, Plus, Target, Trash2, TrendingUp, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { db, useSettings } from '../db';
+import { db, saveSettings, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { isStalled, lastEntryFor, suggestNext, workingSets, type Suggestion } from '../lib/progression';
-import { platesPerSide, usesOlympicBar } from '../lib/equipment';
+import { BAR_OPTIONS, barLabel, barPrefFor, platesPerSide } from '../lib/equipment';
 import { move, writeBackToRoutine } from '../lib/routines';
 import { emptySet, entryFor, isFilled, sessionStats } from '../lib/session';
 import { bestBefore, e1rmOf } from '../lib/strength';
@@ -76,7 +76,9 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
   const sug: Suggestion = useMemo(() => suggestNext(ex, en.repMin, en.repMax, prev?.entry ?? null, best, settings), [ex, en.repMin, en.repMax, prev, best, settings]);
   const stalled = useMemo(() => isStalled(all.filter((x) => x.id !== session.id), ex.id, session.startedAt), [all, ex.id, session.id, session.startedAt]);
   const m = ex.metric;
-  const plates = sug.weight != null && m === 'weight_reps' && usesOlympicBar(ex) ? platesPerSide(sug.weight, settings.barKg) : null;
+  const bar = m === 'weight_reps' ? barPrefFor(ex, settings) : null;
+  const plates = sug.weight != null && bar?.kind === 'bar' ? platesPerSide(sug.weight, bar.kg) : null;
+  const [choosingBar, setChoosingBar] = useState(false);
   const hasW = m === 'weight_reps' || m === 'assisted' || m === 'bodyweight' || m === 'carry';
   const hasRir = m === 'weight_reps' || m === 'bodyweight' || m === 'assisted';
   const repLabel = m === 'hold' ? '초' : m === 'cardio' ? '분' : m === 'carry' ? 'm' : '회';
@@ -123,7 +125,14 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
         {sug.kind === 'increase' ? <TrendingUp size={17} /> : <Target size={17} />}
         <div className="grow">
           <b>오늘 목표 {sug.weight != null && m !== 'bodyweight' ? `${fmtKg(sug.weight)}${m === 'assisted' ? 'kg 보조' : 'kg'} × ` : ''}{sug.reps}{repLabel}</b>
-          {plates && <div className="small" style={{ marginTop: 2 }}>봉 {settings.barKg}kg + 한쪽 <b>{plates.length ? plates.join(' · ') : '원판 없음'}</b></div>}
+          {bar && (
+            <button className="bar-chip" onClick={() => setChoosingBar(true)}>
+              {bar.kind === 'bar'
+                ? <>{barLabel(bar)} + 한쪽 <b>{plates ? (plates.length ? plates.join(' · ') : '원판 없음') : '–'}</b></>
+                : <>{barLabel(bar)}</>}
+              <ChevronDown size={14} />
+            </button>
+          )}
           <div className="text-2">{stalled ? '최근 3번 기록이 같아요. 오늘은 세트를 1개 더 해서 볼륨을 올려보세요.' : sug.note}</div>
           {best > 0 && <div className="tiny muted" style={{ marginTop: 3 }}>추정 1RM {fmtKg(best)}kg{todayBest > best ? <b className="accent"> → 오늘 {fmtKg(todayBest)}kg 🎉</b> : ''}</div>}
         </div>
@@ -154,6 +163,25 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
           ];
         })}
       </div>
+      {choosingBar && (
+        <Sheet title={`${ex.name} · 어떤 봉으로 하나요?`} onClose={() => setChoosingBar(false)}>
+          <p className="muted small" style={{ marginBottom: 12 }}>이 종목만 따로 기억해서 원판 조합과 다음 무게 간격을 맞춰요.</p>
+          <div className="list">
+            {BAR_OPTIONS.map((o) => {
+              const on = bar && JSON.stringify({ ...bar, label: undefined }) === JSON.stringify({ ...o.pref, label: undefined });
+              return (
+                <button key={o.title} className="list-item" onClick={async () => {
+                  await saveSettings({ ...settings, barPrefs: { ...(settings.barPrefs ?? {}), [ex.id]: o.pref } });
+                  setChoosingBar(false);
+                }}>
+                  <div className="grow"><div className="list-title">{o.title}</div><div className="list-sub">{o.sub}</div></div>
+                  {on && <Check size={20} className="accent" />}
+                </button>
+              );
+            })}
+          </div>
+        </Sheet>
+      )}
       <div className="ex-foot">
         <button className="btn sm grow" onClick={() => onChange((e) => ({ ...e, sets: [...e.sets, { ...emptySet(), weight: e.sets[e.sets.length - 1]?.weight ?? null }] }))}><Plus size={16} />세트</button>
         {en.sets.length > 1 && <button className="btn sm" onClick={() => onChange((e) => ({ ...e, sets: e.sets.slice(0, -1) }))}>－ 세트</button>}

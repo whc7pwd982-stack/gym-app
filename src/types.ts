@@ -106,7 +106,11 @@ export interface Settings {
   machineStep: number;
   cableStep: number;
   barKg: number;
+  /** 종목별 봉 설정 (바벨컬은 고정 바벨, 벤치는 20kg 봉 등) */
+  barPrefs?: Record<string, BarPref>;
 }
+
+export type BarPref = { kind: 'bar'; kg: number; label?: string } | { kind: 'fixed'; step: number };
 
 export interface BodyWeight {
   date: string; // YYYY-MM-DD
