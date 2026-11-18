@@ -127,7 +127,7 @@ function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: (
   const patchItem = (uid: string, p: Partial<RoutineItem>) => setItems(routine.items.map((x) => (x.uid === uid ? { ...x, ...p } : x)));
   const addIds = (ids: string[]) => setItems([...routine.items, ...ids.map((i) => map.get(i)).filter(Boolean).map((e) => makeItem(e!, 3, settings.goal))]);
 
-  const single = useMemo(() => analyze([routine], map, all, true, settings.level), [routine, map, all, settings.level]);
+  const single = useMemo(() => analyze([routine], map, all, true), [routine, map, all]);
 
   const del = async () => {
     if (!confirm(`'${routine.name}' 루틴을 삭제할까요? 기록은 남아요.`)) return;
@@ -185,7 +185,7 @@ function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: (
           {routine.items.length > 0 && <button className="btn primary block lg mt" onClick={() => onLog(routine)}>오늘 이 루틴으로 기록하기</button>}
         </>
       ) : (
-        <AnalysisView a={single} single map={map} level={settings.level} onAdd={(eid) => addIds([eid])} />
+        <AnalysisView a={single} single map={map} onAdd={(eid) => addIds([eid])} />
       )}
 
       {picking && <ExercisePicker onClose={() => setPicking(false)} onDone={(ids) => { addIds(ids); setPicking(false); }} />}

@@ -1,6 +1,5 @@
 import { MUSCLES, MUSCLE_ORDER, VOLUME_BANDS } from '../data/muscles';
-import { MUSCLE_TARGETS, targetFor } from '../data/targets';
-import type { Exercise, Level, MuscleCode, Routine } from '../types';
+import type { Exercise, MuscleCode, Routine } from '../types';
 import { credits, isCompound } from './exercises';
 
 export type Tip = {
@@ -46,7 +45,7 @@ export function bestFor(list: Exercise[], m: MuscleCode, exclude: Set<string>, n
  * routines: 분석할 루틴들. single=true면 "이 루틴 1회"를 기준으로 보고,
  * false면 각 루틴의 주당 횟수를 곱해 한 주 전체 계획으로 본다.
  */
-export function analyze(routines: Routine[], map: Map<string, Exercise>, all: Exercise[], single: boolean, level: Level = 'beginner'): Analysis {
+export function analyze(routines: Routine[], map: Map<string, Exercise>, all: Exercise[], single: boolean): Analysis {
   const weekly = zero(), perSessionMax = zero(), sessionsHit = zero();
   let totalSets = 0, seconds = 0;
   const used = new Set<string>();
@@ -78,23 +77,8 @@ export function analyze(routines: Routine[], map: Map<string, Exercise>, all: Ex
     }
   }
 
-  // 근육별 볼륨
+  // 근육별 세트 수는 목표·상한 없이 보여주기만 한다
   const tracked = MUSCLE_ORDER.filter((m) => MUSCLES[m].tracked);
-  const lacking = tracked.filter((m) => weekly[m] < targetFor(m, { level }));
-  if (!single) {
-    for (const m of lacking) {
-      const v = r1(weekly[m]);
-      const t = targetFor(m, { level });
-      tips.push({
-        level: v < VOLUME_BANDS.min ? 'warn' : 'info',
-        title: `${MUSCLES[m].ko} 주 ${v}세트 → ${Math.ceil(t - v)}세트 더 추가해 보세요`,
-        detail: `${MUSCLES[m].ko} 목표는 주 ${t}세트예요(보조근은 0.5세트로 계산). ${MUSCLE_TARGETS[m]?.why ?? ''}`,
-        source: 'Pelland 2026 외 (근육별 근거는 프로필 > 근육별 목표)',
-        suggest: bestFor(all, m, used),
-        muscle: m,
-      });
-    }
-  }
 
   // 근거 기반 종목 보완
   const has = (pred: (e: Exercise) => boolean) => [...used].some((id) => { const e = map.get(id); return !!e && pred(e); });
@@ -136,8 +120,6 @@ export function analyze(routines: Routine[], map: Map<string, Exercise>, all: Ex
   for (const [g, v] of groups) groups.set(g, v / (groupCount.get(g) ?? 1));
   const topGroups = [...groups.entries()].sort((a, b) => b[1] - a[1]).slice(0, 2).map((g) => g[0]);
   if (topGroups.length) effects.push(`${topGroups.join('·')} 중심의 근비대 루틴이에요`);
-  const okCount = tracked.filter((m) => weekly[m] >= targetFor(m, { level })).length;
-  if (!single) effects.push(`주요 근육 ${tracked.length}개 중 ${okCount}개가 근육별 목표 세트를 채워요`);
   const compound = [...used].filter((id) => { const e = map.get(id); return e && isCompound(e); }).length;
   if (used.size) effects.push(`다관절 ${compound}개 · 고립 ${used.size - compound}개 — ${compound >= used.size / 2 ? '무거운 다관절 위주라 근력과 근육량을 함께 키우는 구성' : '고립 운동 위주라 특정 부위를 집중적으로 다듬는 구성'}`);
   if (has((e) => e.metric === 'cardio')) effects.push('유산소가 포함돼 심폐 지구력도 함께 챙겨요');

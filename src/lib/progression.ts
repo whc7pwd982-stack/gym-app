@@ -58,8 +58,8 @@ export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: 
     const inc = ex.increment || 2.5;
     return {
       weight: top + inc,
-      reps: repMin,
-      note: easy && minReps < repMax ? `여유가 많았어요(RIR 4+). ${top + inc}kg로 올려보세요` : `지난번 모든 세트 ${repMax}회 달성 → ${top + inc}kg로 올려요`,
+      reps: minReps,
+      note: easy && minReps < repMax ? `여유가 많았어요(RIR 4+). ${top + inc}kg로 올려보세요` : `지난번 모든 세트를 ${minReps}회 해냈어요 → ${top + inc}kg로 올려요. 횟수가 조금 줄어도 괜찮아요`,
       kind: 'increase',
     };
   }

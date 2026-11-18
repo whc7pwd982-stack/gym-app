@@ -2,15 +2,14 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { BarChart3, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { MUSCLE_ORDER } from '../data/muscles';
-import { db, useBodyweight, useSettings } from '../db';
+import { db, useBodyweight } from '../db';
 import { useExerciseMap } from '../lib/exercises';
-import { addMonths, allExerciseFeedback, monthStart, muscleFeedback, summarize, weekStart } from '../lib/feedback';
+import { addMonths, allExerciseFeedback, monthStart, summarize, weekStart } from '../lib/feedback';
 import { workingSets } from '../lib/progression';
 import { BIG_LIFTS, e1rmSeries, rmTable } from '../lib/strength';
-import type { MuscleCode, Session } from '../types';
+import type { Session } from '../types';
 import { VolumeBars } from './AnalysisView';
-import { FeedbackList, MuscleFeedbackList } from './Feedback';
+import { FeedbackList } from './Feedback';
 import { Empty, fmtDate, fmtKg } from './ui';
 
 const DAY = 86400000;
@@ -43,7 +42,6 @@ function Delta({ now, prev, unit = '' }: { now: number; prev: number; unit?: str
 
 function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Session[] }) {
   const map = useExerciseMap();
-  const settings = useSettings();
   const [offset, setOffset] = useState(0);
   const isCurrent = offset === 0;
 
@@ -60,13 +58,8 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
 
   const cur = useMemo(() => summarize(sessions, map, range.from, range.to), [sessions, map, range]);
   const prev = useMemo(() => summarize(sessions, map, range.prevFrom, isCurrent ? range.prevFrom + (Date.now() - range.from) : range.from), [sessions, map, range, isCurrent]);
-  const muscles = useMemo(() => {
-    const v = { ...cur.muscles };
-    if (mode === 'month') for (const k of MUSCLE_ORDER as MuscleCode[]) v[k] = Math.round((v[k] / range.weeks) * 10) / 10;
-    return v;
-  }, [cur, mode, range.weeks]);
   const exFb = useMemo(() => (isCurrent ? allExerciseFeedback(sessions, map) : []), [isCurrent, sessions, map]);
-  const muFb = useMemo(() => (isCurrent ? muscleFeedback(sessions, map, settings.level) : []), [isCurrent, sessions, map, settings.level]);
+  const prevLabel = `${mode === 'week' ? '지난주' : '지난달'}${isCurrent ? ' 같은 시점' : ''}`;
 
   return (
     <>
@@ -89,8 +82,8 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
 
       {cur.count === 0 ? <div className="card"><Empty icon={<BarChart3 size={26} />} title="이 기간에는 기록이 없어요" /></div> : (
         <>
-          <div className="section-label">{mode === 'week' ? '근육별 세트' : '근육별 주 평균 세트'}</div>
-          <section className="card"><VolumeBars weekly={muscles} level={settings.level} /></section>
+          <div className="section-label">근육별 세트 · {prevLabel} 대비</div>
+          <section className="card"><VolumeBars weekly={cur.muscles} prev={prev.muscles} prevLabel={prevLabel} /></section>
           {cur.prs.length > 0 && (
             <>
               <div className="section-label">개인 기록 갱신</div>
@@ -108,12 +101,6 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
         </>
       )}
 
-      {isCurrent && muFb.length > 0 && (
-        <>
-          <div className="section-label">세트를 늘릴 부위</div>
-          <section className="card" style={{ paddingTop: 6, paddingBottom: 6 }}><MuscleFeedbackList items={muFb} /></section>
-        </>
-      )}
       {isCurrent && exFb.length > 0 && (
         <>
           <div className="section-label">종목별 다음 목표</div>

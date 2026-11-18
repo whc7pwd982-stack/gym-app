@@ -1,37 +1,37 @@
 import { AlertTriangle, Lightbulb, Plus, ThumbsUp } from 'lucide-react';
 import { MUSCLES, MUSCLE_ORDER } from '../data/muscles';
-import { targetFor } from '../data/targets';
 import type { Analysis } from '../lib/analysis';
-import type { Exercise, Level, MuscleCode } from '../types';
+import type { Exercise, MuscleCode } from '../types';
 
-/** 근육별 세트 막대. level을 주면 근육별 목표선과 남은 세트를 표시 */
-export function VolumeBars({ weekly, level, showAll }: { weekly: Record<MuscleCode, number>; level?: Level; showAll?: boolean }) {
-  const rows = MUSCLE_ORDER.filter((m) => (MUSCLES[m].tracked && (showAll || weekly[m] > 0 || level)) || weekly[m] >= 1);
-  const targets = Object.fromEntries(rows.map((m) => [m, level && MUSCLES[m].tracked ? targetFor(m, { level }) : 0])) as Record<MuscleCode, number>;
-  const scale = Math.max(...rows.map((m) => Math.max(weekly[m], targets[m] * 1.3)), 6);
+/** 근육별 세트 막대. prev를 주면 지난 기간 대비 증감을 함께 표시(목표·상한 없음) */
+export function VolumeBars({ weekly, prev, prevLabel = '지난주' }: { weekly: Record<MuscleCode, number>; prev?: Record<MuscleCode, number>; prevLabel?: string }) {
+  const rows = MUSCLE_ORDER.filter((m) => weekly[m] > 0 || (prev?.[m] ?? 0) > 0).sort((a, b) => weekly[b] - weekly[a]);
+  if (!rows.length) return <p className="muted small">기록한 세트가 없어요.</p>;
+  const scale = Math.max(...rows.map((m) => Math.max(weekly[m], prev?.[m] ?? 0)), 1);
+  const r1 = (n: number) => Math.round(n * 10) / 10;
   return (
     <div className="vbars">
       {rows.map((m) => {
-        const v = Math.round(weekly[m] * 10) / 10;
-        const t = targets[m];
-        const ok = t > 0 && v >= t;
+        const v = r1(weekly[m]);
+        const p = prev ? r1(prev[m] ?? 0) : null;
+        const d = p == null ? null : r1(v - p);
         return (
           <div key={m} className="vbar">
             <span className={`vbar-label ${MUSCLES[m].tracked ? '' : 'muted'}`}>{MUSCLES[m].ko}</span>
             <span className="vbar-track">
-              <span className={`vbar-fill ${ok ? 'ok' : 'low'}`} style={{ width: `${Math.min(100, (v / scale) * 100)}%` }} />
-              {t > 0 && <span className="vbar-target" style={{ left: `${(t / scale) * 100}%` }} />}
+              {p != null && p > 0 && <span className="vbar-prev" style={{ width: `${(p / scale) * 100}%` }} />}
+              <span className="vbar-fill" style={{ width: `${(v / scale) * 100}%` }} />
             </span>
-            <span className="vbar-val">{v}{t > 0 && <small> / {t}</small>}</span>
+            <span className="vbar-val">{v}{d != null && d !== 0 && <small className={d > 0 ? 'success' : ''}> {d > 0 ? '▲' : '▼'}{Math.abs(d)}</small>}</span>
           </div>
         );
       })}
-      {level && <p className="tiny muted">세로선은 근육별 목표 세트예요. 보조로 쓰인 근육은 0.5세트로 계산해요.</p>}
+      <p className="tiny muted">{prev ? `옅은 막대는 ${prevLabel}, ▲▼는 ${prevLabel} 대비 증감이에요. ` : ''}보조로 쓰인 근육은 0.5세트로 계산해요.</p>
     </div>
   );
 }
 
-export function AnalysisView({ a, single, map, onAdd, level }: { a: Analysis; single: boolean; map: Map<string, Exercise>; onAdd?: (id: string) => void; level: Level }) {
+export function AnalysisView({ a, single, map, onAdd }: { a: Analysis; single: boolean; map: Map<string, Exercise>; onAdd?: (id: string) => void }) {
   return (
     <>
       <section className="card">
@@ -41,8 +41,8 @@ export function AnalysisView({ a, single, map, onAdd, level }: { a: Analysis; si
         ) : <p className="muted small">종목을 추가하면 분석해 드려요.</p>}
       </section>
       <section className="card">
-        <div className="card-head"><span className="h3">{single ? '한 번 할 때 근육별 세트' : '근육별 주간 세트'}</span></div>
-        <VolumeBars weekly={a.weekly} level={single ? undefined : level} />
+        <div className="card-head"><span className="h3">한 번 할 때 근육별 세트</span></div>
+        <VolumeBars weekly={a.weekly} />
       </section>
       {a.tips.length > 0 && (
         <section className="card">

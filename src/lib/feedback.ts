@@ -1,6 +1,5 @@
-import { MUSCLES, MUSCLE_ORDER } from '../data/muscles';
-import { ceilingFor, targetFor } from '../data/targets';
-import type { Exercise, Level, MuscleCode, Session } from '../types';
+import { MUSCLE_ORDER } from '../data/muscles';
+import type { Exercise, MuscleCode, Session } from '../types';
 import { credits } from './exercises';
 import { isStalled, lastEntryFor, suggestNext, workingSets } from './progression';
 import { e1rmOf } from './strength';
@@ -8,7 +7,7 @@ import { e1rmOf } from './strength';
 /**
  * 점진적 과부하 피드백 — "더 올리는 방향"만 안내한다.
  * 종목: 무게 ↑ / 반복 ↑ / 세트 ↑ (정체 시)
- * 근육: 주간 세트를 목표까지 ↑, 목표를 꾸준히 채우면 다음 블록 +2세트
+ * 근육별 세트 수는 목표·상한 없이 지난 기간과 비교만 한다.
  */
 
 export type FeedbackKind = 'weight' | 'reps' | 'sets';
@@ -16,14 +15,6 @@ export interface ExerciseFeedback {
   exerciseId: string;
   name: string;
   kind: FeedbackKind;
-  text: string;
-}
-export interface MuscleFeedback {
-  muscle: MuscleCode;
-  name: string;
-  sets: number;
-  target: number;
-  next: number;
   text: string;
 }
 
@@ -79,7 +70,7 @@ export function exerciseFeedback(all: Session[], map: Map<string, Exercise>, exe
     return { exerciseId, name, kind: 'weight', text: `모든 세트가 RIR 4 이상으로 여유 있었어요. 다음엔 ${top + ex.increment}kg로 올려보세요.` };
   }
   if (sug.kind === 'increase') {
-    return { exerciseId, name, kind: 'weight', text: sug.weight != null ? `목표 반복을 다 채웠어요! 다음엔 ${sug.weight}kg × ${sug.reps}회로 올려보세요.` : sug.note };
+    return { exerciseId, name, kind: 'weight', text: sug.weight != null ? `지난번 모든 세트를 해냈어요! 다음엔 ${sug.weight}kg로 올려보세요(${sug.reps}회 목표, 조금 줄어도 괜찮아요).` : sug.note };
   }
   if (ex.metric === 'bodyweight' || ex.metric === 'hold' || ex.metric === 'carry' || ex.metric === 'cardio') {
     return { exerciseId, name, kind: 'reps', text: sug.note };
@@ -94,31 +85,6 @@ export function allExerciseFeedback(all: Session[], map: Map<string, Exercise>, 
   return [...ids].map((id) => exerciseFeedback(all, map, id)).filter(Boolean) as ExerciseFeedback[];
 }
 
-/**
- * 근육별 세트 피드백. weekFrom 주(월요일 시작)를 기준으로,
- * 목표 미만이면 목표까지 올리라고, 최근 3주 연속 목표를 채웠으면 +2세트를 제안.
- */
-export function muscleFeedback(all: Session[], map: Map<string, Exercise>, level: Level, weekFrom = weekStart()): MuscleFeedback[] {
-  const week = (i: number) => muscleSets(inRange(all, weekFrom - i * 7 * DAY, weekFrom - (i - 1) * 7 * DAY), map);
-  const current = week(0);
-  const past = [1, 2, 3].map(week); // 지난 3주(완료된 주)
-  const recent = muscleSets(inRange(all, weekFrom - 28 * DAY, weekFrom + 7 * DAY), map);
-  const out: MuscleFeedback[] = [];
-  for (const m of MUSCLE_ORDER) {
-    if (!MUSCLES[m].tracked || recent[m] < 1) continue; // 최근 4주에 한 번도 안 한 부위는 생략
-    const base = targetFor(m, { level });
-    const sets = r1(current[m]);
-    const streak = past.every((w) => w[m] >= base);
-    const target = streak ? Math.ceil(Math.max(...past.map((w) => w[m]))) : base;
-    if (streak) {
-      const ceil = ceilingFor(m, { level });
-      if (target + 2 <= ceil) out.push({ muscle: m, name: MUSCLES[m].ko, sets, target, next: target + 2, text: `지난 3주 연속 주 ${base}세트 이상 했어요. 이제 주 ${target + 2}세트로 올려보세요(종목 하나에 세트 +1~2). 이번 주 ${sets}세트.` });
-    } else if (sets < base) {
-      out.push({ muscle: m, name: MUSCLES[m].ko, sets, target: base, next: base, text: `이번 주 ${sets}세트 → 목표 ${base}세트까지 ${r1(base - sets)}세트 더 하면 좋아요.` });
-    }
-  }
-  return out.sort((a, b) => a.sets - a.target - (b.sets - b.target));
-}
 
 export interface PeriodSummary {
   count: number;

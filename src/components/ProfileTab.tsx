@@ -1,11 +1,9 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { BookOpen, ChevronRight, Download, Flame, Smartphone, Target, Trash2, Upload } from 'lucide-react';
+import { BookOpen, ChevronRight, Download, Flame, Smartphone, Trash2, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { MUSCLES, MUSCLE_ORDER } from '../data/muscles';
-import { BASIS_KO, MUSCLE_TARGETS } from '../data/targets';
 import { db, exportAll, importAll, saveSettings, useBodyweight, useSettings } from '../db';
 import { activityFactor, ageOf, bmr, calorieTarget, proteinTarget, weeklyRateTarget } from '../lib/nutrition';
-import type { Exercise, Goal, Level, MuscleCode, Phase, Settings, Sex } from '../types';
+import type { Exercise, Goal, Level, Phase, Settings, Sex } from '../types';
 import { ExerciseInfo, ExerciseList } from './ExercisePicker';
 import { Sheet, toast } from './ui';
 
@@ -34,7 +32,7 @@ export function ProfileTab() {
   const bw = useBodyweight();
   const recent = useLiveQuery(() => db.sessions.where('startedAt').above(Date.now() - 28 * 86400000).toArray(), [], []);
   const weights = useLiveQuery(() => db.bodyweights.orderBy('date').toArray(), [], []);
-  const [sheet, setSheet] = useState<null | 'targets' | 'dict'>(null);
+  const [sheet, setSheet] = useState<null | 'dict'>(null);
   const [info, setInfo] = useState<Exercise | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const set = (p: Partial<Settings>) => saveSettings({ ...s, ...p });
@@ -81,7 +79,7 @@ export function ProfileTab() {
   return (
     <>
       <div className="large-title">프로필</div>
-      <p className="subtitle">정보를 넣으면 목표 세트·칼로리·단백질이 나에게 맞춰져요</p>
+      <p className="subtitle">정보를 넣으면 칼로리·단백질·반복 범위가 나에게 맞춰져요</p>
 
       <section className="card">
         <div className="field"><span className="field-label">성별</span><Opt<Sex> value={s.sex} options={[['male', '남성'], ['female', '여성']]} onChange={(v) => set({ sex: v })} /></div>
@@ -135,11 +133,6 @@ export function ProfileTab() {
       </section>
 
       <div className="list">
-        <button className="list-item with-icon" onClick={() => setSheet('targets')}>
-          <span className="icon-tile"><Target size={20} /></span>
-          <div className="grow"><div className="list-title">근육별 목표 세트</div><div className="list-sub">{s.level === 'beginner' ? '초보' : s.level === 'intermediate' ? '중급' : '상급'} 기준 · 근거 보기</div></div>
-          <ChevronRight size={18} className="chev" />
-        </button>
         <button className="list-item with-icon" onClick={() => setSheet('dict')}>
           <span className="icon-tile gray"><BookOpen size={20} /></span>
           <div className="grow"><div className="list-title">종목 사전 · 즐겨찾기</div><div className="list-sub">256개 종목과 자극 부위</div></div>
@@ -168,28 +161,6 @@ export function ProfileTab() {
       </div>
       <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e) => e.target.files?.[0] && doImport(e.target.files[0])} />
 
-      {sheet === 'targets' && (
-        <Sheet title="근육별 목표 세트" onClose={() => setSheet(null)} full>
-          <p className="small text-2" style={{ marginBottom: 12 }}>
-            주간 세트 = 주로 쓴 근육 1세트 + 보조 근육 0.5세트(Pelland 2026). <b>시작 목표</b>를 3주 연속 채우면 2세트씩 올려서 <b>상한</b>까지 가요. 상한에 닿으면 세트 대신 무게·반복을 올려요.
-          </p>
-          <p className="tiny muted" style={{ marginBottom: 12 }}>근육마다 용량-반응이 다르다는 메타분석은 아직 없어요. 근육별 차이는 간접 자극량과 일부 근육 연구(삼두는 고볼륨에 더 반응, 이두·대퇴사두는 한계가 빨리 옴)를 반영한 값이에요. 남녀는 같은 목표를 써요(Refalo 2025).</p>
-          <div className="list">
-            {(MUSCLE_ORDER.filter((m) => MUSCLE_TARGETS[m]) as MuscleCode[]).map((m) => {
-              const t = MUSCLE_TARGETS[m]!;
-              return (
-                <div key={m} className="list-item" style={{ alignItems: 'flex-start' }}>
-                  <div className="grow">
-                    <div className="row-between"><span className="list-title">{MUSCLES[m].ko}</span><b className="tnum">{t.start[s.level]} → {t.ceiling[s.level]}세트</b></div>
-                    <div className="list-sub" style={{ lineHeight: 1.5 }}>{t.why}</div>
-                    <span className={`badge ${t.basis === 'evidence' ? 'success' : t.basis === 'inference' ? 'accent' : ''}`} style={{ marginTop: 6 }}>{BASIS_KO[t.basis]}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Sheet>
-      )}
       {sheet === 'dict' && (
         <Sheet title="종목 사전" onClose={() => setSheet(null)} full>
           <ExerciseList onInfo={setInfo} />

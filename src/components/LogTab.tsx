@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { CalendarDays, ChevronLeft, ChevronRight, ClipboardList, Dumbbell, Plus, Scale } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { db, useSettings } from '../db';
+import { db } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { allExerciseFeedback, inRange, muscleSets, weekStart } from '../lib/feedback';
 import { createLog, dateKey, dayStartOf, sessionStats } from '../lib/session';
@@ -15,7 +15,6 @@ const DOW = ['월', '화', '수', '목', '금', '토', '일'];
 
 export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null; onOpened: () => void; goAnalysis: () => void }) {
   const map = useExerciseMap();
-  const settings = useSettings();
   const sessions = useLiveQuery(() => db.sessions.orderBy('startedAt').toArray(), [], []);
   const routines = useLiveQuery(() => db.routines.orderBy('order').toArray(), [], []);
   const today = dayStartOf(Date.now());
@@ -36,6 +35,8 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
   const ws = weekStart();
   const thisWeek = inRange(sessions, ws, ws + 7 * DAY);
   const weekly = useMemo(() => muscleSets(thisWeek, map), [thisWeek, map]);
+  // 지난주 같은 요일·시점까지와 비교
+  const lastWeek = useMemo(() => muscleSets(inRange(sessions, ws - 7 * DAY, Date.now() - 7 * DAY), map), [sessions, ws, map]);
   const fb = useMemo(() => allExerciseFeedback(sessions, map).filter((f) => f.kind !== 'reps').slice(0, 3), [sessions, map]);
 
   const start = async (routineId: number | null) => {
@@ -90,7 +91,7 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
       {thisWeek.length > 0 && (
         <>
           <div className="section-label row-between"><span>이번 주 근육별 세트</span><button className="link" onClick={goAnalysis}>분석 보기<ChevronRight size={16} /></button></div>
-          <section className="card"><VolumeBars weekly={weekly} level={settings.level} /></section>
+          <section className="card"><VolumeBars weekly={weekly} prev={lastWeek} prevLabel="지난주 같은 시점" /></section>
         </>
       )}
       {fb.length > 0 && (
