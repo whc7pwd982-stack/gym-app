@@ -59,10 +59,10 @@ export function ProfileTab() {
   const doExport = async () => {
     const data = await exportAll();
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const name = `운동기록-백업-${new Date().toISOString().slice(0, 10)}.json`;
+    const name = `nextrep-backup-${new Date().toISOString().slice(0, 10)}.json`;
     const file = new File([blob], name, { type: 'application/json' });
     if (navigator.canShare?.({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: '운동 기록 백업' }); return; } catch { /* 취소 시 다운로드 */ }
+      try { await navigator.share({ files: [file], title: 'nextrep 백업' }); return; } catch { /* 취소 시 다운로드 */ }
     }
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = name; a.click(); URL.revokeObjectURL(a.href);

@@ -1,5 +1,5 @@
 {
-  "name": "gym-app",
+  "name": "nextrep",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "data": "node scripts/build-exercises.mjs \"../클로드 코드/reports/헬스장 운동 종목별 자극 부위.md\""
+    "data": "node scripts/build-exercises.mjs \"../클로드 코드/reports/헬스장 운동 종목별 자극 부위.md\"",
+    "icons": "node scripts/build-icons.mjs"
   },
   "dependencies": {
     "dexie": "^4.0.11",
