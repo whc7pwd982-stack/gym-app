@@ -1,0 +1,199 @@
+import { useLiveQuery } from 'dexie-react-hooks';
+import { BookOpen, ChevronRight, Download, Flame, Smartphone, Target, Trash2, Upload } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { MUSCLES, MUSCLE_ORDER } from '../data/muscles';
+import { BASIS_KO, MUSCLE_TARGETS } from '../data/targets';
+import { db, exportAll, importAll, saveSettings, useBodyweight, useSettings } from '../db';
+import { activityFactor, ageOf, bmr, calorieTarget, proteinTarget, weeklyRateTarget } from '../lib/nutrition';
+import type { Exercise, Goal, Level, MuscleCode, Phase, Settings, Sex } from '../types';
+import { ExerciseInfo, ExerciseList } from './ExercisePicker';
+import { Sheet, toast } from './ui';
+
+function Opt<T extends string>({ value, options, onChange }: { value: T | null; options: [T, string, string?][]; onChange: (v: T) => void }) {
+  return (
+    <div className="opt-grid" style={{ gridTemplateColumns: `repeat(${Math.min(options.length, 3)}, 1fr)` }}>
+      {options.map(([v, label, sub]) => <button key={v} className={`opt ${value === v ? 'on' : ''}`} onClick={() => onChange(v)}>{label}{sub && <small>{sub}</small>}</button>)}
+    </div>
+  );
+}
+
+function NumField({ label, value, onSave, suffix, placeholder }: { label: string; value: number | null; onSave: (v: number | null) => void; suffix: string; placeholder: string }) {
+  const [v, setV] = useState(value == null ? '' : String(value));
+  useEffect(() => { setV(value == null ? '' : String(value)); }, [value]);
+  return (
+    <label className="field grow" style={{ marginBottom: 0 }}>
+      <span className="field-label">{label}</span>
+      <input className="input" inputMode="decimal" placeholder={placeholder} value={v} onChange={(e) => setV(e.target.value)} onBlur={() => onSave(v ? Number(v.replace(',', '.')) || null : null)} />
+      <span className="tiny muted">{suffix}</span>
+    </label>
+  );
+}
+
+export function ProfileTab() {
+  const s = useSettings();
+  const bw = useBodyweight();
+  const routines = useLiveQuery(() => db.routines.toArray(), [], []);
+  const weights = useLiveQuery(() => db.bodyweights.orderBy('date').toArray(), [], []);
+  const [sheet, setSheet] = useState<null | 'targets' | 'dict'>(null);
+  const [info, setInfo] = useState<Exercise | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const set = (p: Partial<Settings>) => saveSettings({ ...s, ...p });
+
+  const age = ageOf(s);
+  const days = routines.reduce((n, r) => n + r.timesPerWeek, 0) || 3;
+  const base = bmr(s, bw);
+  const maintenance = base ? Math.round(base * activityFactor(days)) : null;
+  const kcal = maintenance ? calorieTarget(maintenance, s.phase, s.level) : null;
+  const protein = bw ? proteinTarget(bw, s.phase, age) : null;
+  const rate = weeklyRateTarget(s.phase, s.level);
+
+  // 최근 2–4주 체중 변화율(주당 %)
+  let actualRate: number | null = null;
+  if (weights.length >= 2) {
+    const last = weights[weights.length - 1];
+    const lastT = new Date(last.date).getTime();
+    const ref = [...weights].reverse().find((w) => lastT - new Date(w.date).getTime() >= 13 * 86400000);
+    if (ref) actualRate = ((last.kg - ref.kg) / ref.kg) * 100 / ((lastT - new Date(ref.date).getTime()) / (7 * 86400000));
+  }
+
+  const doExport = async () => {
+    const data = await exportAll();
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const name = `운동기록-백업-${new Date().toISOString().slice(0, 10)}.json`;
+    const file = new File([blob], name, { type: 'application/json' });
+    if (navigator.canShare?.({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: '운동 기록 백업' }); return; } catch { /* 취소 시 다운로드 */ }
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name; a.click(); URL.revokeObjectURL(a.href);
+  };
+  const doImport = async (f: File) => {
+    try {
+      const data = JSON.parse(await f.text());
+      if (!confirm('지금 기기의 기록을 백업 파일 내용으로 바꿀까요?')) return;
+      await importAll(data);
+      toast('불러오기 완료');
+    } catch (e) { alert('불러오기 실패: ' + (e as Error).message); }
+  };
+
+  return (
+    <>
+      <div className="large-title">프로필</div>
+      <p className="subtitle">정보를 넣으면 목표 세트·칼로리·단백질이 나에게 맞춰져요</p>
+
+      <section className="card">
+        <div className="field"><span className="field-label">성별</span><Opt<Sex> value={s.sex} options={[['male', '남성'], ['female', '여성']]} onChange={(v) => set({ sex: v })} /></div>
+        <div className="row" style={{ gap: 10, alignItems: 'flex-start' }}>
+          <NumField label="출생연도" value={s.birthYear} onSave={(v) => set({ birthYear: v })} suffix={age ? `만 ${age}세` : ''} placeholder="1998" />
+          <NumField label="키" value={s.heightCm} onSave={(v) => set({ heightCm: v })} suffix="cm" placeholder="175" />
+          <NumField label="체중" value={s.bodyweight} onSave={(v) => set({ bodyweight: v })} suffix={bw && bw !== s.bodyweight ? `최근 기록 ${bw}kg` : 'kg'} placeholder="70" />
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="field"><span className="field-label">운동 경력</span>
+          <Opt<Level> value={s.level} options={[['beginner', '초보', '1년 미만'], ['intermediate', '중급', '1–3년'], ['advanced', '상급', '3년 이상']]} onChange={(v) => set({ level: v })} />
+        </div>
+        <div className="field"><span className="field-label">운동 목표</span>
+          <Opt<Goal> value={s.goal} options={[['hypertrophy', '근육 키우기', '6–15회'], ['strength', '힘 키우기', '3–6회'], ['both', '둘 다', '5–12회']]} onChange={(v) => set({ goal: v })} />
+        </div>
+        <div className="field" style={{ marginBottom: 0 }}><span className="field-label">지금 시기</span>
+          <Opt<Phase> value={s.phase} options={[['bulk', '증량', '벌크업'], ['maintain', '유지'], ['cut', '감량', '다이어트']]} onChange={(v) => set({ phase: v })} />
+        </div>
+      </section>
+
+      <div className="section-label">나에게 맞춘 목표</div>
+      <section className="card">
+        <div className="row" style={{ gap: 12, marginBottom: 6 }}>
+          <span className="icon-tile warning"><Flame size={20} /></span>
+          <div className="grow">
+            <div className="stat-label">하루 칼로리</div>
+            {kcal ? <div className="stat-value">{kcal.toLocaleString()}<small>kcal</small></div> : <div className="small muted">성별·출생연도·키·체중을 넣어주세요</div>}
+          </div>
+          {protein && (
+            <div style={{ textAlign: 'right' }}>
+              <div className="stat-label">단백질</div>
+              <div className="stat-value">{protein.grams}<small>g</small></div>
+            </div>
+          )}
+        </div>
+        {maintenance && <div className="kv"><span className="muted">유지 칼로리 (주 {days}회 운동 기준)</span><b>{maintenance.toLocaleString()}kcal</b></div>}
+        {protein && <div className="kv"><span className="muted">단백질 기준</span><b>체중 × {protein.perKg}g{protein.elderlyMin ? ` (최소 ${protein.elderlyMin}g)` : ''}</b></div>}
+        {rate && <div className="kv"><span className="muted">권장 체중 변화</span><b>주 {rate[0] > 0 ? '+' : ''}{rate[0]}~{rate[1] > 0 ? '+' : ''}{rate[1]}%</b></div>}
+        {rate && actualRate != null && (
+          <div className="kv"><span className="muted">최근 내 체중 변화</span>
+            <b className={actualRate >= Math.min(...rate) && actualRate <= Math.max(...rate) ? 'success' : ''}>주 {actualRate > 0 ? '+' : ''}{actualRate.toFixed(2)}%</b>
+          </div>
+        )}
+        <p className="tiny muted mt">
+          {s.phase === 'bulk' && '잉여가 너무 크면 근육보다 지방이 늘어요(Helms 2023). 경력이 쌓일수록 잉여를 줄여요(Iraki 2019). '}
+          {s.phase === 'cut' && '하루 500kcal 넘는 적자는 근성장을 막아요(Murphy & Koehler 2022). 감량 중엔 단백질을 2.2g/kg 이상으로(Jäger 2017). '}
+          기초대사량은 Mifflin-St Jeor 공식, 단백질은 Morton 2018 기준이에요. 의학적 조언이 아니에요.
+        </p>
+      </section>
+
+      <div className="list">
+        <button className="list-item with-icon" onClick={() => setSheet('targets')}>
+          <span className="icon-tile"><Target size={20} /></span>
+          <div className="grow"><div className="list-title">근육별 목표 세트</div><div className="list-sub">{s.level === 'beginner' ? '초보' : s.level === 'intermediate' ? '중급' : '상급'} 기준 · 근거 보기</div></div>
+          <ChevronRight size={18} className="chev" />
+        </button>
+        <button className="list-item with-icon" onClick={() => setSheet('dict')}>
+          <span className="icon-tile gray"><BookOpen size={20} /></span>
+          <div className="grow"><div className="list-title">종목 사전 · 즐겨찾기</div><div className="list-sub">256개 종목과 자극 부위</div></div>
+          <ChevronRight size={18} className="chev" />
+        </button>
+      </div>
+
+      <div className="section-label">데이터</div>
+      <div className="list">
+        <button className="list-item with-icon" onClick={doExport}>
+          <span className="icon-tile success"><Download size={20} /></span>
+          <div className="grow"><div className="list-title">백업 내보내기</div><div className="list-sub">‘파일’ 앱이나 iCloud Drive에 저장해 두세요</div></div>
+        </button>
+        <button className="list-item with-icon" onClick={() => fileRef.current?.click()}>
+          <span className="icon-tile gray"><Upload size={20} /></span>
+          <div className="grow"><div className="list-title">백업 불러오기</div></div>
+        </button>
+        <div className="list-item with-icon">
+          <span className="icon-tile gray"><Smartphone size={20} /></span>
+          <div className="grow"><div className="list-title">아이폰에 설치</div><div className="list-sub">Safari → 공유 → 홈 화면에 추가. 기록은 이 기기에만 저장돼요</div></div>
+        </div>
+        <button className="list-item with-icon" onClick={async () => { if (confirm('모든 루틴과 기록을 지울까요? 되돌릴 수 없어요.') && confirm('정말 지울까요? 백업을 먼저 하는 걸 추천해요.')) { await db.delete(); location.reload(); } }}>
+          <span className="icon-tile" style={{ background: 'var(--danger-soft)', color: 'var(--danger)' }}><Trash2 size={20} /></span>
+          <div className="grow"><div className="list-title danger">모든 데이터 삭제</div></div>
+        </button>
+      </div>
+      <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e) => e.target.files?.[0] && doImport(e.target.files[0])} />
+
+      {sheet === 'targets' && (
+        <Sheet title="근육별 목표 세트" onClose={() => setSheet(null)} full>
+          <p className="small text-2" style={{ marginBottom: 12 }}>
+            주간 세트 = 주로 쓴 근육 1세트 + 보조 근육 0.5세트(Pelland 2026). <b>시작 목표</b>를 3주 연속 채우면 2세트씩 올려서 <b>상한</b>까지 가요. 상한에 닿으면 세트 대신 무게·반복을 올려요.
+          </p>
+          <p className="tiny muted" style={{ marginBottom: 12 }}>근육마다 용량-반응이 다르다는 메타분석은 아직 없어요. 근육별 차이는 간접 자극량과 일부 근육 연구(삼두는 고볼륨에 더 반응, 이두·대퇴사두는 한계가 빨리 옴)를 반영한 값이에요. 남녀는 같은 목표를 써요(Refalo 2025).</p>
+          <div className="list">
+            {(MUSCLE_ORDER.filter((m) => MUSCLE_TARGETS[m]) as MuscleCode[]).map((m) => {
+              const t = MUSCLE_TARGETS[m]!;
+              return (
+                <div key={m} className="list-item" style={{ alignItems: 'flex-start' }}>
+                  <div className="grow">
+                    <div className="row-between"><span className="list-title">{MUSCLES[m].ko}</span><b className="tnum">{t.start[s.level]} → {t.ceiling[s.level]}세트</b></div>
+                    <div className="list-sub" style={{ lineHeight: 1.5 }}>{t.why}</div>
+                    <span className={`badge ${t.basis === 'evidence' ? 'success' : t.basis === 'inference' ? 'accent' : ''}`} style={{ marginTop: 6 }}>{BASIS_KO[t.basis]}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Sheet>
+      )}
+      {sheet === 'dict' && (
+        <Sheet title="종목 사전" onClose={() => setSheet(null)} full>
+          <ExerciseList onInfo={setInfo} />
+          {info && <ExerciseInfo e={info} onClose={() => setInfo(null)} />}
+        </Sheet>
+      )}
+    </>
+  );
+}

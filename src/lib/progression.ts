@@ -1,17 +1,18 @@
 import type { Exercise, Session, SessionEntry, SetLog } from '../types';
+import { e1rmOf, roundTo, weightFor } from './strength';
 
-/** Epley e1RM — 10회 이하 세트만 (Reynolds 2006 권고) */
+/** @deprecated e1rmOf 사용. RIR 없는 단순 Epley(10회 이하) */
 export function e1rm(weight: number, reps: number) {
-  if (!weight || !reps || reps > 10) return null;
-  return reps === 1 ? weight : weight * (1 + reps / 30);
+  return e1rmOf({ weight, reps, rir: null });
 }
 
 export function workingSets(entry: SessionEntry): SetLog[] {
   return entry.sets.filter((s) => s.done && !s.warmup);
 }
 
-export function lastEntryFor(sessions: Session[], exerciseId: string, excludeId?: number) {
-  const sorted = [...sessions].filter((s) => s.endedAt && s.id !== excludeId).sort((a, b) => b.startedAt - a.startedAt);
+/** before 시점 이전의 가장 최근 기록 */
+export function lastEntryFor(sessions: Session[], exerciseId: string, before = Infinity, excludeId?: number) {
+  const sorted = sessions.filter((s) => s.endedAt && s.id !== excludeId && s.startedAt < before).sort((a, b) => b.startedAt - a.startedAt);
   for (const s of sorted) {
     const en = s.entries.find((e) => e.exerciseId === exerciseId && workingSets(e).length);
     if (en) return { session: s, entry: en };
@@ -26,43 +27,54 @@ export interface Suggestion {
   kind: 'start' | 'increase' | 'reps' | 'hold';
 }
 
-/** 더블 프로그레션: 모든 작업 세트가 반복 상한을 채우면 증량, 아니면 같은 무게로 반복 +1 */
-export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: SessionEntry | null): Suggestion {
-  if (!last) return { weight: null, reps: repMin, note: `처음이에요. ${repMin}–${repMax}회를 RIR 1–2로 할 수 있는 무게를 찾아보세요`, kind: 'start' };
+/**
+ * 더블 프로그레션 (Plotkin 2022: 반복 추가와 무게 추가 모두 근성장에 유효)
+ * - 모든 작업 세트가 반복 상한 도달 → 무게 증가
+ * - 아니면 같은 무게로 반복 +1
+ * - 기록이 없고 다른 종목/이전 e1RM이 있으면 e1RM으로 시작 무게 제안
+ */
+export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: SessionEntry | null, knownE1rm = 0): Suggestion {
+  if (!last) {
+    if (knownE1rm > 0 && ex.metric === 'weight_reps') {
+      const w = roundTo(weightFor(knownE1rm, repMin, 2), ex.increment);
+      return { weight: w, reps: repMin, note: `추정 1RM 기준으로 ${repMin}회를 2개 남기고 할 수 있는 무게예요`, kind: 'start' };
+    }
+    return { weight: null, reps: repMin, note: `${repMin}–${repMax}회를 1–2개 남기고 할 수 있는 무게로 시작해 보세요`, kind: 'start' };
+  }
   const ws = workingSets(last);
   const top = ws.reduce((m, s) => Math.max(m, s.weight ?? 0), 0);
   const topSets = ws.filter((s) => (s.weight ?? 0) === top);
-  const minReps = Math.min(...topSets.map((s) => s.reps ?? 0));
+  const minReps = Math.min(...topSets.map((s) => s.reps ?? s.seconds ?? 0));
   if (ex.metric === 'bodyweight' || ex.metric === 'hold' || ex.metric === 'cardio' || ex.metric === 'carry') {
-    return { weight: top || null, reps: minReps + 1, note: '지난번보다 1회(또는 몇 초) 더 해보세요', kind: 'reps' };
+    return { weight: top || null, reps: minReps + 1, note: ex.metric === 'hold' ? '지난번보다 5초 더 버텨보세요' : '지난번보다 1회 더 해보세요', kind: 'reps' };
   }
   if (ex.metric === 'assisted') {
     if (minReps >= repMax) return { weight: Math.max(0, top - ex.increment), reps: repMin, note: `보조 무게를 ${ex.increment}kg 줄여보세요`, kind: 'increase' };
-    return { weight: top, reps: minReps + 1, note: '같은 보조로 1회 더', kind: 'reps' };
+    return { weight: top, reps: minReps + 1, note: '같은 보조 무게로 1회 더', kind: 'reps' };
   }
-  if (minReps >= repMax) {
+  const rirs = ws.map((x) => x.rir).filter((x): x is number => x != null);
+  const easy = rirs.length >= 2 && rirs.every((r) => r >= 4);
+  if (minReps >= repMax || easy) {
     const inc = ex.increment || 2.5;
-    const next = top + inc;
-    // 가벼운 무게에서 증량폭이 10%를 넘으면 반복 상한을 늘리라고 안내
-    const big = top > 0 && inc / top > 0.1;
     return {
-      weight: next,
+      weight: top + inc,
       reps: repMin,
-      note: big ? `+${inc}kg는 큰 점프예요. 어렵다면 ${top}kg로 ${repMax + 2}회까지 늘린 뒤 올려도 돼요` : `모든 세트 ${repMax}회 달성! +${inc}kg로 올려요`,
+      note: easy && minReps < repMax ? `여유가 많았어요(RIR 4+). ${top + inc}kg로 올려보세요` : `지난번 모든 세트 ${repMax}회 달성 → ${top + inc}kg로 올려요`,
       kind: 'increase',
     };
   }
-  return { weight: top, reps: Math.min(repMax, minReps + 1), note: `같은 무게로 ${Math.min(repMax, minReps + 1)}회를 목표로`, kind: 'reps' };
+  const r = Math.min(repMax, minReps + 1);
+  return { weight: top, reps: r, note: `${top}kg로 ${r}회 목표. ${repMax}회를 다 채우면 무게를 올려요`, kind: 'reps' };
 }
 
-/** 최근 3회 기록에서 e1RM이 오르지 않으면 정체 */
-export function isStalled(sessions: Session[], exerciseId: string) {
+/** 최근 3번 기록에서 e1RM이 오르지 않으면 정체 */
+export function isStalled(sessions: Session[], exerciseId: string, before = Infinity) {
   const vals: number[] = [];
-  const sorted = [...sessions].filter((s) => s.endedAt).sort((a, b) => b.startedAt - a.startedAt);
+  const sorted = sessions.filter((s) => s.endedAt && s.startedAt < before).sort((a, b) => b.startedAt - a.startedAt);
   for (const s of sorted) {
     const en = s.entries.find((e) => e.exerciseId === exerciseId);
     if (!en) continue;
-    const best = Math.max(0, ...workingSets(en).map((x) => e1rm(x.weight ?? 0, x.reps ?? 0) ?? 0));
+    const best = Math.max(0, ...workingSets(en).map((x) => e1rmOf(x) ?? 0));
     if (best) vals.push(best);
     if (vals.length === 3) break;
   }

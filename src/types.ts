@@ -62,6 +62,7 @@ export interface SessionEntry {
   sets: SetLog[];
 }
 
+/** 하루치 운동 기록. startedAt = 그날 정오(로컬), endedAt != null 이면 저장된 기록 */
 export interface Session {
   id?: number;
   routineId: number | null;
@@ -69,17 +70,29 @@ export interface Session {
   startedAt: number;
   endedAt: number | null;
   entries: SessionEntry[];
-  /** 지난 날짜에 나중에 입력한 기록 (운동 시간은 계산하지 않음) */
+  memo?: string;
   backfill?: boolean;
-  /** 완료된 기록을 수정 중일 때 원래 종료 시각 */
   prevEndedAt?: number;
 }
 
 export type Level = 'beginner' | 'intermediate' | 'advanced';
+export type Sex = 'male' | 'female';
+export type Goal = 'hypertrophy' | 'strength' | 'both';
+export type Phase = 'bulk' | 'maintain' | 'cut';
 
 export interface Settings {
   bodyweight: number | null;
   level: Level;
+  sex: Sex | null;
+  birthYear: number | null;
+  heightCm: number | null;
+  goal: Goal;
+  phase: Phase;
   defaultRestCompound: number;
   defaultRestIsolation: number;
+}
+
+export interface BodyWeight {
+  date: string; // YYYY-MM-DD
+  kg: number;
 }

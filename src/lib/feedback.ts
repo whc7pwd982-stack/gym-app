@@ -1,7 +1,9 @@
-import { LEVEL_TARGET, MUSCLES, MUSCLE_ORDER } from '../data/muscles';
+import { MUSCLES, MUSCLE_ORDER } from '../data/muscles';
+import { ceilingFor, targetFor } from '../data/targets';
 import type { Exercise, Level, MuscleCode, Session } from '../types';
 import { credits } from './exercises';
-import { e1rm, isStalled, lastEntryFor, suggestNext, workingSets } from './progression';
+import { isStalled, lastEntryFor, suggestNext, workingSets } from './progression';
+import { e1rmOf } from './strength';
 
 /**
  * 점진적 과부하 피드백 — "더 올리는 방향"만 안내한다.
@@ -97,7 +99,6 @@ export function allExerciseFeedback(all: Session[], map: Map<string, Exercise>, 
  * 목표 미만이면 목표까지 올리라고, 최근 3주 연속 목표를 채웠으면 +2세트를 제안.
  */
 export function muscleFeedback(all: Session[], map: Map<string, Exercise>, level: Level, weekFrom = weekStart()): MuscleFeedback[] {
-  const base = LEVEL_TARGET[level];
   const week = (i: number) => muscleSets(inRange(all, weekFrom - i * 7 * DAY, weekFrom - (i - 1) * 7 * DAY), map);
   const current = week(0);
   const past = [1, 2, 3].map(week); // 지난 3주(완료된 주)
@@ -105,11 +106,13 @@ export function muscleFeedback(all: Session[], map: Map<string, Exercise>, level
   const out: MuscleFeedback[] = [];
   for (const m of MUSCLE_ORDER) {
     if (!MUSCLES[m].tracked || recent[m] < 1) continue; // 최근 4주에 한 번도 안 한 부위는 생략
+    const base = targetFor(m, { level });
     const sets = r1(current[m]);
     const streak = past.every((w) => w[m] >= base);
     const target = streak ? Math.ceil(Math.max(...past.map((w) => w[m]))) : base;
     if (streak) {
-      out.push({ muscle: m, name: MUSCLES[m].ko, sets, target, next: target + 2, text: `지난 3주 연속 주 ${base}세트 이상 했어요. 이제 주 ${target + 2}세트로 올려보세요(종목 하나에 세트 +1~2). 이번 주 ${sets}세트.` });
+      const ceil = ceilingFor(m, { level });
+      if (target + 2 <= ceil) out.push({ muscle: m, name: MUSCLES[m].ko, sets, target, next: target + 2, text: `지난 3주 연속 주 ${base}세트 이상 했어요. 이제 주 ${target + 2}세트로 올려보세요(종목 하나에 세트 +1~2). 이번 주 ${sets}세트.` });
     } else if (sets < base) {
       out.push({ muscle: m, name: MUSCLES[m].ko, sets, target: base, next: base, text: `이번 주 ${sets}세트 → 목표 ${base}세트까지 ${r1(base - sets)}세트 더 하면 좋아요.` });
     }
@@ -121,7 +124,6 @@ export interface PeriodSummary {
   count: number;
   sets: number;
   volume: number;
-  minutes: number;
   muscles: Record<MuscleCode, number>;
   prs: { name: string; from: number; to: number }[];
   days: Set<string>;
@@ -131,21 +133,20 @@ export const dayKey = (t: number) => { const d = new Date(t); return `${d.getFul
 
 export function summarize(all: Session[], map: Map<string, Exercise>, from: number, to: number): PeriodSummary {
   const list = inRange(all, from, to);
-  let sets = 0, volume = 0, minutes = 0;
+  let sets = 0, volume = 0;
   const days = new Set<string>();
   for (const s of list) {
     days.add(dayKey(s.startedAt));
-    if (!s.backfill && s.endedAt) minutes += Math.min(240, Math.round((s.endedAt - s.startedAt) / 60000));
     for (const en of s.entries) for (const x of workingSets(en)) { sets++; volume += (x.weight ?? 0) * (x.reps ?? 0); }
   }
   // 기간 내 최고 e1RM이 기간 이전 최고보다 높으면 PR
   const prs: PeriodSummary['prs'] = [];
   const ids = new Set(list.flatMap((s) => s.entries.map((e) => e.exerciseId)));
   for (const id of ids) {
-    const best = (ss: Session[]) => Math.max(0, ...ss.flatMap((s) => s.entries.filter((e) => e.exerciseId === id).flatMap((e) => workingSets(e).map((x) => e1rm(x.weight ?? 0, x.reps ?? 0) ?? 0))));
+    const best = (ss: Session[]) => Math.max(0, ...ss.flatMap((s) => s.entries.filter((e) => e.exerciseId === id).flatMap((e) => workingSets(e).map((x) => e1rmOf(x) ?? 0))));
     const before = best(done(all).filter((s) => s.startedAt < from));
     const now = best(list);
     if (before && now > before) prs.push({ name: map.get(id)?.name ?? id, from: Math.round(before), to: Math.round(now) });
   }
-  return { count: list.length, sets, volume: Math.round(volume), minutes, muscles: muscleSets(list, map), prs, days };
+  return { count: days.size, sets, volume: Math.round(volume), muscles: muscleSets(list, map), prs, days };
 }

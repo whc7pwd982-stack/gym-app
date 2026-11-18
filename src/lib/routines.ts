@@ -1,18 +1,21 @@
 import { db } from '../db';
-import type { Exercise, Routine, RoutineItem } from '../types';
+import type { Exercise, Goal, Routine, RoutineItem } from '../types';
 import { defaultRest, isCompound } from './exercises';
 import type { Template } from '../data/templates';
 
 export const uid = () => Math.random().toString(36).slice(2, 10);
 
-export function makeItem(e: Exercise, sets = 3): RoutineItem {
+/** 목표별 기본 반복 범위. 근비대는 5–30회 어디서든 실패 근처면 비슷(Lopez 2021), 근력은 무거운 쪽이 유리(Schoenfeld 2017) */
+const REP_RANGES: Record<Goal, { compound: [number, number]; isolation: [number, number] }> = {
+  hypertrophy: { compound: [6, 10], isolation: [10, 15] },
+  strength: { compound: [3, 6], isolation: [8, 12] },
+  both: { compound: [5, 8], isolation: [8, 12] },
+};
+
+export function makeItem(e: Exercise, sets = 3, goal: Goal = 'hypertrophy'): RoutineItem {
   let [repMin, repMax] = e.reps ?? [8, 12];
   if (e.metric === 'weight_reps' || e.metric === 'assisted') {
-    // 보고서 기본: 다관절 6–10, 고립 10–15 범위 안으로 맞춤
-    const [lo, hi] = isCompound(e) ? [6, 10] : [10, 15];
-    repMin = Math.max(repMin, lo);
-    repMax = Math.min(Math.max(repMax, repMin + 2), hi);
-    if (repMin >= repMax) repMin = repMax - 2;
+    [repMin, repMax] = isCompound(e) ? REP_RANGES[goal].compound : REP_RANGES[goal].isolation;
   }
   if (e.metric === 'hold') [repMin, repMax] = [20, 60];
   if (e.metric === 'cardio') [repMin, repMax] = [10, 30];
