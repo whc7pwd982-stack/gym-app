@@ -127,7 +127,7 @@ function RoutineEditor({ initial, onBack, onLog }: { initial: Routine; onBack: (
   const edit = (patch: Partial<Routine>) => { setRoutine((r) => ({ ...r, ...patch })); setDirty(true); };
   const setItems = (items: RoutineItem[]) => edit({ items });
   const patchItem = (uid: string, p: Partial<RoutineItem>) => setItems(routine.items.map((x) => (x.uid === uid ? { ...x, ...p } : x)));
-  const addIds = (ids: string[]) => setItems([...routine.items, ...ids.map((i) => map.get(i)).filter(Boolean).map((e) => makeItem(e!, 3, settings.goal))]);
+  const addIds = (ids: string[]) => setItems([...routine.items, ...ids.map((i) => map.get(i)).filter(Boolean).map((e) => makeItem(e!, 4, settings.goal))]);
 
   const single = useMemo(() => analyze([routine], map, all, true), [routine, map, all]);
 

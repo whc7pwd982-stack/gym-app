@@ -12,7 +12,7 @@ const REP_RANGES: Record<Goal, { compound: [number, number]; isolation: [number,
   both: { compound: [5, 8], isolation: [8, 12] },
 };
 
-export function makeItem(e: Exercise, sets = 3, goal: Goal = 'hypertrophy'): RoutineItem {
+export function makeItem(e: Exercise, sets = 4, goal: Goal = 'hypertrophy'): RoutineItem {
   let [repMin, repMax] = e.reps ?? [8, 12];
   if (e.metric === 'weight_reps' || e.metric === 'assisted') {
     [repMin, repMax] = isCompound(e) ? REP_RANGES[goal].compound : REP_RANGES[goal].isolation;
