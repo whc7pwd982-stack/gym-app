@@ -90,7 +90,7 @@ export function ExercisePicker({ onClose, onDone, title = '종목 추가' }: { o
 
 export function ExerciseInfo({ e, onClose }: { e: Exercise; onClose: () => void }) {
   const rows = (codes: Partial<Record<MuscleCode, number>>) =>
-    (Object.entries(codes) as [MuscleCode, number][]).map(([m, w]) => <div key={m} className="kv"><span>{MUSCLES[m].ko}</span><b>{w}세트</b></div>);
+    (Object.entries(codes) as [MuscleCode, number][]).map(([m, w]) => <div key={m} className="kv"><span>{MUSCLES[m].full ?? MUSCLES[m].ko}</span><b>{w}세트</b></div>);
   return (
     <Sheet title={e.name} onClose={onClose}>
       <p className="muted small">{e.en}{e.aliases.length ? ` · ${e.aliases.join(', ')}` : ''}</p>

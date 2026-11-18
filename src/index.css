@@ -252,7 +252,7 @@ select.cell { font-size: 15px; }
 /* ───────── 볼륨 막대 ───────── */
 .vbars { display: flex; flex-direction: column; gap: 10px; }
 .vbar { display: grid; grid-template-columns: 82px 1fr 64px; align-items: center; gap: 10px; font-size: 13.5px; }
-.vbar-label { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vbar-label { font-weight: 600; line-height: 1.25; word-break: keep-all; }
 .vbar-track { position: relative; height: 8px; background: var(--surface-3); border-radius: 99px; }
 .vbar-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; background: var(--accent); transition: width .5s var(--ease); }
 .vbar-fill.ok { background: var(--success); }
