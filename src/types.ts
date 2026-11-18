@@ -25,10 +25,20 @@ export interface Exercise {
   custom?: boolean;
 }
 
+/** 루틴에 저장해 두는 세트 하나(정해 둔 무게·반복). 기록을 저장하면 가장 최근 값으로 갱신된다 */
+export interface PlanSet {
+  weight: number | null;
+  reps: number | null;
+  seconds?: number | null;
+  distance?: number | null;
+}
+
 export interface RoutineItem {
   uid: string;
   exerciseId: string;
   sets: number;
+  plan?: PlanSet[];
+  /** 증량 판단용 내부 기준(화면에는 노출하지 않음) */
   repMin: number;
   repMax: number;
   restSec: number;

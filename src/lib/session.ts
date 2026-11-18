@@ -1,7 +1,7 @@
 import { db } from '../db';
 import type { Exercise, Routine, Session, SessionEntry, SetLog } from '../types';
 import { defaultRest } from './exercises';
-import { makeItem, uid } from './routines';
+import { makeItem, planOf, uid } from './routines';
 
 export const emptySet = (): SetLog => ({ weight: null, reps: null, rir: null, seconds: null, distance: null, done: false, warmup: false });
 
@@ -11,9 +11,14 @@ export function dateKey(t: number) { const d = new Date(t); return `${d.getFullY
 
 /** 날짜에 루틴으로 기록 만들기 (종목·세트 수를 루틴에서 미리 채움) */
 export async function createLog(day: number, r: Routine | null): Promise<number> {
+  // 루틴에 정해 둔 무게·반복을 그대로 채운다(입력된 세트는 한 것으로 표시). 기록 화면에서 바꾸면 된다
   const entries: SessionEntry[] = (r?.items ?? []).map((it) => ({
     uid: uid(), exerciseId: it.exerciseId, repMin: it.repMin, repMax: it.repMax, restSec: it.restSec,
-    sets: Array.from({ length: it.sets }, emptySet),
+    sets: planOf(it).map((p) => {
+      const x: SetLog = { ...emptySet(), weight: p.weight ?? null, reps: p.reps ?? null, seconds: p.seconds ?? null, distance: p.distance ?? null };
+      x.done = isFilled(x);
+      return x;
+    }),
   }));
   const t = noon(dayStartOf(day));
   return db.sessions.add({ routineId: r?.id ?? null, routineName: r?.name ?? '자유 운동', startedAt: t, endedAt: t, entries });

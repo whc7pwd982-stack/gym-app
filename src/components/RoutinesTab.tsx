@@ -5,11 +5,11 @@ import { TEMPLATES } from '../data/templates';
 import { db, useSettings } from '../db';
 import { analyze } from '../lib/analysis';
 import { useExerciseMap, useExercises } from '../lib/exercises';
-import { applyTemplate, createRoutine, makeItem, move } from '../lib/routines';
-import type { Routine, RoutineItem } from '../types';
+import { applyTemplate, createRoutine, makeItem, move, planOf } from '../lib/routines';
+import type { Exercise, PlanSet, Routine, RoutineItem } from '../types';
 import { AnalysisView } from './AnalysisView';
 import { ExerciseInfo, ExercisePicker } from './ExercisePicker';
-import { Empty, Sheet, Stepper, StretchBadge } from './ui';
+import { Empty, NumCell, Sheet, StretchBadge } from './ui';
 
 export function RoutinesTab({ onLog }: { onLog: (r: Routine) => void }) {
   const routines = useLiveQuery(() => db.routines.orderBy('order').toArray(), [], []);
@@ -78,6 +78,31 @@ export function RoutinesTab({ onLog }: { onLog: (r: Routine) => void }) {
   );
 }
 
+/** 루틴에 정해 둘 세트별 무게·반복 */
+function PlanRows({ ex, plan, onChange }: { ex: Exercise; plan: PlanSet[]; onChange: (p: PlanSet[]) => void }) {
+  const m = ex.metric;
+  const hasW = m === 'weight_reps' || m === 'assisted' || m === 'bodyweight' || m === 'carry';
+  const unit = m === 'hold' ? '초' : m === 'cardio' ? '분' : m === 'carry' ? 'm' : '회';
+  const wLabel = m === 'assisted' ? '보조kg' : m === 'bodyweight' ? '+kg' : 'kg';
+  const setAt = (i: number, p: Partial<PlanSet>) => onChange(plan.map((x, j) => (j === i ? { ...x, ...p } : x)));
+  const valOf = (x: PlanSet) => (m === 'hold' ? x.seconds ?? null : m === 'cardio' ? (x.seconds == null ? null : Math.round(x.seconds / 60)) : m === 'carry' ? x.distance ?? null : x.reps);
+  const patchVal = (v: number | null): Partial<PlanSet> => (m === 'hold' ? { seconds: v } : m === 'cardio' ? { seconds: v == null ? null : v * 60 } : m === 'carry' ? { distance: v } : { reps: v });
+  return (
+    <div style={{ marginTop: 10 }}>
+      <div className={`plan-grid ${hasW ? '' : 'no-w'}`}>
+        <span className="set-h">세트</span>{hasW && <span className="set-h">{wLabel}</span>}<span className="set-h">{unit}</span><span />
+        {plan.map((x, i) => [
+          <span key={`n${i}`} className="set-no">{i + 1}</span>,
+          hasW && <NumCell key={`w${i}`} label="무게" value={x.weight} placeholder="–" onChange={(v) => setAt(i, { weight: v })} />,
+          <NumCell key={`r${i}`} label={unit} decimal={false} value={valOf(x)} placeholder="–" onChange={(v) => setAt(i, patchVal(v))} />,
+          <button key={`x${i}`} className="icon-btn sm" disabled={plan.length <= 1} onClick={() => onChange(plan.filter((_, j) => j !== i))} aria-label="세트 삭제"><X size={16} /></button>,
+        ])}
+      </div>
+      <button className="btn sm" style={{ marginTop: 8 }} onClick={() => onChange([...plan, { ...(plan[plan.length - 1] ?? { weight: null, reps: null }) }])}><Plus size={15} />세트 추가</button>
+    </div>
+  );
+}
+
 function NameInput({ value, onSave }: { value: string; onSave: (v: string) => void }) {
   const [v, setV] = useState(value);
   const commit = () => { const t = v.trim(); if (t && t !== value) onSave(t); else setV(value); };
@@ -137,7 +162,6 @@ function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: (
               {routine.items.map((it, i) => {
                 const e = map.get(it.exerciseId);
                 if (!e) return null;
-                const unit = e.metric === 'hold' ? '초' : e.metric === 'cardio' ? '분' : '회';
                 return (
                   <div key={it.uid} className="item">
                     <span className="item-idx">{i + 1}</span>
@@ -150,10 +174,7 @@ function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: (
                           <button className="icon-btn sm" onClick={() => setItems(routine.items.filter((x) => x.uid !== it.uid))} aria-label="삭제"><X size={17} /></button>
                         </div>
                       </div>
-                      <div className="item-controls">
-                        <label>세트<Stepper value={it.sets} min={1} max={10} onChange={(v) => patchItem(it.uid, { sets: v })} /></label>
-                        <label>{unit}<Stepper value={it.repMin} min={1} max={it.repMax} onChange={(v) => patchItem(it.uid, { repMin: v })} />–<Stepper value={it.repMax} min={it.repMin} max={100} onChange={(v) => patchItem(it.uid, { repMax: v })} /></label>
-                      </div>
+                      <PlanRows ex={e} plan={planOf(it)} onChange={(plan) => patchItem(it.uid, { plan, sets: plan.length })} />
                     </div>
                   </div>
                 );

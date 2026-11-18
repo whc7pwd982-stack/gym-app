@@ -1,5 +1,5 @@
 import { db } from '../db';
-import type { Exercise, Goal, Routine, RoutineItem } from '../types';
+import type { Exercise, Goal, PlanSet, Routine, RoutineItem, Session } from '../types';
 import { defaultRest, isCompound } from './exercises';
 import type { Template } from '../data/templates';
 
@@ -19,7 +19,37 @@ export function makeItem(e: Exercise, sets = 3, goal: Goal = 'hypertrophy'): Rou
   }
   if (e.metric === 'hold') [repMin, repMax] = [20, 60];
   if (e.metric === 'cardio') [repMin, repMax] = [10, 30];
-  return { uid: uid(), exerciseId: e.id, sets, repMin, repMax, restSec: defaultRest(e) };
+  const mid = Math.round((repMin + repMax) / 2);
+  const one: PlanSet = e.metric === 'hold' ? { weight: null, reps: null, seconds: 30 }
+    : e.metric === 'cardio' ? { weight: null, reps: null, seconds: 20 * 60 }
+    : { weight: null, reps: mid };
+  return { uid: uid(), exerciseId: e.id, sets, plan: Array.from({ length: sets }, () => ({ ...one })), repMin, repMax, restSec: defaultRest(e) };
+}
+
+/** 저장된 세트 계획 (예전 데이터는 세트 수만 있으므로 빈 세트로 채움) */
+export function planOf(it: RoutineItem): PlanSet[] {
+  if (it.plan && it.plan.length) return it.plan;
+  return Array.from({ length: Math.max(1, it.sets) }, () => ({ weight: null, reps: null }));
+}
+
+/**
+ * 기록을 저장하면 그 루틴의 같은 종목을 방금 기록한 값(워밍업 제외)으로 갱신해서
+ * 다음에 루틴을 불러올 때 가장 최근 값이 채워지게 한다.
+ */
+export async function writeBackToRoutine(s: Session) {
+  if (s.routineId == null) return;
+  const r = await db.routines.get(s.routineId);
+  if (!r) return;
+  let changed = false;
+  const items = r.items.map((it) => {
+    const en = s.entries.find((e) => e.exerciseId === it.exerciseId);
+    const sets = en?.sets.filter((x) => x.done && !x.warmup) ?? [];
+    if (!sets.length) return it;
+    changed = true;
+    const plan = sets.map((x) => ({ weight: x.weight, reps: x.reps, seconds: x.seconds, distance: x.distance }));
+    return { ...it, plan, sets: plan.length };
+  });
+  if (changed) await db.routines.update(r.id!, { items });
 }
 
 export async function nextRoutineName() {

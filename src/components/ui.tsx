@@ -73,5 +73,23 @@ export function ToastHost() {
   return msg ? <div className="toast">{msg}</div> : null;
 }
 
+/** 숫자 입력칸. 입력 중인 "62." 같은 값을 잃지 않도록 문자열로 들고 있다 */
+export function NumCell({ value, placeholder, onChange, label, decimal = true }: { value: number | null; placeholder?: string; onChange: (v: number | null) => void; label: string; decimal?: boolean }) {
+  const [text, setText] = useState(value == null ? '' : String(value));
+  useEffect(() => {
+    if (value == null ? text !== '' : Number(text) !== value) setText(value == null ? '' : String(value));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+  return (
+    <input className={`cell ${text ? 'filled' : ''}`} inputMode={decimal ? 'decimal' : 'numeric'} aria-label={label} placeholder={placeholder} value={text}
+      onChange={(e) => {
+        const t = e.target.value.replace(',', '.');
+        if (!/^\d*\.?\d*$/.test(t)) return;
+        setText(t);
+        onChange(t === '' || t === '.' ? null : Number(t));
+      }} />
+  );
+}
+
 export const fmtDate = (t: number, opt: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', weekday: 'short' }) => new Date(t).toLocaleDateString('ko-KR', opt);
 export const fmtKg = (n: number) => (Math.round(n * 10) / 10).toLocaleString('ko-KR');

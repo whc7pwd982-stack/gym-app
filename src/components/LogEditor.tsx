@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { db, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { isStalled, lastEntryFor, suggestNext, workingSets, type Suggestion } from '../lib/progression';
-import { move } from '../lib/routines';
+import { move, writeBackToRoutine } from '../lib/routines';
 import { emptySet, entryFor, isFilled, sessionStats } from '../lib/session';
 import { bestBefore, e1rmOf } from '../lib/strength';
 import type { Exercise, Session, SessionEntry, SetLog } from '../types';
 import { ExerciseInfo, ExercisePicker } from './ExercisePicker';
-import { Empty, fmtDate, fmtKg, Sheet, StretchBadge } from './ui';
+import { Empty, fmtDate, fmtKg, NumCell, Sheet, StretchBadge, toast } from './ui';
 
 export function LogEditor({ id, onClose }: { id: number; onClose: () => void }) {
   const stored = useLiveQuery(() => db.sessions.get(id), [id]);
@@ -33,8 +33,10 @@ export function LogEditor({ id, onClose }: { id: number; onClose: () => void }) 
   };
   const close = async () => {
     if (st.sets === 0 && s.entries.every((e) => e.sets.every((x) => !isFilled(x)))) {
-      if (confirm('입력한 세트가 없어요. 이 기록을 지울까요?')) { await db.sessions.delete(id); }
+      if (confirm('입력한 세트가 없어요. 이 기록을 지울까요?')) { await db.sessions.delete(id); onClose(); return; }
     }
+    // 루틴으로 만든 기록이면, 방금 값으로 루틴을 갱신(다음에 불러올 때 최신 값)
+    if (s.routineId != null && st.sets > 0) { await writeBackToRoutine(s); toast(`‘${s.routineName}’ 루틴도 이 값으로 업데이트했어요`); }
     onClose();
   };
 
@@ -154,22 +156,5 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
         {prev && <button className="btn sm" onClick={copyPrev}><Copy size={15} />지난번 그대로</button>}
       </div>
     </section>
-  );
-}
-
-function NumCell({ value, placeholder, onChange, label, decimal = true }: { value: number | null; placeholder?: string; onChange: (v: number | null) => void; label: string; decimal?: boolean }) {
-  const [text, setText] = useState(value == null ? '' : String(value));
-  useEffect(() => {
-    if (value == null ? text !== '' : Number(text) !== value) setText(value == null ? '' : String(value));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
-  return (
-    <input className={`cell ${text ? 'filled' : ''}`} inputMode={decimal ? 'decimal' : 'numeric'} aria-label={label} placeholder={placeholder} value={text}
-      onChange={(e) => {
-        const t = e.target.value.replace(',', '.');
-        if (!/^\d*\.?\d*$/.test(t)) return;
-        setText(t);
-        onChange(t === '' || t === '.' ? null : Number(t));
-      }} />
   );
 }

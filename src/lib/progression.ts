@@ -39,7 +39,7 @@ export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: 
       const w = roundTo(weightFor(knownE1rm, repMin, 2), ex.increment);
       return { weight: w, reps: repMin, note: `추정 1RM 기준으로 ${repMin}회를 2개 남기고 할 수 있는 무게예요`, kind: 'start' };
     }
-    return { weight: null, reps: repMin, note: `${repMin}–${repMax}회를 1–2개 남기고 할 수 있는 무게로 시작해 보세요`, kind: 'start' };
+    return { weight: null, reps: Math.round((repMin + repMax) / 2), note: '첫 기록이에요. 1–2개 더 할 수 있을 정도의 무게로 해보세요', kind: 'start' };
   }
   const ws = workingSets(last);
   const top = ws.reduce((m, s) => Math.max(m, s.weight ?? 0), 0);
