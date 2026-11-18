@@ -2,7 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-export default defineConfig({
+// GitHub Pages는 https://<user>.github.io/gym-app/ 아래에서 서비스되므로 빌드 때만 경로를 붙인다
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/gym-app/' : '/',
   plugins: [
     react(),
     VitePWA({
@@ -14,8 +16,8 @@ export default defineConfig({
         description: '근거 기반 운동 기록 · 점진적 과부하 플래너',
         lang: 'ko',
         display: 'standalone',
-        start_url: '/',
-        scope: '/',
+        start_url: './',
+        scope: './',
         theme_color: '#2563eb',
         background_color: '#0d0f12',
         icons: [
@@ -30,4 +32,4 @@ export default defineConfig({
   ],
   server: { host: true, port: 5173 },
   preview: { host: true, port: 4173 },
-})
+}))
