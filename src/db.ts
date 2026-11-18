@@ -47,6 +47,7 @@ export const DEFAULT_SETTINGS: Settings = {
   machineStep: 5,
   cableStep: 2.5,
   barKg: 20,
+  targetRir: 0,
 };
 
 export async function getSettings(): Promise<Settings> {

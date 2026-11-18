@@ -65,7 +65,7 @@ export function exerciseFeedback(all: Session[], map: Map<string, Exercise>, exe
   const sug = suggestNext(ex, en.repMin, en.repMax, en, 0, opts);
   if (ex.metric === 'weight_reps' && sug.weight != null) {
     const top = Math.max(0, ...ws.map((x) => x.weight ?? 0));
-    const target = `${sug.weight}kg × ${sug.reps}회${sug.rir != null ? ` (${sug.rir}개 남기고)` : ''}`;
+    const target = `${sug.weight}kg × ${sug.reps}회`;
     const e = sug.e1rmFrom && sug.e1rmTo ? ` · 추정 1RM ${fmt1(sug.e1rmFrom)}→${fmt1(sug.e1rmTo)}kg` : '';
     return { exerciseId, name, kind: sug.weight > top ? 'weight' : 'reps', text: `다음 목표 ${target}${e}` };
   }

@@ -33,7 +33,7 @@ export interface Suggestion {
   rir?: number;
 }
 
-export type ProgressOpts = { goal: Goal; level: Level } & Partial<Pick<Settings, 'plateSide' | 'dumbbellStep' | 'machineStep' | 'cableStep' | 'barKg' | 'barPrefs'>>;
+export type ProgressOpts = { goal: Goal; level: Level } & Partial<Pick<Settings, 'plateSide' | 'dumbbellStep' | 'machineStep' | 'cableStep' | 'barKg' | 'barPrefs' | 'targetRir'>>;
 
 /**
  * 목표별 "근비대·근력에 효과적인 구간"
@@ -54,8 +54,6 @@ interface Zone { lo: number; hi: number; rir: number }
  */
 export const SESSION_GAIN: Record<Level, number> = { beginner: 0.025, intermediate: 0.0125, advanced: 0.006 };
 
-/** RIR을 안 적은 세트는 실패 1회 전(RIR 1)으로 가정 — 보수적 */
-const rirOr = (r: number | null) => (r == null ? 1 : Math.min(r, 4));
 const e1 = (w: number, reps: number, rir: number) => w * (1 + (reps + rir) / 30);
 export const fmt1 = (n: number) => (n < 30 ? (Math.round(n * 10) / 10).toString() : Math.round(n).toString());
 
@@ -69,16 +67,20 @@ export const fmt1 = (n: number) => (n < 30 ? (Math.round(n * 10) / 10).toString(
  */
 export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: SessionEntry | null, knownE1rm = 0, opts: ProgressOpts = { goal: 'hypertrophy', level: 'beginner' }): Suggestion {
   // 고립 운동은 가벼운 무게·높은 반복이 관절 부담이 적고 근비대 효과는 비슷(Lopez 2021: 30–85% 1RM)
-  const zone = isCompound(ex) ? ZONES[opts.goal].compound : ZONES[opts.goal].isolation;
+  // 세트 강도는 프로필 설정(기본: 실패까지 = RIR 0). 실패까지 해도, 1–2회 남겨도 근비대는 비슷(Refalo 2024)
+  const tRir = opts.targetRir ?? 0;
+  const zone = { ...(isCompound(ex) ? ZONES[opts.goal].compound : ZONES[opts.goal].isolation), rir: tRir };
+  // RIR을 안 적은 세트는 평소 하는 강도(설정값)로 했다고 본다
+  const rirOr = (r: number | null) => (r == null ? tRir : Math.min(r, 4));
   // 내 헬스장 장비로 실제 올릴 수 있는 최소 단위 (바벨이면 가장 작은 원판 × 양쪽)
   const step = incrementFor(ex, opts);
   if (!last) {
     if (knownE1rm > 0 && ex.metric === 'weight_reps') {
       const reps = Math.round((zone.lo + zone.hi) / 2);
       const w = roundTo(weightFor(knownE1rm, reps, zone.rir), step);
-      return { weight: w, reps, rir: zone.rir, e1rmFrom: knownE1rm, e1rmTo: knownE1rm, note: `추정 1RM ${Math.round(knownE1rm)}kg 기준, ${reps}회를 ${zone.rir}개 남기고 할 수 있는 무게예요`, kind: 'start' };
+      return { weight: w, reps, rir: zone.rir, e1rmFrom: knownE1rm, e1rmTo: knownE1rm, note: `추정 1RM ${Math.round(knownE1rm)}kg 기준으로 계산한 시작 무게예요`, kind: 'start' };
     }
-    return { weight: null, reps: Math.round((zone.lo + zone.hi) / 2), note: '첫 기록이에요. 1–2개 더 할 수 있을 정도의 무게로 해보세요', kind: 'start' };
+    return { weight: null, reps: Math.round((zone.lo + zone.hi) / 2), note: tRir === 0 ? '첫 기록이에요. 이 횟수 근처에서 더는 못 들 정도의 무게로 해보세요' : '첫 기록이에요. 1–2개 더 할 수 있을 정도의 무게로 해보세요', kind: 'start' };
   }
   const ws = workingSets(last);
   const top = ws.reduce((m, s) => Math.max(m, s.weight ?? 0), 0);
@@ -129,7 +131,7 @@ export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: 
   const kind: Suggestion['kind'] = best.w > top ? 'increase' : 'reps';
   return {
     weight: best.w, reps: best.r, rir: zone.rir, e1rmFrom: Math.round(cur * 10) / 10, e1rmTo: Math.round(best.v * 10) / 10, kind,
-    note: `${why}추정 1RM ${fmt1(cur)} → ${fmt1(best.v)}kg(+${pct}%)이 되는 가장 작은 진전이에요. ${zone.rir}개 남기고 멈추세요.`,
+    note: `${why}추정 1RM ${fmt1(cur)} → ${fmt1(best.v)}kg(+${pct}%)이 되는 가장 작은 진전이에요.`,
   };
 }
 

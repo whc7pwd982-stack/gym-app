@@ -97,6 +97,9 @@ export function ProfileTab() {
         <div className="field"><span className="field-label">운동 목표</span>
           <Opt<Goal> value={s.goal} options={[['hypertrophy', '근육 키우기', '6–12회'], ['strength', '힘 키우기', '3–6회'], ['both', '둘 다', '5–10회']]} onChange={(v) => set({ goal: v })} />
         </div>
+        <div className="field"><span className="field-label">세트를 어디까지 하나요?</span>
+          <Opt<string> value={String(s.targetRir)} options={[['0', '실패까지', '더 못 들 때까지'], ['2', '1–2개 남기고', '여유 남기기']]} onChange={(v) => set({ targetRir: Number(v) })} />
+        </div>
         <div className="field" style={{ marginBottom: 0 }}><span className="field-label">지금 시기</span>
           <Opt<Phase> value={s.phase} options={[['bulk', '증량', '벌크업'], ['maintain', '유지'], ['cut', '감량', '다이어트']]} onChange={(v) => set({ phase: v })} />
         </div>
