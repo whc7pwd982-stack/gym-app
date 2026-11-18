@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Check, ChevronDown, ChevronUp, Copy, Plus, Target, Trash2, TrendingUp, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { db, saveSettings, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { isStalled, lastEntryFor, suggestNext, workingSets, type Suggestion } from '../lib/progression';
@@ -12,40 +12,51 @@ import type { Exercise, Session, SessionEntry, SetLog } from '../types';
 import { ExerciseInfo, ExercisePicker } from './ExercisePicker';
 import { Empty, fmtDate, fmtKg, NumCell, Sheet, StretchBadge, toast } from './ui';
 
-export function LogEditor({ id, onClose }: { id: number; onClose: () => void }) {
-  const stored = useLiveQuery(() => db.sessions.get(id), [id]);
+/**
+ * 하루 기록 편집. 변경은 화면 안에서만 들고 있다가 [저장]을 눌러야 DB에 쓴다.
+ * initial.id가 없으면 새 기록(저장 전에는 DB에 없음).
+ */
+export function LogEditor({ initial, onClose }: { initial: Session; onClose: () => void }) {
   const all = useLiveQuery(() => db.sessions.toArray(), [], []);
-  const [s, setS] = useState<Session | null>(null);
-  useEffect(() => { if (stored && !s) setS(stored); }, [stored, s]);
+  const [s, setS] = useState<Session>(initial);
+  const [dirty, setDirty] = useState(initial.id == null);
   const map = useExerciseMap();
   const settings = useSettings();
   const [picking, setPicking] = useState(false);
   const [info, setInfo] = useState<Exercise | null>(null);
 
-  if (!s) return null;
-  const update = (next: Session) => { setS(next); db.sessions.put(next); };
+  const update = (next: Session) => { setS(next); setDirty(true); };
   const patchEntry = (uid: string, fn: (e: SessionEntry) => SessionEntry) => update({ ...s, entries: s.entries.map((e) => (e.uid === uid ? fn(e) : e)) });
   const st = sessionStats(s, map, settings.smithBarKg);
 
   const remove = async () => {
+    if (s.id == null) { if (confirm('이 기록을 저장하지 않고 버릴까요?')) onClose(); return; }
     if (!confirm('이 날의 기록을 삭제할까요? 되돌릴 수 없어요.')) return;
-    await db.sessions.delete(id);
+    await db.sessions.delete(s.id);
     onClose();
   };
-  const close = async () => {
+  const save = async () => {
     if (st.sets === 0 && s.entries.every((e) => e.sets.every((x) => !isFilled(x)))) {
-      if (confirm('입력한 세트가 없어요. 이 기록을 지울까요?')) { await db.sessions.delete(id); onClose(); return; }
+      alert('입력한 세트가 없어요. 무게·횟수를 적고 저장해 주세요.');
+      return;
     }
+    const id = await db.sessions.put(s);
+    const saved = { ...s, id };
     // 루틴으로 만든 기록이면, 방금 값으로 루틴을 갱신(다음에 불러올 때 최신 값)
-    if (s.routineId != null && st.sets > 0) { await writeBackToRoutine(s); toast(`‘${s.routineName}’ 루틴도 이 값으로 업데이트했어요`); }
+    if (saved.routineId != null && st.sets > 0) { await writeBackToRoutine(saved); toast(`저장했어요 · ‘${s.routineName}’ 루틴도 이 값으로 업데이트`); }
+    else toast('저장했어요');
+    onClose();
+  };
+  const close = () => {
+    if (dirty && !confirm('저장하지 않은 변경이 있어요. 저장하지 않고 닫을까요?')) return;
     onClose();
   };
 
   return (
     <Sheet full onClose={close}
-      title={<span className="stack-sm" style={{ gap: 0 }}><span>{s.routineName}</span><span className="small muted" style={{ fontWeight: 600 }}>{fmtDate(s.startedAt)}</span></span>}
+      title={<span className="stack-sm" style={{ gap: 0 }}><span>{s.routineName}</span><span className="small muted" style={{ fontWeight: 600 }}>{fmtDate(s.startedAt)}{dirty ? ' · 저장 안 됨' : ''}</span></span>}
       right={<button className="icon-btn danger" onClick={remove} aria-label="기록 삭제"><Trash2 size={20} /></button>}
-      footer={<div className="row"><div className="grow small text-2"><b className="tnum">{st.sets}</b>세트 · <b className="tnum">{fmtKg(st.volume)}</b>kg</div><button className="btn primary" style={{ minWidth: 120 }} onClick={close}>저장</button></div>}>
+      footer={<div className="row"><div className="grow small text-2"><b className="tnum">{st.sets}</b>세트 · <b className="tnum">{fmtKg(st.volume)}</b>kg</div><button className="btn primary" style={{ minWidth: 120 }} disabled={!dirty} onClick={save}>저장</button></div>}>
       {s.entries.length === 0 && <Empty title="종목을 추가해 보세요" sub="루틴에 없는 종목도 자유롭게 넣을 수 있어요" />}
       {s.entries.map((en, idx) => {
         const ex = map.get(en.exerciseId);

@@ -59,9 +59,10 @@ export async function nextRoutineName() {
   return `루틴${n}`;
 }
 
-export async function createRoutine(name?: string): Promise<number> {
+/** 새 루틴 초안 (DB에는 [저장]할 때 들어간다) */
+export async function draftRoutine(): Promise<Routine> {
   const count = await db.routines.count();
-  return db.routines.add({ name: name ?? (await nextRoutineName()), timesPerWeek: 1, items: [], order: count, createdAt: Date.now() });
+  return { name: await nextRoutineName(), timesPerWeek: 1, items: [], order: count, createdAt: Date.now() };
 }
 
 export async function applyTemplate(t: Template, list: Exercise[]) {

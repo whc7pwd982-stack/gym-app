@@ -1,4 +1,3 @@
-import { db } from '../db';
 import type { Exercise, Routine, Session, SessionEntry, SetLog } from '../types';
 import { realWeight, volumeFactor } from './equipment';
 import { BUILTIN, defaultRest } from './exercises';
@@ -10,8 +9,8 @@ export const noon = (dayStart: number) => dayStart + 12 * 3600000;
 export function dayStartOf(t: number) { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }
 export function dateKey(t: number) { const d = new Date(t); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 
-/** 날짜에 루틴으로 기록 만들기 (종목·세트 수를 루틴에서 미리 채움) */
-export async function createLog(day: number, r: Routine | null): Promise<number> {
+/** 날짜에 루틴으로 새 기록 초안 만들기 (DB에는 [저장]할 때 들어간다) */
+export function draftLog(day: number, r: Routine | null): Session {
   // 루틴에 정해 둔 무게·반복을 그대로 채운다(입력된 세트는 한 것으로 표시). 기록 화면에서 바꾸면 된다
   const entries: SessionEntry[] = (r?.items ?? []).map((it) => ({
     uid: uid(), exerciseId: it.exerciseId, repMin: it.repMin, repMax: it.repMax, restSec: it.restSec,
@@ -22,7 +21,7 @@ export async function createLog(day: number, r: Routine | null): Promise<number>
     }),
   }));
   const t = noon(dayStartOf(day));
-  return db.sessions.add({ routineId: r?.id ?? null, routineName: r?.name ?? '자유 운동', startedAt: t, endedAt: t, entries });
+  return { routineId: r?.id ?? null, routineName: r?.name ?? '자유 운동', startedAt: t, endedAt: t, entries };
 }
 
 export function entryFor(e: Exercise): SessionEntry {

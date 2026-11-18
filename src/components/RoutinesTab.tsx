@@ -6,31 +6,30 @@ import { db, useSettings } from '../db';
 import { analyze } from '../lib/analysis';
 import { useExerciseMap, useExercises } from '../lib/exercises';
 import { isPairedDumbbell } from '../lib/equipment';
-import { applyTemplate, createRoutine, makeItem, move, planOf } from '../lib/routines';
+import { applyTemplate, draftRoutine, makeItem, move, planOf } from '../lib/routines';
 import type { Exercise, PlanSet, Routine, RoutineItem } from '../types';
 import { AnalysisView } from './AnalysisView';
 import { ExerciseInfo, ExercisePicker } from './ExercisePicker';
-import { Empty, NumCell, Sheet, StretchBadge } from './ui';
+import { Empty, NumCell, Sheet, StretchBadge, toast } from './ui';
 
 export function RoutinesTab({ onLog }: { onLog: (r: Routine) => void }) {
   const routines = useLiveQuery(() => db.routines.orderBy('order').toArray(), [], []);
-  const [openId, setOpenId] = useState<number | null>(null);
+  const [open, setOpen] = useState<Routine | null>(null);
   const [showTemplates, setShowTemplates] = useState(false);
   const all = useExercises();
-  const open = routines.find((r) => r.id === openId);
 
   const reorder = async (from: number, to: number) => {
     const next = move(routines, from, to);
     await db.transaction('rw', db.routines, () => Promise.all(next.map((r, i) => db.routines.update(r.id!, { order: i }))));
   };
 
-  if (open) return <RoutineEditor routine={open} onBack={() => setOpenId(null)} onLog={onLog} />;
+  if (open) return <RoutineEditor key={open.id ?? 'new'} initial={open} onBack={() => setOpen(null)} onLog={onLog} />;
 
   return (
     <>
       <div className="top-bar">
         <div className="large-title">내 루틴</div>
-        <button className="btn primary sm" onClick={async () => setOpenId(await createRoutine())}><Plus size={17} />새 루틴</button>
+        <button className="btn primary sm" onClick={async () => setOpen(await draftRoutine())}><Plus size={17} />새 루틴</button>
       </div>
       <p className="subtitle">루틴을 저장해 두고, 기록할 때 불러와요</p>
 
@@ -41,7 +40,7 @@ export function RoutinesTab({ onLog }: { onLog: (r: Routine) => void }) {
           {routines.map((r, i) => (
             <div key={r.id} className="list-item with-icon">
               <span className="icon-tile"><Dumbbell size={20} /></span>
-              <button className="grow" style={{ textAlign: 'left' }} onClick={() => setOpenId(r.id!)}>
+              <button className="grow" style={{ textAlign: 'left' }} onClick={() => setOpen(r)}>
                 <div className="list-title">{r.name}</div>
                 <div className="list-sub ellipsis">{r.items.length}종목 · {r.items.reduce((s, x) => s + x.sets, 0)}세트</div>
               </button>
@@ -114,42 +113,66 @@ function NameInput({ value, onSave }: { value: string; onSave: (v: string) => vo
   );
 }
 
-function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: () => void; onLog: (r: Routine) => void }) {
+/** 루틴 편집. 변경은 화면 안에서만 들고 있다가 [저장]을 눌러야 DB에 쓴다 */
+function RoutineEditor({ initial, onBack, onLog }: { initial: Routine; onBack: () => void; onLog: (r: Routine) => void }) {
   const all = useExercises();
   const map = useExerciseMap();
   const settings = useSettings();
   const allRoutines = useLiveQuery(() => db.routines.toArray(), [], []);
+  const [routine, setRoutine] = useState<Routine>(initial);
+  const [dirty, setDirty] = useState(initial.id == null);
   const [picking, setPicking] = useState(false);
   const [info, setInfo] = useState<string | null>(null);
   const [tab, setTab] = useState<'list' | 'analysis'>('list');
-  const id = routine.id!;
-  const save = (patch: Partial<Routine>) => db.routines.update(id, patch);
-  const setItems = (items: RoutineItem[]) => save({ items });
+  const edit = (patch: Partial<Routine>) => { setRoutine((r) => ({ ...r, ...patch })); setDirty(true); };
+  const setItems = (items: RoutineItem[]) => edit({ items });
   const patchItem = (uid: string, p: Partial<RoutineItem>) => setItems(routine.items.map((x) => (x.uid === uid ? { ...x, ...p } : x)));
   const addIds = (ids: string[]) => setItems([...routine.items, ...ids.map((i) => map.get(i)).filter(Boolean).map((e) => makeItem(e!, 3, settings.goal))]);
 
   const single = useMemo(() => analyze([routine], map, all, true), [routine, map, all]);
 
+  const persist = async (): Promise<Routine> => {
+    const id = await db.routines.put(routine);
+    const saved = { ...routine, id };
+    setRoutine(saved);
+    setDirty(false);
+    return saved;
+  };
+  const save = async () => { await persist(); toast('루틴을 저장했어요'); };
+  const back = () => {
+    if (dirty && !confirm('저장하지 않은 변경이 있어요. 저장하지 않고 나갈까요?')) return;
+    onBack();
+  };
   const del = async () => {
+    if (routine.id == null) { if (confirm('이 루틴을 저장하지 않고 버릴까요?')) onBack(); return; }
     if (!confirm(`'${routine.name}' 루틴을 삭제할까요? 기록은 남아요.`)) return;
-    await db.routines.delete(id);
+    await db.routines.delete(routine.id);
     onBack();
   };
   const dup = async () => {
-    await db.routines.add({ ...routine, id: undefined, name: routine.name + ' 복사', order: allRoutines.length, createdAt: Date.now() });
+    if (dirty && !confirm('저장하지 않은 변경은 빼고, 저장된 루틴을 복제할까요?')) return;
+    const base = routine.id != null ? (await db.routines.get(routine.id)) ?? routine : routine;
+    await db.routines.add({ ...base, id: undefined, name: base.name + ' 복사', order: allRoutines.length, createdAt: Date.now() });
+    toast('복제했어요');
     onBack();
+  };
+  const logToday = async () => {
+    const r = dirty || routine.id == null ? await persist() : routine;
+    onLog(r);
   };
 
   return (
     <>
       <div className="top-bar">
-        <button className="icon-btn" onClick={onBack} aria-label="뒤로" style={{ marginLeft: -8 }}><ChevronRight size={24} style={{ transform: 'rotate(180deg)' }} /></button>
+        <button className="icon-btn" onClick={back} aria-label="뒤로" style={{ marginLeft: -8 }}><ChevronRight size={24} style={{ transform: 'rotate(180deg)' }} /></button>
         <div className="top-bar-actions">
           <button className="icon-btn" onClick={dup} aria-label="복제"><Copy size={20} /></button>
           <button className="icon-btn danger" onClick={del} aria-label="루틴 삭제"><Trash2 size={20} /></button>
+          <button className="btn primary sm" disabled={!dirty} onClick={save}>저장</button>
         </div>
       </div>
-      <div className="row" style={{ gap: 6, marginBottom: 14 }}><NameInput value={routine.name} onSave={(name) => save({ name })} /><PenLine size={18} className="muted" /></div>
+      <div className="row" style={{ gap: 6, marginBottom: 14 }}><NameInput value={routine.name} onSave={(name) => edit({ name })} /><PenLine size={18} className="muted" /></div>
+      {dirty && <p className="tiny" style={{ color: 'var(--warning)', margin: '-8px 0 12px' }}>저장하지 않은 변경이 있어요</p>}
 
       <div className="seg">
         <button className={tab === 'list' ? 'on' : ''} onClick={() => setTab('list')}>종목 {routine.items.length}</button>
@@ -183,7 +206,7 @@ function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: (
             </div>
           ) : <div className="card"><Empty title="종목을 추가해 보세요" sub="검색하거나 즐겨찾기에서 골라 담을 수 있어요" /></div>}
           <button className="btn soft block lg" onClick={() => setPicking(true)}><Plus size={20} />종목 추가</button>
-          {routine.items.length > 0 && <button className="btn primary block lg mt" onClick={() => onLog(routine)}>오늘 이 루틴으로 기록하기</button>}
+          {routine.items.length > 0 && <button className="btn primary block lg mt" onClick={logToday}>{dirty ? '저장하고 오늘 이 루틴으로 기록하기' : '오늘 이 루틴으로 기록하기'}</button>}
         </>
       ) : (
         <AnalysisView a={single} single map={map} onAdd={(eid) => addIds([eid])} />

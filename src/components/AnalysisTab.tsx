@@ -1,11 +1,12 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { BarChart3, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
+import { BarChart3, ChevronLeft, ChevronRight, Dumbbell, Search, Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { db, useBodyweight, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { addMonths, allExerciseFeedback, monthStart, summarize, weekStart } from '../lib/feedback';
 import { workingSets } from '../lib/progression';
+import { searchExercises } from '../lib/search';
 import { BIG_LIFTS, e1rmSeries, rmTable } from '../lib/strength';
 import type { Session } from '../types';
 import { VolumeBars } from './AnalysisView';
@@ -13,11 +14,11 @@ import { FeedbackList } from './Feedback';
 import { Empty, fmtDate, fmtKg } from './ui';
 
 const DAY = 86400000;
-type View = 'week' | 'month' | 'lift';
+export type View = 'week' | 'month' | 'next' | 'lift';
 
-export function AnalysisTab() {
+export function AnalysisTab({ initialView }: { initialView?: View }) {
   const sessions = useLiveQuery(() => db.sessions.toArray(), [], []);
-  const [view, setView] = useState<View>('week');
+  const [view, setView] = useState<View>(initialView ?? 'week');
   return (
     <>
       <div className="large-title">분석</div>
@@ -25,9 +26,78 @@ export function AnalysisTab() {
       <div className="seg">
         <button className={view === 'week' ? 'on' : ''} onClick={() => setView('week')}>주간</button>
         <button className={view === 'month' ? 'on' : ''} onClick={() => setView('month')}>월간</button>
-        <button className={view === 'lift' ? 'on' : ''} onClick={() => setView('lift')}>종목 · 1RM</button>
+        <button className={view === 'next' ? 'on' : ''} onClick={() => setView('next')}>다음 목표</button>
+        <button className={view === 'lift' ? 'on' : ''} onClick={() => setView('lift')}>1RM</button>
       </div>
-      {view === 'lift' ? <LiftView sessions={sessions} /> : <PeriodView key={view} mode={view} sessions={sessions} />}
+      {view === 'lift' ? <LiftView sessions={sessions} />
+        : view === 'next' ? <NextView sessions={sessions} />
+        : <PeriodView key={view} mode={view} sessions={sessions} />}
+    </>
+  );
+}
+
+function SearchBox({ q, setQ, placeholder }: { q: string; setQ: (v: string) => void; placeholder: string }) {
+  return (
+    <div className="search" style={{ marginBottom: 12 }}>
+      <Search size={18} />
+      <input className="input" type="search" placeholder={placeholder} value={q} onChange={(e) => setQ(e.target.value)} />
+    </div>
+  );
+}
+
+/** 다음 목표: 루틴별로 묶어 보거나, 기록한 종목 전체를 검색해서 본다 */
+function NextView({ sessions }: { sessions: Session[] }) {
+  const map = useExerciseMap();
+  const settings = useSettings();
+  const routines = useLiveQuery(() => db.routines.orderBy('order').toArray(), [], []);
+  const [mode, setMode] = useState<'routine' | 'exercise'>('routine');
+  const [q, setQ] = useState('');
+  const fbAll = useMemo(() => allExerciseFeedback(sessions, map, settings, 0), [sessions, map, settings]);
+  const fbById = useMemo(() => new Map(fbAll.map((f) => [f.exerciseId, f])), [fbAll]);
+  const matches = (id: string) => !q.trim() || searchExercises([map.get(id)!].filter(Boolean), q).length > 0;
+
+  return (
+    <>
+      <SearchBox q={q} setQ={setQ} placeholder="종목 검색 · 벤치, ㄹㅍㄷ, 삼두" />
+      <div className="seg">
+        <button className={mode === 'routine' ? 'on' : ''} onClick={() => setMode('routine')}>루틴별</button>
+        <button className={mode === 'exercise' ? 'on' : ''} onClick={() => setMode('exercise')}>종목별</button>
+      </div>
+      {mode === 'routine' ? (
+        routines.length === 0 ? <div className="card"><Empty icon={<Dumbbell size={26} />} title="루틴이 없어요" sub="루틴을 만들면 루틴별 다음 목표를 모아서 보여드려요" /></div> : (
+          routines.map((r) => {
+            const items = r.items.filter((it) => matches(it.exerciseId) || (q.trim() && r.name.includes(q.trim())));
+            if (!items.length) return null;
+            return (
+              <div key={r.id}>
+                <div className="section-label">{r.name}</div>
+                <section className="card" style={{ paddingTop: 6, paddingBottom: 6 }}>
+                  <div className="fb-list">
+                    {items.map((it) => {
+                      const ex = map.get(it.exerciseId);
+                      const f = fbById.get(it.exerciseId);
+                      if (!ex) return null;
+                      return f ? <FeedbackList key={it.uid} items={[f]} /> : (
+                        <div key={it.uid} className="fb">
+                          <span className="icon-tile gray"><Dumbbell size={18} /></span>
+                          <div className="grow"><div className="fb-title">{ex.name}</div><div className="fb-text muted">아직 기록이 없어요. 한 번 기록하면 다음 목표를 계산해요.</div></div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              </div>
+            );
+          })
+        )
+      ) : (
+        (() => {
+          const list = fbAll.filter((f) => matches(f.exerciseId));
+          return list.length
+            ? <section className="card" style={{ paddingTop: 6, paddingBottom: 6 }}><FeedbackList items={list} /></section>
+            : <div className="card"><Empty icon={<Search size={26} />} title={q ? '찾는 종목의 기록이 없어요' : '기록한 종목이 없어요'} /></div>;
+        })()
+      )}
     </>
   );
 }
@@ -59,7 +129,6 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
   const settings = useSettings();
   const cur = useMemo(() => summarize(sessions, map, range.from, range.to, settings.smithBarKg), [sessions, map, range, settings.smithBarKg]);
   const prev = useMemo(() => summarize(sessions, map, range.prevFrom, isCurrent ? range.prevFrom + (Date.now() - range.from) : range.from, settings.smithBarKg), [sessions, map, range, isCurrent, settings.smithBarKg]);
-  const exFb = useMemo(() => (isCurrent ? allExerciseFeedback(sessions, map, settings) : []), [isCurrent, sessions, map, settings]);
   const prevLabel = `${mode === 'week' ? '지난주' : '지난달'}${isCurrent ? ' 같은 시점' : ''}`;
 
   return (
@@ -102,12 +171,6 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
         </>
       )}
 
-      {isCurrent && exFb.length > 0 && (
-        <>
-          <div className="section-label">종목별 다음 목표</div>
-          <section className="card" style={{ paddingTop: 6, paddingBottom: 6 }}><FeedbackList items={exFb} /></section>
-        </>
-      )}
     </>
   );
 }
@@ -121,7 +184,14 @@ function LiftView({ sessions }: { sessions: Session[] }) {
     return [...count.entries()].sort((a, b) => b[1] - a[1]).map((x) => x[0]).filter((id) => map.get(id)?.metric === 'weight_reps');
   }, [sessions, map]);
   const [exId, setExId] = useState('');
-  const selected = exId || logged[0] || '';
+  const [q, setQ] = useState('');
+  const shown = useMemo(() => {
+    if (!q.trim()) return logged;
+    const hit = new Set(searchExercises(logged.map((id) => map.get(id)!).filter(Boolean), q).map((e) => e.id));
+    return logged.filter((id) => hit.has(id));
+  }, [logged, q, map]);
+  // 검색 중이면 검색 결과 안에서 고른 종목(없으면 첫 결과)을 보여준다
+  const selected = (exId && shown.includes(exId) ? exId : shown[0]) || exId || logged[0] || '';
   const ex = map.get(selected);
   const series = useMemo(() => e1rmSeries(sessions, selected), [sessions, selected]);
 
@@ -135,8 +205,10 @@ function LiftView({ sessions }: { sessions: Session[] }) {
 
   return (
     <>
+      <SearchBox q={q} setQ={(v) => { setQ(v); }} placeholder={`기록한 종목 ${logged.length}개 중 검색`} />
+      {q && shown.length === 0 && <p className="muted small" style={{ margin: '-4px 4px 10px' }}>“{q}”에 맞는 종목 기록이 없어요.</p>}
       <div className="scroll-x">
-        {logged.map((id) => <button key={id} className={`pill ${id === selected ? 'on' : ''}`} onClick={() => setExId(id)}>{map.get(id)?.name}</button>)}
+        {shown.map((id) => <button key={id} className={`pill ${id === selected ? 'on' : ''}`} onClick={() => setExId(id)}>{map.get(id)?.name}</button>)}
       </div>
       {latest ? (
         <>

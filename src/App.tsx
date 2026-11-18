@@ -1,13 +1,13 @@
 import { BarChart3, CalendarCheck, Dumbbell, UserRound } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { AnalysisTab } from './components/AnalysisTab';
+import { AnalysisTab, type View } from './components/AnalysisTab';
 import { LogTab } from './components/LogTab';
 import { ProfileTab } from './components/ProfileTab';
 import { RoutinesTab } from './components/RoutinesTab';
 import { ToastHost } from './components/ui';
 import { requestPersistence } from './db';
-import { createLog } from './lib/session';
-import type { Routine } from './types';
+import { draftLog } from './lib/session';
+import type { Routine, Session } from './types';
 
 type Tab = 'log' | 'routines' | 'analysis' | 'profile';
 const TABS: [Tab, string, typeof Dumbbell][] = [
@@ -20,23 +20,23 @@ function savedTab(): Tab {
 
 export default function App() {
   const [tab, setTab] = useState<Tab>(savedTab);
-  const [openLog, setOpenLog] = useState<number | null>(null);
+  const [openLog, setOpenLog] = useState<Session | null>(null);
+  const [analysisView, setAnalysisView] = useState<View>('week');
   useEffect(() => { requestPersistence(); }, []);
   useEffect(() => { try { sessionStorage.setItem('tab', tab); } catch { /* 무시 */ } window.scrollTo(0, 0); }, [tab]);
   const onOpened = useCallback(() => setOpenLog(null), []);
 
-  const logRoutineToday = async (r: Routine) => {
-    const id = await createLog(Date.now(), r);
-    setOpenLog(id);
+  const logRoutineToday = (r: Routine) => {
+    setOpenLog(draftLog(Date.now(), r));
     setTab('log');
   };
 
   return (
     <div className="app">
       <main>
-        {tab === 'log' && <LogTab openId={openLog} onOpened={onOpened} goAnalysis={() => setTab('analysis')} />}
+        {tab === 'log' && <LogTab openDraft={openLog} onOpened={onOpened} goAnalysis={(v) => { setAnalysisView(v ?? 'week'); setTab('analysis'); }} />}
         {tab === 'routines' && <RoutinesTab onLog={logRoutineToday} />}
-        {tab === 'analysis' && <AnalysisTab />}
+        {tab === 'analysis' && <AnalysisTab key={analysisView} initialView={analysisView} />}
         {tab === 'profile' && <ProfileTab />}
       </main>
       <nav className="tabbar">

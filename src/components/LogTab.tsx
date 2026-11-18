@@ -1,29 +1,29 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { CalendarDays, ChevronLeft, ChevronRight, ClipboardList, Dumbbell, Plus, Scale } from 'lucide-react';
+import { CalendarDays, ChevronLeft, ChevronRight, ClipboardList, Dumbbell, Plus, Scale, TrendingUp } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { db, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
-import { allExerciseFeedback, inRange, muscleSets, weekStart } from '../lib/feedback';
-import { createLog, dateKey, dayStartOf, sessionStats } from '../lib/session';
+import { inRange, muscleSets, weekStart } from '../lib/feedback';
+import { dateKey, dayStartOf, draftLog, sessionStats } from '../lib/session';
+import type { Session } from '../types';
 import { VolumeBars } from './AnalysisView';
-import { FeedbackList } from './Feedback';
 import { LogEditor } from './LogEditor';
 import { Empty, fmtDate, fmtKg, Sheet, toast } from './ui';
 
 const DAY = 86400000;
 const DOW = ['월', '화', '수', '목', '금', '토', '일'];
 
-export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null; onOpened: () => void; goAnalysis: () => void }) {
+export function LogTab({ openDraft, onOpened, goAnalysis }: { openDraft: Session | null; onOpened: () => void; goAnalysis: (v?: 'week' | 'next') => void }) {
   const map = useExerciseMap();
   const sessions = useLiveQuery(() => db.sessions.orderBy('startedAt').toArray(), [], []);
   const routines = useLiveQuery(() => db.routines.orderBy('order').toArray(), [], []);
   const today = dayStartOf(Date.now());
   const [sel, setSel] = useState(today);
   const [monthView, setMonthView] = useState(false);
-  const [editing, setEditing] = useState<number | null>(null);
+  const [editing, setEditing] = useState<Session | null>(null);
   const [choosing, setChoosing] = useState(false);
 
-  useEffect(() => { if (openId != null) { setEditing(openId); onOpened(); } }, [openId, onOpened]);
+  useEffect(() => { if (openDraft) { setEditing(openDraft); onOpened(); } }, [openDraft, onOpened]);
 
   const byDay = useMemo(() => {
     const m = new Map<string, typeof sessions>();
@@ -38,13 +38,11 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
   // 지난주 같은 요일·시점까지와 비교
   const lastWeek = useMemo(() => muscleSets(inRange(sessions, ws - 7 * DAY, Date.now() - 7 * DAY), map), [sessions, ws, map]);
   const settings = useSettings();
-  const fb = useMemo(() => allExerciseFeedback(sessions, map, settings).slice(0, 4), [sessions, map, settings]);
 
-  const start = async (routineId: number | null) => {
+  const start = (routineId: number | null) => {
     const r = routineId == null ? null : routines.find((x) => x.id === routineId) ?? null;
-    const id = await createLog(sel, r);
     setChoosing(false);
-    setEditing(id);
+    setEditing(draftLog(sel, r));
   };
 
   return (
@@ -70,7 +68,7 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
             const st = sessionStats(s, map, settings.smithBarKg);
             const names = s.entries.filter((e) => e.sets.some((x) => x.done)).map((e) => map.get(e.exerciseId)?.name).filter(Boolean);
             return (
-              <button key={s.id} className="list-item with-icon" onClick={() => setEditing(s.id!)}>
+              <button key={s.id} className="list-item with-icon" onClick={() => setEditing(s)}>
                 <span className="icon-tile"><Dumbbell size={20} /></span>
                 <div className="grow">
                   <div className="row-between"><span className="list-title ellipsis">{s.routineName}</span><span className="small muted tnum">{st.sets}세트 · {fmtKg(st.volume)}kg</span></div>
@@ -91,15 +89,18 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
 
       {thisWeek.length > 0 && (
         <>
-          <div className="section-label row-between"><span>이번 주 근육별 세트</span><button className="link" onClick={goAnalysis}>분석 보기<ChevronRight size={16} /></button></div>
+          <div className="section-label row-between"><span>이번 주 근육별 세트</span><button className="link" onClick={() => goAnalysis('week')}>분석 보기<ChevronRight size={16} /></button></div>
           <section className="card"><VolumeBars weekly={weekly} prev={lastWeek} prevLabel="지난주 같은 시점" /></section>
         </>
       )}
-      {fb.length > 0 && (
-        <>
-          <div className="section-label">다음에 올릴 것</div>
-          <section className="card" style={{ paddingTop: 6, paddingBottom: 6 }}><FeedbackList items={fb} /></section>
-        </>
+      {sessions.length > 0 && (
+        <div className="list mt">
+          <button className="list-item with-icon" onClick={() => goAnalysis('next')}>
+            <span className="icon-tile success"><TrendingUp size={20} /></span>
+            <div className="grow"><div className="list-title">다음 목표 보기</div><div className="list-sub">루틴별 · 종목별로 다음에 들 무게와 횟수</div></div>
+            <ChevronRight size={18} className="chev" />
+          </button>
+        </div>
       )}
 
       {choosing && (
@@ -122,7 +123,7 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
           {routines.length === 0 && <p className="tiny muted center">루틴 탭에서 나만의 루틴을 만들어 두면 다음부터 한 번에 불러올 수 있어요.</p>}
         </Sheet>
       )}
-      {editing != null && <LogEditor id={editing} onClose={() => setEditing(null)} />}
+      {editing && <LogEditor key={editing.id ?? 'new'} initial={editing} onClose={() => setEditing(null)} />}
     </>
   );
 }
