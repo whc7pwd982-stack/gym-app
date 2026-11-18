@@ -59,7 +59,7 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
   const cur = useMemo(() => summarize(sessions, map, range.from, range.to), [sessions, map, range]);
   const prev = useMemo(() => summarize(sessions, map, range.prevFrom, isCurrent ? range.prevFrom + (Date.now() - range.from) : range.from), [sessions, map, range, isCurrent]);
   const settings = useSettings();
-  const exFb = useMemo(() => (isCurrent ? allExerciseFeedback(sessions, map, { goal: settings.goal, level: settings.level }) : []), [isCurrent, sessions, map, settings.goal, settings.level]);
+  const exFb = useMemo(() => (isCurrent ? allExerciseFeedback(sessions, map, settings) : []), [isCurrent, sessions, map, settings]);
   const prevLabel = `${mode === 'week' ? '지난주' : '지난달'}${isCurrent ? ' 같은 시점' : ''}`;
 
   return (

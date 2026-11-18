@@ -95,10 +95,32 @@ export function ProfileTab() {
           <Opt<Level> value={s.level} options={[['beginner', '초보', '1년 미만'], ['intermediate', '중급', '1–3년'], ['advanced', '상급', '3년 이상']]} onChange={(v) => set({ level: v })} />
         </div>
         <div className="field"><span className="field-label">운동 목표</span>
-          <Opt<Goal> value={s.goal} options={[['hypertrophy', '근육 키우기', '6–15회'], ['strength', '힘 키우기', '3–6회'], ['both', '둘 다', '5–12회']]} onChange={(v) => set({ goal: v })} />
+          <Opt<Goal> value={s.goal} options={[['hypertrophy', '근육 키우기', '6–12회'], ['strength', '힘 키우기', '3–6회'], ['both', '둘 다', '5–10회']]} onChange={(v) => set({ goal: v })} />
         </div>
         <div className="field" style={{ marginBottom: 0 }}><span className="field-label">지금 시기</span>
           <Opt<Phase> value={s.phase} options={[['bulk', '증량', '벌크업'], ['maintain', '유지'], ['cut', '감량', '다이어트']]} onChange={(v) => set({ phase: v })} />
+        </div>
+      </section>
+
+      <div className="section-label">우리 헬스장 무게 단위</div>
+      <section className="card">
+        <p className="tiny muted" style={{ marginBottom: 12 }}>다음 무게를 추천할 때 실제로 만들 수 있는 무게만 골라요.</p>
+        <div className="field"><span className="field-label">바벨 · 원판 — 가장 작은 원판 (한쪽)</span>
+          <Opt<string> value={String(s.plateSide)} options={[['1.25', '1.25kg', '한 번에 +2.5kg'], ['2.5', '2.5kg', '한 번에 +5kg'], ['5', '5kg', '한 번에 +10kg']]} onChange={(v) => set({ plateSide: Number(v) })} />
+        </div>
+        <div className="field"><span className="field-label">바벨 봉 무게</span>
+          <Opt<string> value={String(s.barKg)} options={[['20', '20kg', '올림픽 봉'], ['15', '15kg', '여성용 봉'], ['10', '10kg', '짧은 봉']]} onChange={(v) => set({ barKg: Number(v) })} />
+        </div>
+        <div className="field"><span className="field-label">덤벨 간격</span>
+          <Opt<string> value={String(s.dumbbellStep)} options={[['1', '1kg'], ['2', '2kg'], ['2.5', '2.5kg']]} onChange={(v) => set({ dumbbellStep: Number(v) })} />
+        </div>
+        <div className="row" style={{ gap: 10 }}>
+          <div className="field grow" style={{ marginBottom: 0 }}><span className="field-label">머신 핀 간격</span>
+            <Opt<string> value={String(s.machineStep)} options={[['2.5', '2.5'], ['5', '5kg']]} onChange={(v) => set({ machineStep: Number(v) })} />
+          </div>
+          <div className="field grow" style={{ marginBottom: 0 }}><span className="field-label">케이블 간격</span>
+            <Opt<string> value={String(s.cableStep)} options={[['2.5', '2.5'], ['5', '5kg']]} onChange={(v) => set({ cableStep: Number(v) })} />
+          </div>
         </div>
       </section>
 

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { db, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { isStalled, lastEntryFor, suggestNext, workingSets, type Suggestion } from '../lib/progression';
+import { platesPerSide, usesOlympicBar } from '../lib/equipment';
 import { move, writeBackToRoutine } from '../lib/routines';
 import { emptySet, entryFor, isFilled, sessionStats } from '../lib/session';
 import { bestBefore, e1rmOf } from '../lib/strength';
@@ -72,9 +73,10 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
   const prev = useMemo(() => lastEntryFor(all, ex.id, session.startedAt, session.id), [all, ex.id, session.startedAt, session.id]);
   const best = useMemo(() => bestBefore(all, ex.id, session.startedAt + 1, session.id), [all, ex.id, session.startedAt, session.id]);
   const settings = useSettings();
-  const sug: Suggestion = useMemo(() => suggestNext(ex, en.repMin, en.repMax, prev?.entry ?? null, best, { goal: settings.goal, level: settings.level }), [ex, en.repMin, en.repMax, prev, best, settings.goal, settings.level]);
+  const sug: Suggestion = useMemo(() => suggestNext(ex, en.repMin, en.repMax, prev?.entry ?? null, best, settings), [ex, en.repMin, en.repMax, prev, best, settings]);
   const stalled = useMemo(() => isStalled(all.filter((x) => x.id !== session.id), ex.id, session.startedAt), [all, ex.id, session.id, session.startedAt]);
   const m = ex.metric;
+  const plates = sug.weight != null && m === 'weight_reps' && usesOlympicBar(ex) ? platesPerSide(sug.weight, settings.barKg) : null;
   const hasW = m === 'weight_reps' || m === 'assisted' || m === 'bodyweight' || m === 'carry';
   const hasRir = m === 'weight_reps' || m === 'bodyweight' || m === 'assisted';
   const repLabel = m === 'hold' ? '초' : m === 'cardio' ? '분' : m === 'carry' ? 'm' : '회';
@@ -121,6 +123,7 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
         {sug.kind === 'increase' ? <TrendingUp size={17} /> : <Target size={17} />}
         <div className="grow">
           <b>오늘 목표 {sug.weight != null && m !== 'bodyweight' ? `${fmtKg(sug.weight)}${m === 'assisted' ? 'kg 보조' : 'kg'} × ` : ''}{sug.reps}{repLabel}</b>
+          {plates && <div className="small" style={{ marginTop: 2 }}>봉 {settings.barKg}kg + 한쪽 <b>{plates.length ? plates.join(' · ') : '원판 없음'}</b></div>}
           <div className="text-2">{stalled ? '최근 3번 기록이 같아요. 오늘은 세트를 1개 더 해서 볼륨을 올려보세요.' : sug.note}</div>
           {best > 0 && <div className="tiny muted" style={{ marginTop: 3 }}>추정 1RM {fmtKg(best)}kg{todayBest > best ? <b className="accent"> → 오늘 {fmtKg(todayBest)}kg 🎉</b> : ''}</div>}
         </div>

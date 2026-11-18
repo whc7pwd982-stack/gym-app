@@ -1,5 +1,6 @@
 import Dexie, { type Table } from 'dexie';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useMemo } from 'react';
 import type { BodyWeight, Exercise, Routine, Session, Settings } from './types';
 
 class GymDB extends Dexie {
@@ -41,6 +42,11 @@ export const DEFAULT_SETTINGS: Settings = {
   phase: 'maintain',
   defaultRestCompound: 150,
   defaultRestIsolation: 90,
+  plateSide: 2.5,
+  dumbbellStep: 2,
+  machineStep: 5,
+  cableStep: 2.5,
+  barKg: 20,
 };
 
 export async function getSettings(): Promise<Settings> {
@@ -54,7 +60,7 @@ export async function saveSettings(s: Settings) {
 
 export function useSettings(): Settings {
   const row = useLiveQuery(() => db.kv.get('settings'), []);
-  return { ...DEFAULT_SETTINGS, ...((row?.value as Settings) ?? {}) };
+  return useMemo(() => ({ ...DEFAULT_SETTINGS, ...((row?.value as Settings) ?? {}) }), [row]);
 }
 
 /** 가장 최근 체중(체중 기록 → 없으면 프로필 값) */

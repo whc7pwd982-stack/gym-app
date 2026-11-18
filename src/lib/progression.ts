@@ -1,4 +1,5 @@
-import type { Exercise, Goal, Level, Session, SessionEntry, SetLog } from '../types';
+import type { Exercise, Goal, Level, Session, SessionEntry, SetLog, Settings } from '../types';
+import { incrementFor } from './equipment';
 import { isCompound } from './exercises';
 import { e1rmOf, roundTo, weightFor } from './strength';
 
@@ -32,7 +33,7 @@ export interface Suggestion {
   rir?: number;
 }
 
-export interface ProgressOpts { goal: Goal; level: Level }
+export type ProgressOpts = { goal: Goal; level: Level } & Partial<Pick<Settings, 'plateSide' | 'dumbbellStep' | 'machineStep' | 'cableStep'>>;
 
 /**
  * 목표별 "근비대·근력에 효과적인 구간"
@@ -69,10 +70,12 @@ export const fmt1 = (n: number) => (n < 30 ? (Math.round(n * 10) / 10).toString(
 export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: SessionEntry | null, knownE1rm = 0, opts: ProgressOpts = { goal: 'hypertrophy', level: 'beginner' }): Suggestion {
   // 고립 운동은 가벼운 무게·높은 반복이 관절 부담이 적고 근비대 효과는 비슷(Lopez 2021: 30–85% 1RM)
   const zone = isCompound(ex) ? ZONES[opts.goal].compound : ZONES[opts.goal].isolation;
+  // 내 헬스장 장비로 실제 올릴 수 있는 최소 단위 (바벨이면 가장 작은 원판 × 양쪽)
+  const step = incrementFor(ex, opts);
   if (!last) {
     if (knownE1rm > 0 && ex.metric === 'weight_reps') {
       const reps = Math.round((zone.lo + zone.hi) / 2);
-      const w = roundTo(weightFor(knownE1rm, reps, zone.rir), ex.increment);
+      const w = roundTo(weightFor(knownE1rm, reps, zone.rir), step);
       return { weight: w, reps, rir: zone.rir, e1rmFrom: knownE1rm, e1rmTo: knownE1rm, note: `추정 1RM ${Math.round(knownE1rm)}kg 기준, ${reps}회를 ${zone.rir}개 남기고 할 수 있는 무게예요`, kind: 'start' };
     }
     return { weight: null, reps: Math.round((zone.lo + zone.hi) / 2), note: '첫 기록이에요. 1–2개 더 할 수 있을 정도의 무게로 해보세요', kind: 'start' };
@@ -85,12 +88,12 @@ export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: 
     return { weight: top || null, reps: minReps + 1, note: ex.metric === 'hold' ? '지난번보다 5초 더 버텨보세요' : '지난번보다 1회 더 해보세요', kind: 'reps' };
   }
   if (ex.metric === 'assisted') {
-    if (minReps >= repMax) return { weight: Math.max(0, top - ex.increment), reps: repMin, note: `보조 무게를 ${ex.increment}kg 줄여보세요`, kind: 'increase' };
+    if (minReps >= repMax) return { weight: Math.max(0, top - step), reps: repMin, note: `보조 무게를 ${step}kg 줄여보세요`, kind: 'increase' };
     return { weight: top, reps: minReps + 1, note: '같은 보조 무게로 1회 더', kind: 'reps' };
   }
   // ── 무게 × 반복 종목: 추정 1RM 기반 ──
   void repMin; void repMax;
-  const inc = ex.increment || 2.5;
+  const inc = step;
   // 지난번 추정 1RM: 작업 세트들의 RIR 보정 e1RM 중 최고(12회 초과 환산은 오차가 커서 제외)
   let cur = 0;
   for (const x of ws) {
@@ -107,7 +110,8 @@ export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: 
   // 후보: 지난 무게 −1칸 ~ +3칸, 반복은 목표 구간 전체
   let best: { w: number; r: number; v: number; score: number } | null = null;
   for (let k = -1; k <= 3; k++) {
-    const w = roundTo(top + k * inc, inc);
+    // 지난번 무게에서 장비 단위만큼 더하고 빼서 실제로 만들 수 있는 무게만 후보로 쓴다
+    const w = Math.round((top + k * inc) * 100) / 100;
     if (w <= 0) continue;
     for (let r = zone.lo; r <= zone.hi; r++) {
       const v = e1(w, r, zone.rir);

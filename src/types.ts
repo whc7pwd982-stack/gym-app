@@ -100,6 +100,12 @@ export interface Settings {
   phase: Phase;
   defaultRestCompound: number;
   defaultRestIsolation: number;
+  /** 헬스장 장비 단위: 가장 작은 원판(한쪽), 덤벨 간격, 머신 핀 간격, 케이블 간격, 바벨 봉 무게 */
+  plateSide: number;
+  dumbbellStep: number;
+  machineStep: number;
+  cableStep: number;
+  barKg: number;
 }
 
 export interface BodyWeight {

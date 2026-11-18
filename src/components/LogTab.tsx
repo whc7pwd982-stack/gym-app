@@ -38,7 +38,7 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
   // 지난주 같은 요일·시점까지와 비교
   const lastWeek = useMemo(() => muscleSets(inRange(sessions, ws - 7 * DAY, Date.now() - 7 * DAY), map), [sessions, ws, map]);
   const settings = useSettings();
-  const fb = useMemo(() => allExerciseFeedback(sessions, map, { goal: settings.goal, level: settings.level }).slice(0, 4), [sessions, map, settings.goal, settings.level]);
+  const fb = useMemo(() => allExerciseFeedback(sessions, map, settings).slice(0, 4), [sessions, map, settings]);
 
   const start = async (routineId: number | null) => {
     const r = routineId == null ? null : routines.find((x) => x.id === routineId) ?? null;
