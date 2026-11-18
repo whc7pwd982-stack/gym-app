@@ -13,15 +13,15 @@ const mark = (scale = 1) => {
 const square = (scale) => Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="${BG}"/>${mark(scale)}</svg>`);
 
 const out = [
-  ['apple-touch-icon-180x180.png', 180, 1],
-  ['pwa-64x64.png', 64, 1],
-  ['pwa-192x192.png', 192, 1],
-  ['pwa-512x512.png', 512, 1],
-  ['maskable-icon-512x512.png', 512, 0.78], // 안드로이드 마스크 안전 영역
+  ['apple-touch-icon-v2.png', 180, 1],
+  ['icon-v2-64.png', 64, 1],
+  ['icon-v2-192.png', 192, 1],
+  ['icon-v2-512.png', 512, 1],
+  ['icon-v2-maskable-512.png', 512, 0.78], // 안드로이드 마스크 안전 영역
 ];
 for (const [name, size, scale] of out) {
   await sharp(square(scale), { density: 600 }).resize(size, size).png().toFile(`public/${name}`);
 }
 // favicon.ico 대신 32px PNG를 ico 이름으로 둔다(브라우저는 PNG 아이콘도 읽음)
-await sharp(fs.readFileSync('public/icon.svg'), { density: 300 }).resize(48, 48).png().toFile('public/favicon.ico');
+await sharp(fs.readFileSync('public/icon-v2.svg'), { density: 300 }).resize(48, 48).png().toFile('public/favicon.ico');
 console.log('icons ok');

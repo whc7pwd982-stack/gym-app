@@ -9,7 +9,7 @@ export default defineConfig(({ command }) => ({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'icon.svg', 'apple-touch-icon-180x180.png'],
+      includeAssets: ['favicon.ico', 'icon-v2.svg', 'apple-touch-icon-v2.png'],
       manifest: {
         name: 'nextrep',
         short_name: 'nextrep',
@@ -21,10 +21,10 @@ export default defineConfig(({ command }) => ({
         theme_color: '#1B1F3B',
         background_color: '#1B1F3B',
         icons: [
-          { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: 'icon-v2-64.png', sizes: '64x64', type: 'image/png' },
+          { src: 'icon-v2-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'icon-v2-512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'icon-v2-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: { globPatterns: ['**/*.{js,css,html,svg,png,ico,json}'] },
