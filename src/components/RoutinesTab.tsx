@@ -5,6 +5,7 @@ import { TEMPLATES } from '../data/templates';
 import { db, useSettings } from '../db';
 import { analyze } from '../lib/analysis';
 import { useExerciseMap, useExercises } from '../lib/exercises';
+import { isPairedDumbbell } from '../lib/equipment';
 import { applyTemplate, createRoutine, makeItem, move, planOf } from '../lib/routines';
 import type { Exercise, PlanSet, Routine, RoutineItem } from '../types';
 import { AnalysisView } from './AnalysisView';
@@ -83,7 +84,7 @@ function PlanRows({ ex, plan, onChange }: { ex: Exercise; plan: PlanSet[]; onCha
   const m = ex.metric;
   const hasW = m === 'weight_reps' || m === 'assisted' || m === 'bodyweight' || m === 'carry';
   const unit = m === 'hold' ? '초' : m === 'cardio' ? '분' : m === 'carry' ? 'm' : '회';
-  const wLabel = m === 'assisted' ? '보조kg' : m === 'bodyweight' ? '+kg' : 'kg';
+  const wLabel = m === 'assisted' ? '보조kg' : m === 'bodyweight' ? '+kg' : isPairedDumbbell(ex) ? '한 손 kg' : 'kg';
   const setAt = (i: number, p: Partial<PlanSet>) => onChange(plan.map((x, j) => (j === i ? { ...x, ...p } : x)));
   const valOf = (x: PlanSet) => (m === 'hold' ? x.seconds ?? null : m === 'cardio' ? (x.seconds == null ? null : Math.round(x.seconds / 60)) : m === 'carry' ? x.distance ?? null : x.reps);
   const patchVal = (v: number | null): Partial<PlanSet> => (m === 'hold' ? { seconds: v } : m === 'cardio' ? { seconds: v == null ? null : v * 60 } : m === 'carry' ? { distance: v } : { reps: v });

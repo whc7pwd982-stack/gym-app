@@ -48,6 +48,7 @@ export const DEFAULT_SETTINGS: Settings = {
   cableStep: 2.5,
   barKg: 20,
   targetRir: 0,
+  smithBarKg: 10,
 };
 
 export async function getSettings(): Promise<Settings> {

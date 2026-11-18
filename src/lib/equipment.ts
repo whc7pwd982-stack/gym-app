@@ -61,6 +61,37 @@ export function incrementFor(e: Exercise, s: EquipSettings) {
   }
 }
 
+/** 스미스 머신 종목: 이름에 스미스가 있거나 장비가 스미스로 시작 */
+export function isSmith(e: Exercise) {
+  return /스미스/.test(e.name) || /^스미스/.test(e.equipment);
+}
+
+/**
+ * 스미스는 프리 바벨처럼 "봉 20kg + 원판"으로 입력받고, 실제 무게는
+ * 20kg 대신 스미스 봉의 체감 무게(설정값, 기본 10kg)로 바꿔 계산한다.
+ * 스미스 봉은 기종마다 달라(카운터밸런스 여부) 정해진 값이 없으므로 설정에서 바꿀 수 있게 한다.
+ */
+export function realWeight(e: Exercise | undefined, w: number, smithBarKg = 10) {
+  if (!e || !isSmith(e) || w <= 0) return w;
+  return Math.max(0, w - 20 + smithBarKg);
+}
+
+/** 덤벨 하나만 드는 종목(한 팔씩·덤벨 1개 사용) */
+const ONE_DB = /원암|싱글암|싱글 암|컨센트레이션|고블릿|풀오버|사이드 벤드|사이드라잉|싱글 레그|티바|크록|덤벨 오버헤드 익스텐션/;
+
+/**
+ * 양손에 덤벨을 하나씩 드는 종목인가 — 무게는 "한 손(덤벨 1개)" 기준으로 적고, 볼륨은 ×2.
+ * 바벨/덤벨 겸용 종목은 장비 문자열에서 덤벨이 먼저 나올 때만 해당.
+ */
+export function isPairedDumbbell(e: Exercise) {
+  return equipType(e) === 'dumbbell' && /덤벨/.test(e.equipment) && !ONE_DB.test(e.name);
+}
+
+/** 볼륨(무게×반복) 계산 배수 */
+export function volumeFactor(e?: Exercise) {
+  return e && isPairedDumbbell(e) ? 2 : 1;
+}
+
 const PLATES = [25, 20, 15, 10, 5, 2.5, 1.25];
 
 /** 바벨 무게 → 한쪽에 끼울 원판 조합 (봉 무게 제외). 못 맞추면 null */

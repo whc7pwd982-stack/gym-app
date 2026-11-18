@@ -56,9 +56,9 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
     return { from, to, prevFrom: addMonths(from, -1), label: `${d.getFullYear()}년 ${d.getMonth() + 1}월`, weeks: (to - from) / (7 * DAY) };
   }, [mode, offset]);
 
-  const cur = useMemo(() => summarize(sessions, map, range.from, range.to), [sessions, map, range]);
-  const prev = useMemo(() => summarize(sessions, map, range.prevFrom, isCurrent ? range.prevFrom + (Date.now() - range.from) : range.from), [sessions, map, range, isCurrent]);
   const settings = useSettings();
+  const cur = useMemo(() => summarize(sessions, map, range.from, range.to, settings.smithBarKg), [sessions, map, range, settings.smithBarKg]);
+  const prev = useMemo(() => summarize(sessions, map, range.prevFrom, isCurrent ? range.prevFrom + (Date.now() - range.from) : range.from, settings.smithBarKg), [sessions, map, range, isCurrent, settings.smithBarKg]);
   const exFb = useMemo(() => (isCurrent ? allExerciseFeedback(sessions, map, settings) : []), [isCurrent, sessions, map, settings]);
   const prevLabel = `${mode === 'week' ? '지난주' : '지난달'}${isCurrent ? ' 같은 시점' : ''}`;
 

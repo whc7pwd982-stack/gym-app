@@ -1,6 +1,7 @@
 import { db } from '../db';
 import type { Exercise, Routine, Session, SessionEntry, SetLog } from '../types';
-import { defaultRest } from './exercises';
+import { realWeight, volumeFactor } from './equipment';
+import { BUILTIN, defaultRest } from './exercises';
 import { makeItem, planOf, uid } from './routines';
 
 export const emptySet = (): SetLog => ({ weight: null, reps: null, rir: null, seconds: null, distance: null, done: false, warmup: false });
@@ -34,9 +35,16 @@ export function isFilled(x: SetLog) {
   return (x.reps ?? 0) > 0 || (x.seconds ?? 0) > 0 || (x.distance ?? 0) > 0;
 }
 
-export function sessionStats(s: Session) {
+const BUILTIN_MAP = new Map(BUILTIN.map((e) => [e.id, e]));
+
+/** 볼륨은 저장된 숫자로 그때그때 계산한다(양손 덤벨은 ×2) — 그래서 예전 기록·백업도 자동으로 같은 기준이 된다 */
+export function sessionStats(s: Session, map: Map<string, Exercise> = BUILTIN_MAP, smithBarKg = 10) {
   let sets = 0, volume = 0;
   const ex = new Set<string>();
-  for (const en of s.entries) for (const x of en.sets) if (x.done && !x.warmup) { sets++; volume += (x.weight ?? 0) * (x.reps ?? 0); ex.add(en.exerciseId); }
+  for (const en of s.entries) {
+    const e = map.get(en.exerciseId);
+    const f = volumeFactor(e);
+    for (const x of en.sets) if (x.done && !x.warmup) { sets++; volume += realWeight(e, x.weight ?? 0, smithBarKg) * (x.reps ?? 0) * f; ex.add(en.exerciseId); }
+  }
   return { sets, volume: Math.round(volume), exercises: ex.size };
 }

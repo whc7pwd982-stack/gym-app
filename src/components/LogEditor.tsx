@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { db, saveSettings, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { isStalled, lastEntryFor, suggestNext, workingSets, type Suggestion } from '../lib/progression';
-import { BAR_OPTIONS, barLabel, barPrefFor, platesPerSide } from '../lib/equipment';
+import { BAR_OPTIONS, barLabel, barPrefFor, isPairedDumbbell, isSmith, platesPerSide, realWeight } from '../lib/equipment';
 import { move, writeBackToRoutine } from '../lib/routines';
 import { emptySet, entryFor, isFilled, sessionStats } from '../lib/session';
 import { bestBefore, e1rmOf } from '../lib/strength';
@@ -25,7 +25,7 @@ export function LogEditor({ id, onClose }: { id: number; onClose: () => void }) 
   if (!s) return null;
   const update = (next: Session) => { setS(next); db.sessions.put(next); };
   const patchEntry = (uid: string, fn: (e: SessionEntry) => SessionEntry) => update({ ...s, entries: s.entries.map((e) => (e.uid === uid ? fn(e) : e)) });
-  const st = sessionStats(s);
+  const st = sessionStats(s, map, settings.smithBarKg);
 
   const remove = async () => {
     if (!confirm('이 날의 기록을 삭제할까요? 되돌릴 수 없어요.')) return;
@@ -78,11 +78,14 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
   const m = ex.metric;
   const bar = m === 'weight_reps' ? barPrefFor(ex, settings) : null;
   const plates = sug.weight != null && bar?.kind === 'bar' ? platesPerSide(sug.weight, bar.kg) : null;
+  // 스미스: 프리 봉(20kg) 기준으로 입력 → 실제 무게는 스미스 봉 체감 무게로 환산
+  const smith = m === 'weight_reps' && isSmith(ex);
+  const smithPlates = smith && sug.weight != null ? platesPerSide(sug.weight, 20) : null;
   const [choosingBar, setChoosingBar] = useState(false);
   const hasW = m === 'weight_reps' || m === 'assisted' || m === 'bodyweight' || m === 'carry';
   const hasRir = m === 'weight_reps' || m === 'bodyweight' || m === 'assisted';
   const repLabel = m === 'hold' ? '초' : m === 'cardio' ? '분' : m === 'carry' ? 'm' : '회';
-  const wLabel = m === 'assisted' ? '보조kg' : m === 'bodyweight' ? '+kg' : 'kg';
+  const wLabel = m === 'assisted' ? '보조kg' : m === 'bodyweight' ? '+kg' : isPairedDumbbell(ex) ? '한 손 kg' : 'kg';
   const todayBest = Math.max(0, ...workingSets(en).map((x) => e1rmOf(x) ?? 0));
   const prevSummary = prev ? workingSets(prev.entry).map((x) => (x.weight ? `${fmtKg(x.weight)}×${x.reps ?? x.seconds ?? ''}` : `${x.reps ?? x.seconds ?? ''}`)).join(' · ') : null;
 
@@ -132,6 +135,12 @@ function EntryCard({ ex, en, session, all, first, last, onInfo, onMove, onRemove
                 : <>{barLabel(bar)}</>}
               <ChevronDown size={14} />
             </button>
+          )}
+          {smith && (
+            <div className="bar-chip" style={{ cursor: 'default' }}>
+              스미스 · 봉 20kg으로 입력{smithPlates ? <> + 한쪽 <b>{smithPlates.length ? smithPlates.join(' · ') : '원판 없음'}</b></> : ''}
+              {sug.weight != null && <> · 실제 약 <b>{fmtKg(realWeight(ex, sug.weight, settings.smithBarKg))}kg</b></>}
+            </div>
           )}
           <div className="text-2">{stalled ? '최근 3번 기록이 같아요. 오늘은 세트를 1개 더 해서 볼륨을 올려보세요.' : sug.note}</div>
           {best > 0 && <div className="tiny muted" style={{ marginTop: 3 }}>추정 1RM {fmtKg(best)}kg{todayBest > best ? <b className="accent"> → 오늘 {fmtKg(todayBest)}kg 🎉</b> : ''}</div>}

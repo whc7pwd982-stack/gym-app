@@ -1,5 +1,6 @@
 import { MUSCLE_ORDER } from '../data/muscles';
 import type { Exercise, MuscleCode, Session } from '../types';
+import { realWeight, volumeFactor } from './equipment';
 import { credits } from './exercises';
 import { fmt1, isStalled, lastEntryFor, suggestNext, workingSets, type ProgressOpts } from './progression';
 import { e1rmOf } from './strength';
@@ -91,13 +92,17 @@ export interface PeriodSummary {
 
 export const dayKey = (t: number) => { const d = new Date(t); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; };
 
-export function summarize(all: Session[], map: Map<string, Exercise>, from: number, to: number): PeriodSummary {
+export function summarize(all: Session[], map: Map<string, Exercise>, from: number, to: number, smithBarKg = 10): PeriodSummary {
   const list = inRange(all, from, to);
   let sets = 0, volume = 0;
   const days = new Set<string>();
   for (const s of list) {
     days.add(dayKey(s.startedAt));
-    for (const en of s.entries) for (const x of workingSets(en)) { sets++; volume += (x.weight ?? 0) * (x.reps ?? 0); }
+    for (const en of s.entries) {
+      const e = map.get(en.exerciseId);
+      const f = volumeFactor(e);
+      for (const x of workingSets(en)) { sets++; volume += realWeight(e, x.weight ?? 0, smithBarKg) * (x.reps ?? 0) * f; }
+    }
   }
   // 기간 내 최고 e1RM이 기간 이전 최고보다 높으면 PR
   const prs: PeriodSummary['prs'] = [];

@@ -106,6 +106,8 @@ export interface Settings {
   machineStep: number;
   cableStep: number;
   barKg: number;
+  /** 스미스 머신 봉의 실제 체감 무게(카운터밸런스로 프리 봉보다 가벼움). 입력은 프리 봉 20kg 기준 */
+  smithBarKg: number;
   /** 세트를 어디까지 하나: 0 = 실패까지, 2 = 2회 남기고 */
   targetRir: number;
   /** 종목별 봉 설정 (바벨컬은 고정 바벨, 벤치는 20kg 봉 등) */

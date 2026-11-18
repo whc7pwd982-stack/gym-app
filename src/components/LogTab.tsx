@@ -67,7 +67,7 @@ export function LogTab({ openId, onOpened, goAnalysis }: { openId: number | null
       {daySessions.length > 0 && (
         <div className="list">
           {daySessions.map((s) => {
-            const st = sessionStats(s);
+            const st = sessionStats(s, map, settings.smithBarKg);
             const names = s.entries.filter((e) => e.sets.some((x) => x.done)).map((e) => map.get(e.exerciseId)?.name).filter(Boolean);
             return (
               <button key={s.id} className="list-item with-icon" onClick={() => setEditing(s.id!)}>

@@ -114,6 +114,9 @@ export function ProfileTab() {
         <div className="field"><span className="field-label">기본 바벨 봉 무게 <span className="muted">(바벨컬처럼 다른 봉을 쓰는 종목은 기록 화면에서 따로 정해요)</span></span>
           <Opt<string> value={String(s.barKg)} options={[['20', '20kg', '올림픽 봉'], ['15', '15kg', '여성용 봉'], ['10', '10kg', '짧은 봉']]} onChange={(v) => set({ barKg: Number(v) })} />
         </div>
+        <div className="field"><span className="field-label">스미스 머신 봉 실제 무게 <span className="muted">(기록은 프리 봉 20kg 기준으로 입력하면 돼요)</span></span>
+          <Opt<string> value={String(s.smithBarKg)} options={[['5', '5kg', '가벼운 기종'], ['10', '10kg', '모르면 이것'], ['15', '15kg'], ['20', '20kg', '프리와 같음']]} onChange={(v) => set({ smithBarKg: Number(v) })} />
+        </div>
         <div className="field"><span className="field-label">덤벨 간격</span>
           <Opt<string> value={String(s.dumbbellStep)} options={[['1', '1kg'], ['2', '2kg'], ['2.5', '2.5kg']]} onChange={(v) => set({ dumbbellStep: Number(v) })} />
         </div>
