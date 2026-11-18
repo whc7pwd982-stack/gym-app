@@ -32,7 +32,7 @@ function NumField({ label, value, onSave, suffix, placeholder }: { label: string
 export function ProfileTab() {
   const s = useSettings();
   const bw = useBodyweight();
-  const routines = useLiveQuery(() => db.routines.toArray(), [], []);
+  const recent = useLiveQuery(() => db.sessions.where('startedAt').above(Date.now() - 28 * 86400000).toArray(), [], []);
   const weights = useLiveQuery(() => db.bodyweights.orderBy('date').toArray(), [], []);
   const [sheet, setSheet] = useState<null | 'targets' | 'dict'>(null);
   const [info, setInfo] = useState<Exercise | null>(null);
@@ -40,7 +40,9 @@ export function ProfileTab() {
   const set = (p: Partial<Settings>) => saveSettings({ ...s, ...p });
 
   const age = ageOf(s);
-  const days = routines.reduce((n, r) => n + r.timesPerWeek, 0) || 3;
+  // 최근 4주 실제 운동한 날로 주당 횟수 추정 (기록이 없으면 주 3회로 가정)
+  const loggedDays = new Set(recent.map((x) => new Date(x.startedAt).toDateString())).size;
+  const days = loggedDays ? Math.max(1, Math.round(loggedDays / 4)) : 3;
   const base = bmr(s, bw);
   const maintenance = base ? Math.round(base * activityFactor(days)) : null;
   const kcal = maintenance ? calorieTarget(maintenance, s.phase, s.level) : null;
@@ -117,7 +119,7 @@ export function ProfileTab() {
             </div>
           )}
         </div>
-        {maintenance && <div className="kv"><span className="muted">유지 칼로리 (주 {days}회 운동 기준)</span><b>{maintenance.toLocaleString()}kcal</b></div>}
+        {maintenance && <div className="kv"><span className="muted">유지 칼로리 ({loggedDays ? `최근 4주 기록 · 주 ${days}회` : '주 3회 가정'})</span><b>{maintenance.toLocaleString()}kcal</b></div>}
         {protein && <div className="kv"><span className="muted">단백질 기준</span><b>체중 × {protein.perKg}g{protein.elderlyMin ? ` (최소 ${protein.elderlyMin}g)` : ''}</b></div>}
         {rate && <div className="kv"><span className="muted">권장 체중 변화</span><b>주 {rate[0] > 0 ? '+' : ''}{rate[0]}~{rate[1] > 0 ? '+' : ''}{rate[1]}%</b></div>}
         {rate && actualRate != null && (

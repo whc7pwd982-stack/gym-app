@@ -1,10 +1,9 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { BarChart3, ChevronDown, ChevronRight, ChevronUp, Copy, Dumbbell, LayoutTemplate, PenLine, Plus, Trash2, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronUp, Copy, Dumbbell, LayoutTemplate, PenLine, Plus, Trash2, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { MUSCLES, MUSCLE_ORDER } from '../data/muscles';
 import { TEMPLATES } from '../data/templates';
 import { db, useSettings } from '../db';
-import { analyze, type Tip } from '../lib/analysis';
+import { analyze } from '../lib/analysis';
 import { useExerciseMap, useExercises } from '../lib/exercises';
 import { applyTemplate, createRoutine, makeItem, move } from '../lib/routines';
 import type { Routine, RoutineItem } from '../types';
@@ -16,11 +15,7 @@ export function RoutinesTab({ onLog }: { onLog: (r: Routine) => void }) {
   const routines = useLiveQuery(() => db.routines.orderBy('order').toArray(), [], []);
   const [openId, setOpenId] = useState<number | null>(null);
   const [showTemplates, setShowTemplates] = useState(false);
-  const [showPlan, setShowPlan] = useState(false);
   const all = useExercises();
-  const map = useExerciseMap();
-  const settings = useSettings();
-  const plan = useMemo(() => analyze(routines, map, all, false, settings.level), [routines, map, all, settings.level]);
   const open = routines.find((r) => r.id === openId);
 
   const reorder = async (from: number, to: number) => {
@@ -47,7 +42,7 @@ export function RoutinesTab({ onLog }: { onLog: (r: Routine) => void }) {
               <span className="icon-tile"><Dumbbell size={20} /></span>
               <button className="grow" style={{ textAlign: 'left' }} onClick={() => setOpenId(r.id!)}>
                 <div className="list-title">{r.name}</div>
-                <div className="list-sub ellipsis">{r.items.length}종목 · {r.items.reduce((s, x) => s + x.sets, 0)}세트 · 주 {r.timesPerWeek}회</div>
+                <div className="list-sub ellipsis">{r.items.length}종목 · {r.items.reduce((s, x) => s + x.sets, 0)}세트</div>
               </button>
               <div className="order">
                 <button className="icon-btn sm" disabled={i === 0} onClick={() => reorder(i, i - 1)} aria-label="위로"><ChevronUp size={17} /></button>
@@ -64,13 +59,6 @@ export function RoutinesTab({ onLog }: { onLog: (r: Routine) => void }) {
           <div className="grow"><div className="list-title">추천 분할 루틴</div><div className="list-sub">무분할 · 상하체 · 밀기/당기기/하체</div></div>
           <ChevronRight size={18} className="chev" />
         </button>
-        {routines.length > 0 && (
-          <button className="list-item with-icon" onClick={() => setShowPlan(true)}>
-            <span className="icon-tile gray"><BarChart3 size={20} /></span>
-            <div className="grow"><div className="list-title">주간 계획 분석</div><div className="list-sub">모든 루틴 × 주당 횟수로 근육별 세트 계산</div></div>
-            <ChevronRight size={18} className="chev" />
-          </button>
-        )}
       </div>
 
       {showTemplates && (
@@ -84,12 +72,6 @@ export function RoutinesTab({ onLog }: { onLog: (r: Routine) => void }) {
               <button className="btn soft block mt" onClick={async () => { await applyTemplate(t, all); setShowTemplates(false); }}><Plus size={17} />이 분할 추가</button>
             </div>
           ))}
-        </Sheet>
-      )}
-      {showPlan && (
-        <Sheet title="주간 계획 분석" onClose={() => setShowPlan(false)} full>
-          <p className="muted small" style={{ marginBottom: 12 }}>모든 루틴과 각 루틴의 ‘주 N회’를 합쳐 한 주를 분석해요.</p>
-          <AnalysisView a={plan} single={false} map={map} level={settings.level} />
         </Sheet>
       )}
     </>
@@ -121,17 +103,6 @@ function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: (
   const addIds = (ids: string[]) => setItems([...routine.items, ...ids.map((i) => map.get(i)).filter(Boolean).map((e) => makeItem(e!, 3, settings.goal))]);
 
   const single = useMemo(() => analyze([routine], map, all, true, settings.level), [routine, map, all, settings.level]);
-  const week = useMemo(() => analyze(allRoutines, map, all, false, settings.level), [allRoutines, map, all, settings.level]);
-  const merged = useMemo(() => {
-    const weekTips = week.tips.filter((t) => t.muscle && single.weekly[t.muscle] >= 1 && !single.tips.some((x) => x.title === t.title));
-    const missing = MUSCLE_ORDER.filter((m) => MUSCLES[m].tracked && week.weekly[m] < 1);
-    const extra: Tip[] = missing.length && routine.items.length ? [{
-      level: 'info',
-      title: `주간 계획에서 아직 안 하는 부위 ${missing.length}곳`,
-      detail: `${missing.map((m) => MUSCLES[m].ko).join(', ')} — 분할 루틴이라면 다른 루틴에서 채우면 돼요.`,
-    }] : [];
-    return { ...single, tips: [...weekTips.map((t) => ({ ...t, title: `주간 계획 · ${t.title}` })), ...single.tips, ...extra] };
-  }, [single, week, routine.items.length]);
 
   const del = async () => {
     if (!confirm(`'${routine.name}' 루틴을 삭제할까요? 기록은 남아요.`)) return;
@@ -152,11 +123,7 @@ function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: (
           <button className="icon-btn danger" onClick={del} aria-label="루틴 삭제"><Trash2 size={20} /></button>
         </div>
       </div>
-      <div className="row" style={{ gap: 6 }}><NameInput value={routine.name} onSave={(name) => save({ name })} /><PenLine size={18} className="muted" /></div>
-      <div className="card row-between mt">
-        <span className="bold">일주일에 몇 번 하나요?</span>
-        <Stepper value={routine.timesPerWeek} min={0} max={7} onChange={(v) => save({ timesPerWeek: v })} suffix="회" />
-      </div>
+      <div className="row" style={{ gap: 6, marginBottom: 14 }}><NameInput value={routine.name} onSave={(name) => save({ name })} /><PenLine size={18} className="muted" /></div>
 
       <div className="seg">
         <button className={tab === 'list' ? 'on' : ''} onClick={() => setTab('list')}>종목 {routine.items.length}</button>
@@ -197,7 +164,7 @@ function RoutineEditor({ routine, onBack, onLog }: { routine: Routine; onBack: (
           {routine.items.length > 0 && <button className="btn primary block lg mt" onClick={() => onLog(routine)}>오늘 이 루틴으로 기록하기</button>}
         </>
       ) : (
-        <AnalysisView a={merged} single map={map} level={settings.level} onAdd={(eid) => addIds([eid])} />
+        <AnalysisView a={single} single map={map} level={settings.level} onAdd={(eid) => addIds([eid])} />
       )}
 
       {picking && <ExercisePicker onClose={() => setPicking(false)} onDone={(ids) => { addIds(ids); setPicking(false); }} />}
