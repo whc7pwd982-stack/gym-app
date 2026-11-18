@@ -1,0 +1,6150 @@
+[
+ {
+  "id": "ex1",
+  "name": "벤치프레스",
+  "aliases": [
+   "플랫 벤치",
+   "벤치"
+  ],
+  "en": "Barbell bench press",
+  "equipment": "바벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   3,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Rodríguez-Ridao 2020",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex2",
+  "name": "와이드 그립 벤치프레스",
+  "aliases": [],
+  "en": "Wide-grip bench press",
+  "equipment": "바벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Saeterbakken 2017·2021(그립 차 작음)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex3",
+  "name": "인클라인 벤치프레스",
+  "aliases": [
+   "인클라인 바벨"
+  ],
+  "en": "Incline barbell press (15–45°, 기본 30°)",
+  "equipment": "바벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Chaves 2020, PubMed 34644424",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex4",
+  "name": "디클라인 벤치프레스",
+  "aliases": [],
+  "en": "Decline barbell press",
+  "equipment": "바벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "TRI": 0.5,
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex5",
+  "name": "스미스 벤치프레스",
+  "aliases": [],
+  "en": "Smith machine bench press",
+  "equipment": "스미스",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex6",
+  "name": "스미스 인클라인 프레스",
+  "aliases": [],
+  "en": "Smith incline press",
+  "equipment": "스미스",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex7",
+  "name": "플로어 프레스",
+  "aliases": [],
+  "en": "Floor press",
+  "equipment": "바벨/덤벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1,
+   "TRI": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   5,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex8",
+  "name": "덤벨 벤치프레스",
+  "aliases": [
+   "덤벨 프레스"
+  ],
+  "en": "Dumbbell bench press",
+  "equipment": "덤벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex9",
+  "name": "인클라인 덤벨 프레스",
+  "aliases": [
+   "인덤프"
+  ],
+  "en": "Incline dumbbell press",
+  "equipment": "덤벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "evidence": "★비대(인클라인 각도 근거 준용)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex10",
+  "name": "디클라인 덤벨 프레스",
+  "aliases": [],
+  "en": "Decline DB press",
+  "equipment": "덤벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex11",
+  "name": "뉴트럴 그립 덤벨 프레스",
+  "aliases": [
+   "해머 프레스"
+  ],
+  "en": "Neutral-grip DB press",
+  "equipment": "덤벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1,
+   "TRI": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex12",
+  "name": "체스트 프레스 머신",
+  "aliases": [],
+  "en": "Machine chest press",
+  "equipment": "머신",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex13",
+  "name": "인클라인 체스트 프레스 머신",
+  "aliases": [],
+  "en": "Incline machine press",
+  "equipment": "머신",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex14",
+  "name": "해머 스트렝스 체스트 프레스",
+  "aliases": [],
+  "en": "Plate-loaded (Hammer Strength) chest press",
+  "equipment": "원판 머신",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex15",
+  "name": "케이블 체스트 프레스",
+  "aliases": [],
+  "en": "Standing cable chest press",
+  "equipment": "케이블",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5,
+   "ABS": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex16",
+  "name": "푸시업",
+  "aliases": [
+   "팔굽혀펴기"
+  ],
+  "en": "Push-up (press-up)",
+  "equipment": "맨몸",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5,
+   "SERR": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   30
+  ],
+  "increment": 5,
+  "metric": "bodyweight",
+  "evidence": "★비대 Kikuchi 2017, ★EMG·근력 Calatayud 2015",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex17",
+  "name": "디클라인 푸시업",
+  "aliases": [
+   "발 올리고"
+  ],
+  "en": "Feet-elevated push-up",
+  "equipment": "맨몸",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   25
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex18",
+  "name": "인클라인 푸시업",
+  "aliases": [
+   "손 올리고"
+  ],
+  "en": "Incline (hands-elevated) push-up",
+  "equipment": "맨몸",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "TRI": 0.5,
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   30
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex19",
+  "name": "체스트 딥스",
+  "aliases": [
+   "평행봉",
+   "앞으로 숙임"
+  ],
+  "en": "Chest dip (forward lean)",
+  "equipment": "평행봉",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "TRI": 0.5,
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex20",
+  "name": "어시스트 딥스 머신",
+  "aliases": [],
+  "en": "Assisted dip machine",
+  "equipment": "머신",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1,
+   "TRI": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex21",
+  "name": "덤벨 플라이",
+  "aliases": [],
+  "en": "Dumbbell fly",
+  "equipment": "덤벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex22",
+  "name": "인클라인 덤벨 플라이",
+  "aliases": [],
+  "en": "Incline DB fly",
+  "equipment": "덤벨",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex23",
+  "name": "펙덱 플라이",
+  "aliases": [
+   "펙덱",
+   "버터플라이"
+  ],
+  "en": "Pec deck / machine fly",
+  "equipment": "머신",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG ACE(벤치의 ~98%)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex24",
+  "name": "케이블 크로스오버",
+  "aliases": [
+   "하이→로우"
+  ],
+  "en": "High-to-low cable crossover",
+  "equipment": "케이블",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex25",
+  "name": "로우 투 하이 케이블 플라이",
+  "aliases": [],
+  "en": "Low-to-high cable fly",
+  "equipment": "케이블",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex26",
+  "name": "미드 케이블 플라이",
+  "aliases": [
+   "스탠딩 케이블 플라이"
+  ],
+  "en": "Mid-pulley cable fly",
+  "equipment": "케이블",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex27",
+  "name": "싱글암 케이블 플라이",
+  "aliases": [],
+  "en": "Single-arm cable fly",
+  "equipment": "케이블",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "ABS": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex28",
+  "name": "스베드 프레스",
+  "aliases": [
+   "플레이트 프레스"
+  ],
+  "en": "Svend / plate squeeze press",
+  "equipment": "원판",
+  "category": "chest",
+  "primary": {
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex29",
+  "name": "랜드마인 프레스",
+  "aliases": [],
+  "en": "Landmine press (half-kneeling)",
+  "equipment": "바벨+랜드마인",
+  "category": "chest",
+  "primary": {
+   "DELT_F": 1,
+   "CHEST": 1
+  },
+  "secondary": {
+   "TRI": 0.5,
+   "SERR": 0.5,
+   "ABS": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 1.25,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex30",
+  "name": "오버헤드 프레스",
+  "aliases": [
+   "OHP",
+   "밀리터리 프레스",
+   "밀프"
+  ],
+  "en": "Standing barbell overhead / military press",
+  "equipment": "바벨",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "DELT_S": 0.5,
+   "TRI": 0.5,
+   "TRAP_U": 0.5,
+   "ABS": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   3,
+   8
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "evidence": "★EMG Saeterbakken & Fimland 2013",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex31",
+  "name": "시티드 바벨 숄더프레스",
+  "aliases": [],
+  "en": "Seated barbell shoulder press",
+  "equipment": "바벨+벤치",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "DELT_S": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   10
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "evidence": "★EMG 同",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex32",
+  "name": "비하인드 넥 프레스",
+  "aliases": [],
+  "en": "Behind-the-neck press",
+  "equipment": "바벨/스미스",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1,
+   "DELT_S": 1
+  },
+  "secondary": {
+   "TRI": 0.5,
+   "TRAP_U": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex33",
+  "name": "시티드 덤벨 숄더프레스",
+  "aliases": [
+   "숄프"
+  ],
+  "en": "Seated DB shoulder press",
+  "equipment": "덤벨",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "DELT_S": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "evidence": "★EMG 同",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex34",
+  "name": "스탠딩 덤벨 숄더프레스",
+  "aliases": [],
+  "en": "Standing DB shoulder press",
+  "equipment": "덤벨",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "DELT_S": 0.5,
+   "DELT_R": 0.5,
+   "TRI": 0.5,
+   "ABS": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "evidence": "★EMG 同(삼각근 활성 최고·1RM 최저)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex35",
+  "name": "아놀드 프레스",
+  "aliases": [],
+  "en": "Arnold press",
+  "equipment": "덤벨",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "DELT_S": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex36",
+  "name": "스미스 숄더프레스",
+  "aliases": [],
+  "en": "Smith shoulder press",
+  "equipment": "스미스",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "DELT_S": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex37",
+  "name": "머신 숄더프레스",
+  "aliases": [],
+  "en": "Machine shoulder press",
+  "equipment": "머신",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "DELT_S": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex38",
+  "name": "파이크 푸시업",
+  "aliases": [
+   "핸드스탠드 푸시업"
+  ],
+  "en": "Pike / handstand push-up",
+  "equipment": "맨몸",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "TRI": 0.5,
+   "TRAP_U": 0.5,
+   "ABS": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   3,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex39",
+  "name": "사이드 레터럴 레이즈",
+  "aliases": [
+   "사레레",
+   "덤벨 사레레"
+  ],
+  "en": "Dumbbell lateral raise",
+  "equipment": "덤벨",
+  "category": "shoulder",
+  "primary": {
+   "DELT_S": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRAP_U": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "evidence": "★비대 Larsen 2025, ★EMG Coratella 2020",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex40",
+  "name": "시티드 사레레",
+  "aliases": [],
+  "en": "Seated lateral raise",
+  "equipment": "덤벨",
+  "category": "shoulder",
+  "primary": {
+   "DELT_S": 1
+  },
+  "secondary": {
+   "TRAP_U": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex41",
+  "name": "케이블 사레레",
+  "aliases": [
+   "크로스바디",
+   "비하인드 바디"
+  ],
+  "en": "Cable lateral raise",
+  "equipment": "케이블",
+  "category": "shoulder",
+  "primary": {
+   "DELT_S": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRAP_U": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Larsen 2025(덤벨과 동등)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex42",
+  "name": "린어웨이 사레레",
+  "aliases": [
+   "기대서 사레레"
+  ],
+  "en": "Lean-away lateral raise",
+  "equipment": "덤벨/케이블",
+  "category": "shoulder",
+  "primary": {
+   "DELT_S": 1
+  },
+  "secondary": {
+   "TRAP_U": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex43",
+  "name": "머신 레터럴 레이즈",
+  "aliases": [
+   "사레레 머신"
+  ],
+  "en": "Machine lateral raise",
+  "equipment": "머신",
+  "category": "shoulder",
+  "primary": {
+   "DELT_S": 1
+  },
+  "secondary": {
+   "TRAP_U": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex44",
+  "name": "케이블 Y 레이즈",
+  "aliases": [],
+  "en": "Cable Y-raise",
+  "equipment": "케이블",
+  "category": "shoulder",
+  "primary": {
+   "DELT_S": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "TRAP_L": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex45",
+  "name": "프론트 레이즈",
+  "aliases": [
+   "덤벨",
+   "바벨",
+   "원판",
+   "케이블"
+  ],
+  "en": "Front raise",
+  "equipment": "다양",
+  "category": "shoulder",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "CHEST": 0.5,
+   "SERR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "evidence": "★EMG Coratella 2020",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex46",
+  "name": "업라이트 로우",
+  "aliases": [],
+  "en": "Upright row (BB/EZ/cable/DB)",
+  "equipment": "바벨/케이블",
+  "category": "shoulder",
+  "primary": {
+   "DELT_S": 1,
+   "TRAP_U": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex47",
+  "name": "벤트오버 리어 델트 플라이",
+  "aliases": [
+   "벤트오버 레터럴"
+  ],
+  "en": "Bent-over rear delt fly",
+  "equipment": "덤벨",
+  "category": "shoulder",
+  "primary": {
+   "DELT_R": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "RC": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex48",
+  "name": "체스트 서포티드 리어 델트 레이즈",
+  "aliases": [],
+  "en": "Chest-supported rear delt raise",
+  "equipment": "덤벨+벤치",
+  "category": "shoulder",
+  "primary": {
+   "DELT_R": 1
+  },
+  "secondary": {
+   "UB": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex49",
+  "name": "리버스 펙덱",
+  "aliases": [
+   "리어 델트 머신",
+   "리어델트"
+  ],
+  "en": "Reverse pec deck",
+  "equipment": "머신",
+  "category": "shoulder",
+  "primary": {
+   "DELT_R": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "RC": 0.5,
+   "TRAP_L": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Schoenfeld(중립 > 회내)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex50",
+  "name": "케이블 리어 델트 플라이",
+  "aliases": [
+   "리버스 크로스오버"
+  ],
+  "en": "Reverse cable crossover",
+  "equipment": "케이블",
+  "category": "shoulder",
+  "primary": {
+   "DELT_R": 1
+  },
+  "secondary": {
+   "UB": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex51",
+  "name": "페이스풀",
+  "aliases": [],
+  "en": "Face pull (rope)",
+  "equipment": "케이블",
+  "category": "shoulder",
+  "primary": {
+   "DELT_R": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "RC": 0.5,
+   "TRAP_U": 0.5,
+   "TRAP_L": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "(직접 EMG 제한적 [2차])",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex52",
+  "name": "리어 델트 로우",
+  "aliases": [
+   "와이드 로우"
+  ],
+  "en": "Rear delt (wide-elbow) row",
+  "equipment": "덤벨/케이블/머신",
+  "category": "shoulder",
+  "primary": {
+   "DELT_R": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "LAT": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex53",
+  "name": "사이드라잉 외회전",
+  "aliases": [],
+  "en": "Side-lying external rotation",
+  "equipment": "덤벨",
+  "category": "shoulder",
+  "primary": {
+   "RC": 1
+  },
+  "secondary": {
+   "DELT_R": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 0.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Reinold 2004",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex54",
+  "name": "케이블/밴드 외회전",
+  "aliases": [],
+  "en": "Cable/band external rotation",
+  "equipment": "케이블/밴드",
+  "category": "shoulder",
+  "primary": {
+   "RC": 1
+  },
+  "secondary": {
+   "DELT_R": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex55",
+  "name": "케이블/밴드 내회전",
+  "aliases": [],
+  "en": "Cable internal rotation",
+  "equipment": "케이블/밴드",
+  "category": "shoulder",
+  "primary": {
+   "RC": 1
+  },
+  "secondary": {
+   "CHEST": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex56",
+  "name": "풀캔/스캡션 레이즈",
+  "aliases": [],
+  "en": "Full-can / scaption raise",
+  "equipment": "덤벨",
+  "category": "shoulder",
+  "primary": {
+   "RC": 1,
+   "DELT_S": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 0.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex57",
+  "name": "쿠반 프레스",
+  "aliases": [],
+  "en": "Cuban press",
+  "equipment": "덤벨/바",
+  "category": "shoulder",
+  "primary": {
+   "RC": 1,
+   "DELT_R": 1
+  },
+  "secondary": {
+   "DELT_S": 0.5,
+   "TRAP_U": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex58",
+  "name": "풀업",
+  "aliases": [
+   "턱걸이",
+   "오버핸드"
+  ],
+  "en": "Pull-up (pronated)",
+  "equipment": "철봉",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   12
+  ],
+  "increment": 1.25,
+  "metric": "bodyweight",
+  "evidence": "★EMG Youdas 2010, Dickie 2017",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex59",
+  "name": "와이드 그립 풀업",
+  "aliases": [],
+  "en": "Wide-grip pull-up",
+  "equipment": "철봉",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG Dickie 2017",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex60",
+  "name": "친업",
+  "aliases": [
+   "언더그립 턱걸이"
+  ],
+  "en": "Chin-up (supinated)",
+  "equipment": "철봉",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "BI": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BR": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG Youdas 2010(이두↑)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex61",
+  "name": "뉴트럴 그립 풀업",
+  "aliases": [
+   "패러렐·해머 풀업"
+  ],
+  "en": "Neutral-grip pull-up",
+  "equipment": "철봉",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG Dickie 2017",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex62",
+  "name": "중량 풀업",
+  "aliases": [
+   "중량 턱걸이"
+  ],
+  "en": "Weighted pull-up/chin-up",
+  "equipment": "딥벨트·조끼",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   4,
+   10
+  ],
+  "increment": 1.25,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex63",
+  "name": "어시스트 풀업 머신",
+  "aliases": [
+   "어시스티드 풀업"
+  ],
+  "en": "Assisted pull-up (Gravitron)",
+  "equipment": "머신",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex64",
+  "name": "밴드 풀업",
+  "aliases": [],
+  "en": "Band-assisted pull-up",
+  "equipment": "밴드",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex65",
+  "name": "네거티브 풀업",
+  "aliases": [
+   "네거티브 턱걸이"
+  ],
+  "en": "Negative / eccentric pull-up",
+  "equipment": "철봉",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   3,
+   6
+  ],
+  "increment": 1,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex66",
+  "name": "랫풀다운",
+  "aliases": [
+   "와이드",
+   "랫풀"
+  ],
+  "en": "Wide-grip lat pulldown",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Andersen 2014, Lusk 2010, Signorile 2002",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex67",
+  "name": "클로즈 그립 랫풀다운",
+  "aliases": [
+   "내로우"
+  ],
+  "en": "Close-grip pulldown",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Andersen 2014",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex68",
+  "name": "뉴트럴/V바 랫풀다운",
+  "aliases": [],
+  "en": "Neutral / V-bar (MAG) pulldown",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex69",
+  "name": "언더그립 랫풀다운",
+  "aliases": [
+   "리버스 그립"
+  ],
+  "en": "Underhand pulldown",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "BI": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Lusk 2010(회내가 광배↑)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex70",
+  "name": "비하인드 넥 랫풀다운",
+  "aliases": [
+   "백 랫풀다운"
+  ],
+  "en": "Behind-the-neck pulldown",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG 2009(광배 이득 없음, 회피 권고)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex71",
+  "name": "원암 랫풀다운",
+  "aliases": [],
+  "en": "Single-arm cable pulldown",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Wolf 2025(부분반복 = 전 ROM)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex72",
+  "name": "머신 랫풀다운",
+  "aliases": [
+   "프론트 풀다운 머신"
+  ],
+  "en": "Machine pulldown (plate/iso-lateral)",
+  "equipment": "머신",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex73",
+  "name": "스트레이트 암 풀다운",
+  "aliases": [
+   "암 풀다운"
+  ],
+  "en": "Straight-arm pulldown",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex74",
+  "name": "덤벨 풀오버",
+  "aliases": [],
+  "en": "Dumbbell pullover",
+  "equipment": "덤벨+벤치",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "CHEST": 0.5,
+   "TRI": 0.5,
+   "SERR": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex75",
+  "name": "케이블 풀오버",
+  "aliases": [],
+  "en": "Lying cable pullover",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "CHEST": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex76",
+  "name": "풀오버 머신",
+  "aliases": [],
+  "en": "Machine pullover (Nautilus)",
+  "equipment": "머신",
+  "category": "back",
+  "primary": {
+   "LAT": 1
+  },
+  "secondary": {
+   "CHEST": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex77",
+  "name": "바벨로우",
+  "aliases": [
+   "벤트오버 바벨로우"
+  ],
+  "en": "Barbell bent-over row (BOR)",
+  "equipment": "바벨",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "TRAP_U": 0.5,
+   "ES": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Fenwick 2009(요추 부하 최대)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex78",
+  "name": "언더그립 바벨로우",
+  "aliases": [
+   "예이츠 로우"
+  ],
+  "en": "Underhand / Yates row",
+  "equipment": "바벨",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "ES": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex79",
+  "name": "펜들레이 로우",
+  "aliases": [],
+  "en": "Pendlay (dead-stop) row",
+  "equipment": "바벨",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "TRAP_U": 0.5,
+   "ES": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   5,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex80",
+  "name": "티바로우",
+  "aliases": [
+   "랜드마인"
+  ],
+  "en": "T-bar row (landmine, V-handle)",
+  "equipment": "바벨+랜드마인",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "TRAP_U": 0.5,
+   "ES": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex81",
+  "name": "티바로우 머신",
+  "aliases": [
+   "체스트 서포티드"
+  ],
+  "en": "Chest-supported T-bar row",
+  "equipment": "머신",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "TRAP_U": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex82",
+  "name": "체스트 서포티드 덤벨로우",
+  "aliases": [
+   "인클라인 덤벨로우"
+  ],
+  "en": "Chest-supported DB row",
+  "equipment": "덤벨+벤치",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "TRAP_U": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex83",
+  "name": "씰 로우",
+  "aliases": [],
+  "en": "Seal row",
+  "equipment": "높은 벤치+바/덤벨",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex84",
+  "name": "원암 덤벨로우",
+  "aliases": [
+   "덤벨로우"
+  ],
+  "en": "One-arm DB row",
+  "equipment": "덤벨+벤치",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "TRAP_U": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex85",
+  "name": "크록 로우",
+  "aliases": [],
+  "en": "Kroc row",
+  "equipment": "덤벨",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "ES": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   15,
+   30
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex86",
+  "name": "메도우스 로우",
+  "aliases": [],
+  "en": "Meadows row",
+  "equipment": "랜드마인",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "ES": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex87",
+  "name": "시티드 케이블 로우",
+  "aliases": [
+   "시티드 로우",
+   "V핸들"
+  ],
+  "en": "Seated cable row",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "ES": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Lehman 2004(UB 최고)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex88",
+  "name": "와이드 그립 시티드 로우",
+  "aliases": [],
+  "en": "Wide-grip seated row",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "UB": 1,
+   "DELT_R": 1
+  },
+  "secondary": {
+   "LAT": 0.5,
+   "TRAP_L": 0.5,
+   "TRAP_U": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Padovan 2025(HD-EMG 위치 차이)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex89",
+  "name": "원암 케이블 로우",
+  "aliases": [],
+  "en": "Single-arm cable row",
+  "equipment": "케이블",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Saeterbakken 2015(편측은 기립근 60–78%)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex90",
+  "name": "시티드 로우 머신",
+  "aliases": [
+   "로우 로우 머신"
+  ],
+  "en": "Seated machine row / low row",
+  "equipment": "머신",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Saeterbakken 2015(머신 < 프리웨이트 기립근)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex91",
+  "name": "하이 로우 머신",
+  "aliases": [
+   "하이로우"
+  ],
+  "en": "High row machine",
+  "equipment": "원판 머신",
+  "category": "back",
+  "primary": {
+   "UB": 1,
+   "DELT_R": 1
+  },
+  "secondary": {
+   "LAT": 0.5,
+   "TRAP_U": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex92",
+  "name": "인버티드 로우",
+  "aliases": [
+   "오스트레일리안 풀업",
+   "바디웨이트 로우"
+  ],
+  "en": "Inverted row",
+  "equipment": "스미스·랙·TRX",
+  "category": "back",
+  "primary": {
+   "LAT": 1,
+   "UB": 1
+  },
+  "secondary": {
+   "TRAP_L": 0.5,
+   "DELT_R": 0.5,
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Fenwick 2009(요추 부하 최저)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex93",
+  "name": "인클라인 프론 Y레이즈",
+  "aliases": [],
+  "en": "Prone (incline) Y-raise",
+  "equipment": "덤벨/맨몸",
+  "category": "back",
+  "primary": {
+   "TRAP_L": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "DELT_R": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   25
+  ],
+  "increment": 1,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex94",
+  "name": "바벨 슈러그",
+  "aliases": [],
+  "en": "Barbell shrug",
+  "equipment": "바벨",
+  "category": "back",
+  "primary": {
+   "TRAP_U": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Ekstrom 2003",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex95",
+  "name": "덤벨 슈러그",
+  "aliases": [
+   "편측 포함"
+  ],
+  "en": "Dumbbell shrug",
+  "equipment": "덤벨",
+  "category": "back",
+  "primary": {
+   "TRAP_U": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "evidence": "★EMG Ekstrom 2003(편측 최대)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex96",
+  "name": "머신·스미스·트랩바·케이블 슈러그",
+  "aliases": [],
+  "en": "Machine/Smith/trap-bar/cable shrug",
+  "equipment": "다양",
+  "category": "back",
+  "primary": {
+   "TRAP_U": 1
+  },
+  "secondary": {
+   "UB": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex97",
+  "name": "업워드 로테이션 슈러그",
+  "aliases": [
+   "30° 외전"
+  ],
+  "en": "Upward-rotation shrug",
+  "equipment": "덤벨/케이블",
+  "category": "back",
+  "primary": {
+   "TRAP_U": 1,
+   "TRAP_L": 1
+  },
+  "secondary": {
+   "UB": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "evidence": "★EMG Pizzari 2014",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex98",
+  "name": "랙풀",
+  "aliases": [
+   "블록풀"
+  ],
+  "en": "Rack / block pull",
+  "equipment": "바벨+랙",
+  "category": "back",
+  "primary": {
+   "ES": 1,
+   "TRAP_U": 1
+  },
+  "secondary": {
+   "LAT": 0.5,
+   "UB": 0.5,
+   "GLU": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   3,
+   8
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex99",
+  "name": "백 익스텐션 척추 강조",
+  "aliases": [
+   "45°",
+   "90° GHD",
+   "로어백 머신"
+  ],
+  "en": "Back extension (spinal) / lumbar extension machine",
+  "equipment": "로만체어·GHD·머신",
+  "category": "back",
+  "primary": {
+   "ES": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "HAM": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★비대 머신 요추 신전(요통 환자, Frontiers Med 2023)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex100",
+  "name": "슈퍼맨",
+  "aliases": [],
+  "en": "Superman (prone extension)",
+  "equipment": "맨몸",
+  "category": "back",
+  "primary": {
+   "ES": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "hold",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex101",
+  "name": "리버스 하이퍼",
+  "aliases": [],
+  "en": "Reverse hyperextension",
+  "equipment": "전용 머신·벤치",
+  "category": "back",
+  "primary": {
+   "GLU": 1,
+   "HAM": 1
+  },
+  "secondary": {
+   "ES": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex102",
+  "name": "제퍼슨 컬",
+  "aliases": [],
+  "en": "Jefferson curl",
+  "equipment": "바벨/덤벨",
+  "category": "back",
+  "primary": {},
+  "secondary": {
+   "ES": 0.5,
+   "HAM": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex103",
+  "name": "바벨 컬",
+  "aliases": [
+   "스탠딩 바벨컬"
+  ],
+  "en": "Barbell curl",
+  "equipment": "바벨",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex104",
+  "name": "이지바 컬",
+  "aliases": [
+   "EZ바 컬"
+  ],
+  "en": "EZ-bar curl",
+  "equipment": "EZ바",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "evidence": "★EMG Marcolin 2018(상완요골근↑)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex105",
+  "name": "덤벨 컬",
+  "aliases": [],
+  "en": "Dumbbell curl",
+  "equipment": "덤벨",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "evidence": "★EMG Oliveira 2009",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex106",
+  "name": "얼터네이트 덤벨 컬",
+  "aliases": [],
+  "en": "Alternating DB curl",
+  "equipment": "덤벨",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex107",
+  "name": "해머 컬",
+  "aliases": [],
+  "en": "Hammer (neutral-grip) curl",
+  "equipment": "덤벨",
+  "category": "arm",
+  "primary": {
+   "BR": 1
+  },
+  "secondary": {
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "evidence": "★EMG(근거 약함)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex108",
+  "name": "크로스바디 해머 컬",
+  "aliases": [],
+  "en": "Cross-body / pinwheel curl",
+  "equipment": "덤벨",
+  "category": "arm",
+  "primary": {
+   "BR": 1
+  },
+  "secondary": {
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "S~F",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex109",
+  "name": "로프 해머 컬",
+  "aliases": [
+   "케이블 해머 컬"
+  ],
+  "en": "Cable rope hammer curl",
+  "equipment": "케이블",
+  "category": "arm",
+  "primary": {
+   "BR": 1
+  },
+  "secondary": {
+   "BI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex110",
+  "name": "인클라인 덤벨 컬",
+  "aliases": [],
+  "en": "Incline dumbbell curl",
+  "equipment": "덤벨+인클라인",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "B",
+  "evidence": "★EMG Oliveira 2009",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex111",
+  "name": "베이지안 케이블 컬",
+  "aliases": [
+   "비하인드 케이블 컬"
+  ],
+  "en": "Bayesian / behind-the-body cable curl",
+  "equipment": "케이블",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "B",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex112",
+  "name": "프리처 컬",
+  "aliases": [
+   "스콧 컬",
+   "바벨",
+   "EZ"
+  ],
+  "en": "Preacher (Scott) curl",
+  "equipment": "프리처+EZ",
+  "category": "arm",
+  "primary": {
+   "BI": 1,
+   "BR": 1
+  },
+  "secondary": {},
+  "stretch": "S★",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "evidence": "★비대 Pedrosa 2022·2023, Zabaleta-Korta 2023",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex113",
+  "name": "원암 덤벨 프리처 컬",
+  "aliases": [],
+  "en": "One-arm DB preacher curl",
+  "equipment": "프리처+덤벨",
+  "category": "arm",
+  "primary": {
+   "BI": 1,
+   "BR": 1
+  },
+  "secondary": {},
+  "stretch": "S★",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "evidence": "★비대 Pedrosa 2023(덤벨 프리처)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex114",
+  "name": "머신 프리처 컬",
+  "aliases": [
+   "머신 컬"
+  ],
+  "en": "Machine preacher curl",
+  "equipment": "머신",
+  "category": "arm",
+  "primary": {
+   "BI": 1,
+   "BR": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex115",
+  "name": "프리처 해머 컬",
+  "aliases": [],
+  "en": "Preacher hammer curl",
+  "equipment": "프리처+덤벨",
+  "category": "arm",
+  "primary": {
+   "BR": 1
+  },
+  "secondary": {
+   "BI": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex116",
+  "name": "스파이더 컬",
+  "aliases": [],
+  "en": "Spider curl",
+  "equipment": "인클라인(엎드림)",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex117",
+  "name": "컨센트레이션 컬",
+  "aliases": [],
+  "en": "Concentration curl",
+  "equipment": "덤벨",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex118",
+  "name": "케이블 컬",
+  "aliases": [
+   "스트레이트바",
+   "EZ"
+  ],
+  "en": "Cable curl",
+  "equipment": "케이블 로우 풀리",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex119",
+  "name": "하이 케이블 컬",
+  "aliases": [
+   "더블 바이셉스 케이블 컬"
+  ],
+  "en": "High / overhead cable curl",
+  "equipment": "케이블 하이 풀리",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "외전 90°",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex120",
+  "name": "리버스 컬",
+  "aliases": [],
+  "en": "Reverse (pronated) curl",
+  "equipment": "바벨/EZ",
+  "category": "arm",
+  "primary": {
+   "BR": 1
+  },
+  "secondary": {
+   "BI": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 1.25,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "evidence": "★EMG 학회 발표(상완근↑, 신뢰 낮음)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex121",
+  "name": "드래그 컬",
+  "aliases": [],
+  "en": "Drag curl",
+  "equipment": "바벨",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "B",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex122",
+  "name": "조트먼 컬",
+  "aliases": [],
+  "en": "Zottman curl",
+  "equipment": "덤벨",
+  "category": "arm",
+  "primary": {
+   "BI": 1,
+   "BR": 1
+  },
+  "secondary": {
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex123",
+  "name": "21s",
+  "aliases": [
+   "바벨 21"
+  ],
+  "en": "21s curl",
+  "equipment": "바벨/EZ",
+  "category": "arm",
+  "primary": {
+   "BI": 1
+  },
+  "secondary": {
+   "BR": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex124",
+  "name": "로프 푸시다운",
+  "aliases": [
+   "케이블 푸시다운"
+  ],
+  "en": "Rope triceps pushdown",
+  "equipment": "케이블",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "evidence": "★비대 Maeo 2023(오버헤드보다 열세), Stasinaki 2018",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex125",
+  "name": "스트레이트바 푸시다운",
+  "aliases": [],
+  "en": "Straight-bar pushdown",
+  "equipment": "케이블",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex126",
+  "name": "V바 푸시다운",
+  "aliases": [],
+  "en": "V-bar pushdown",
+  "equipment": "케이블",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex127",
+  "name": "리버스그립 푸시다운",
+  "aliases": [],
+  "en": "Reverse-grip pushdown",
+  "equipment": "케이블",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex128",
+  "name": "싱글암 케이블 푸시다운",
+  "aliases": [],
+  "en": "Single-arm pushdown",
+  "equipment": "케이블",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "S",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex129",
+  "name": "케이블 오버헤드 트라이셉스 익스텐션",
+  "aliases": [],
+  "en": "Cable overhead triceps extension",
+  "equipment": "케이블",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "S★",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "O",
+  "evidence": "★비대 Maeo 2023",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex130",
+  "name": "덤벨 오버헤드 익스텐션",
+  "aliases": [
+   "프렌치 프레스"
+  ],
+  "en": "DB overhead extension",
+  "equipment": "덤벨",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "O",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex131",
+  "name": "이지바 오버헤드 익스텐션",
+  "aliases": [
+   "시티드 프렌치 프레스"
+  ],
+  "en": "EZ-bar overhead extension",
+  "equipment": "EZ바",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "O",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex132",
+  "name": "라잉 트라이셉스 익스텐션",
+  "aliases": [
+   "스컬 크러셔"
+  ],
+  "en": "Lying triceps extension (skull crusher)",
+  "equipment": "EZ바/덤벨",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "evidence": "★EMG ACE(62)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex133",
+  "name": "인클라인 스컬 크러셔",
+  "aliases": [],
+  "en": "Incline skull crusher",
+  "equipment": "인클라인+EZ",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F~O",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex134",
+  "name": "케이블 스컬 크러셔",
+  "aliases": [
+   "라잉 케이블 익스텐션"
+  ],
+  "en": "Cable lying extension",
+  "equipment": "케이블+벤치",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F~O",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex135",
+  "name": "클로즈그립 벤치프레스",
+  "aliases": [
+   "내로우 벤치"
+  ],
+  "en": "Close-grip bench press",
+  "equipment": "바벨",
+  "category": "arm",
+  "primary": {
+   "TRI": 1,
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   5,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "evidence": "★EMG ACE(62)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex136",
+  "name": "JM 프레스",
+  "aliases": [],
+  "en": "JM press",
+  "equipment": "바벨/스미스",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {
+   "CHEST": 0.5,
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex137",
+  "name": "삼두 딥스",
+  "aliases": [
+   "평행봉 딥스",
+   "상체 세움"
+  ],
+  "en": "Triceps (upright) dip",
+  "equipment": "평행봉",
+  "category": "arm",
+  "primary": {
+   "TRI": 1,
+   "CHEST": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "shoulder": "B",
+  "evidence": "★EMG ACE(87)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex138",
+  "name": "벤치 딥스",
+  "aliases": [],
+  "en": "Bench dip",
+  "equipment": "벤치",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {
+   "DELT_F": 0.5,
+   "CHEST": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "B",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex139",
+  "name": "킥백",
+  "aliases": [
+   "덤벨",
+   "케이블"
+  ],
+  "en": "Triceps kickback",
+  "equipment": "덤벨/케이블",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "B",
+  "evidence": "★EMG ACE(87)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex140",
+  "name": "다이아몬드 푸시업",
+  "aliases": [
+   "트라이앵글 푸시업"
+  ],
+  "en": "Diamond push-up",
+  "equipment": "맨몸",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {
+   "CHEST": 0.5,
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "shoulder": "F",
+  "evidence": "★EMG ACE(100)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex141",
+  "name": "머신 트라이셉스 익스텐션",
+  "aliases": [
+   "시티드 딥 머신"
+  ],
+  "en": "Machine triceps extension / dip machine",
+  "equipment": "머신",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {
+   "CHEST": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "shoulder": "F/B",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex142",
+  "name": "테이트 프레스",
+  "aliases": [],
+  "en": "Tate press",
+  "equipment": "덤벨",
+  "category": "arm",
+  "primary": {
+   "TRI": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "shoulder": "F",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex143",
+  "name": "리스트 컬",
+  "aliases": [],
+  "en": "Wrist curl (palms-up)",
+  "equipment": "바벨/덤벨",
+  "category": "arm",
+  "primary": {
+   "FA": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   12,
+   25
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex144",
+  "name": "비하인드 백 리스트 컬",
+  "aliases": [],
+  "en": "Behind-the-back wrist curl",
+  "equipment": "바벨",
+  "category": "arm",
+  "primary": {
+   "FA": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex145",
+  "name": "리버스 리스트 컬",
+  "aliases": [],
+  "en": "Reverse wrist curl",
+  "equipment": "바벨/덤벨",
+  "category": "arm",
+  "primary": {
+   "FA": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   15,
+   25
+  ],
+  "increment": 0.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex146",
+  "name": "리스트 롤러",
+  "aliases": [],
+  "en": "Wrist roller",
+  "equipment": "롤러+원판",
+  "category": "arm",
+  "primary": {
+   "FA": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   2,
+   4
+  ],
+  "increment": 1.25,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex147",
+  "name": "데드 행",
+  "aliases": [
+   "매달리기"
+  ],
+  "en": "Dead hang",
+  "equipment": "철봉",
+  "category": "arm",
+  "primary": {
+   "FA": 1
+  },
+  "secondary": {
+   "LAT": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   20,
+   60
+  ],
+  "increment": 2.5,
+  "metric": "hold",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex148",
+  "name": "플레이트 핀치",
+  "aliases": [
+   "그리퍼"
+  ],
+  "en": "Plate pinch / hand gripper",
+  "equipment": "원판·그리퍼",
+  "category": "arm",
+  "primary": {
+   "FA": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex149",
+  "name": "스쿼트",
+  "aliases": [
+   "하이바 백스쿼트"
+  ],
+  "en": "High-bar back squat",
+  "equipment": "바벨·랙",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "GLU": 1
+  },
+  "secondary": {
+   "ADD": 0.5,
+   "RF": 0.25,
+   "ES": 0.25
+  },
+  "stretch": "S★",
+  "reps": [
+   4,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Kubo 2019, Plotkin 2023",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex150",
+  "name": "로우바 백스쿼트",
+  "aliases": [],
+  "en": "Low-bar back squat",
+  "equipment": "바벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "GLU": 1
+  },
+  "secondary": {
+   "ADD": 0.5,
+   "ES": 0.5,
+   "RF": 0.25
+  },
+  "stretch": "partial",
+  "reps": [
+   3,
+   8
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex151",
+  "name": "프론트 스쿼트",
+  "aliases": [],
+  "en": "Front squat",
+  "equipment": "바벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5,
+   "UB": 0.25
+  },
+  "stretch": "S",
+  "reps": [
+   4,
+   8
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex152",
+  "name": "고블릿 스쿼트",
+  "aliases": [],
+  "en": "Goblet squat",
+  "equipment": "덤벨·케틀벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex153",
+  "name": "핵스쿼트",
+  "aliases": [],
+  "en": "Hack squat (machine)",
+  "equipment": "원판 머신",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex154",
+  "name": "리버스 핵스쿼트",
+  "aliases": [],
+  "en": "Reverse hack squat",
+  "equipment": "핵 머신",
+  "category": "legs",
+  "primary": {
+   "GLU": 1,
+   "QUAD": 1
+  },
+  "secondary": {
+   "HAM": 0.25
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex155",
+  "name": "스미스 스쿼트",
+  "aliases": [],
+  "en": "Smith machine squat",
+  "equipment": "스미스",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5,
+   "RF": 0.25
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Zabaleta-Korta 2021(RF 무변화)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex156",
+  "name": "펜듈럼 스쿼트",
+  "aliases": [],
+  "en": "Pendulum squat",
+  "equipment": "펜듈럼 머신",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex157",
+  "name": "벨트 스쿼트",
+  "aliases": [],
+  "en": "Belt squat",
+  "equipment": "벨트스쿼트 머신",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex158",
+  "name": "박스 스쿼트",
+  "aliases": [],
+  "en": "Box squat",
+  "equipment": "바벨+박스",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "GLU": 1
+  },
+  "secondary": {
+   "ADD": 0.5
+  },
+  "stretch": "partial",
+  "reps": [
+   3,
+   8
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex159",
+  "name": "포즈 스쿼트",
+  "aliases": [],
+  "en": "Pause squat",
+  "equipment": "바벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   3,
+   6
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex160",
+  "name": "젤처 스쿼트",
+  "aliases": [],
+  "en": "Zercher squat",
+  "equipment": "바벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex161",
+  "name": "사이클 스쿼트",
+  "aliases": [
+   "힐 엘리베이티드"
+  ],
+  "en": "Heel-elevated (cyclist) squat",
+  "equipment": "바벨/덤벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex162",
+  "name": "와이드 스탠스 스쿼트",
+  "aliases": [
+   "스모"
+  ],
+  "en": "Sumo / wide-stance squat",
+  "equipment": "바벨/덤벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "ADD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex163",
+  "name": "시시 스쿼트",
+  "aliases": [],
+  "en": "Sissy squat",
+  "equipment": "맨몸·시시 벤치",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "RF": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   8,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex164",
+  "name": "레그프레스",
+  "aliases": [
+   "45°"
+  ],
+  "en": "45° incline leg press",
+  "equipment": "원판 머신",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5,
+   "RF": 0.25
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 10,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex165",
+  "name": "수평 레그프레스",
+  "aliases": [
+   "시티드"
+  ],
+  "en": "Horizontal leg press",
+  "equipment": "스택 머신",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5
+  },
+  "stretch": "partial",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex166",
+  "name": "싱글 레그프레스",
+  "aliases": [],
+  "en": "Single-leg press",
+  "equipment": "레그프레스",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex167",
+  "name": "불가리안 스플릿 스쿼트",
+  "aliases": [],
+  "en": "Bulgarian split squat (RFESS)",
+  "equipment": "덤벨/바벨/스미스",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "GLU": 1
+  },
+  "secondary": {
+   "ADD": 0.5,
+   "RF": 0.25
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex168",
+  "name": "스플릿 스쿼트",
+  "aliases": [
+   "스태틱 런지"
+  ],
+  "en": "Split squat",
+  "equipment": "덤벨/바벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex169",
+  "name": "스미스 스플릿 스쿼트",
+  "aliases": [],
+  "en": "Smith split squat",
+  "equipment": "스미스",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex170",
+  "name": "워킹 런지",
+  "aliases": [],
+  "en": "Walking lunge",
+  "equipment": "덤벨/바벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ADD": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex171",
+  "name": "리버스 런지",
+  "aliases": [],
+  "en": "Reverse lunge",
+  "equipment": "덤벨/바벨/스미스",
+  "category": "legs",
+  "primary": {
+   "GLU": 1,
+   "QUAD": 1
+  },
+  "secondary": {
+   "ADD": 0.5,
+   "HAM": 0.25
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex172",
+  "name": "디피싯 리버스 런지",
+  "aliases": [],
+  "en": "Deficit reverse lunge",
+  "equipment": "덤벨+스텝",
+  "category": "legs",
+  "primary": {
+   "GLU": 1,
+   "QUAD": 1
+  },
+  "secondary": {
+   "ADD": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex173",
+  "name": "포워드 런지",
+  "aliases": [],
+  "en": "Forward lunge",
+  "equipment": "덤벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex174",
+  "name": "사이드 런지",
+  "aliases": [
+   "코사크 스쿼트"
+  ],
+  "en": "Lateral lunge / Cossack squat",
+  "equipment": "덤벨·맨몸",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "ADD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex175",
+  "name": "스텝업",
+  "aliases": [],
+  "en": "Box step-up",
+  "equipment": "박스+덤벨",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "partial",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex176",
+  "name": "레그 익스텐션",
+  "aliases": [
+   "레그익스"
+  ],
+  "en": "Seated leg extension",
+  "equipment": "스택 머신",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "RF": 1
+  },
+  "secondary": {},
+  "stretch": "S★",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Zabaleta-Korta 2021, Pedrosa 2022",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex177",
+  "name": "리컴번트 레그 익스텐션",
+  "aliases": [
+   "등받이 젖힘"
+  ],
+  "en": "Reclined leg extension",
+  "equipment": "머신",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "RF": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★비대 [프리프린트] SRXIV.407",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex178",
+  "name": "싱글 레그 익스텐션",
+  "aliases": [],
+  "en": "Single-leg extension",
+  "equipment": "머신",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "RF": 1
+  },
+  "secondary": {},
+  "stretch": "partial",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex179",
+  "name": "리버스 노르딕",
+  "aliases": [],
+  "en": "Reverse Nordic curl",
+  "equipment": "맨몸",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "RF": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   6,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex180",
+  "name": "루마니안 데드리프트",
+  "aliases": [
+   "RDL",
+   "루마니안"
+  ],
+  "en": "Romanian deadlift",
+  "equipment": "바벨/덤벨",
+  "category": "legs",
+  "primary": {
+   "HAM": 1,
+   "GLU": 1
+  },
+  "secondary": {
+   "ADD": 0.5,
+   "ES": 0.5,
+   "TRAP_U": 0.5,
+   "FA": 0.25
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG Veeck 2024(H:Q 비율)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex181",
+  "name": "스티프 레그 데드리프트",
+  "aliases": [
+   "SLDL"
+  ],
+  "en": "Stiff-leg deadlift",
+  "equipment": "바벨",
+  "category": "legs",
+  "primary": {
+   "HAM": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ES": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex182",
+  "name": "싱글 레그 RDL",
+  "aliases": [],
+  "en": "Single-leg RDL",
+  "equipment": "덤벨·케틀벨",
+  "category": "legs",
+  "primary": {
+   "HAM": 1,
+   "GLU": 1
+  },
+  "secondary": {
+   "ABD": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex183",
+  "name": "컨벤셔널 데드리프트",
+  "aliases": [
+   "데드"
+  ],
+  "en": "Conventional deadlift",
+  "equipment": "바벨",
+  "category": "legs",
+  "primary": {
+   "GLU": 1,
+   "ES": 1
+  },
+  "secondary": {
+   "QUAD": 0.5,
+   "HAM": 0.5,
+   "ADD": 0.5,
+   "LAT": 0.5,
+   "UB": 0.5,
+   "TRAP_U": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   1,
+   8
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG PeerJ 7337(기립근 동등)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex184",
+  "name": "스모 데드리프트",
+  "aliases": [],
+  "en": "Sumo deadlift",
+  "equipment": "바벨",
+  "category": "legs",
+  "primary": {
+   "GLU": 1,
+   "ADD": 1
+  },
+  "secondary": {
+   "QUAD": 0.5,
+   "HAM": 0.5,
+   "ES": 0.5,
+   "LAT": 0.5,
+   "TRAP_U": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   1,
+   6
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex185",
+  "name": "트랩바 데드리프트",
+  "aliases": [
+   "헥스바"
+  ],
+  "en": "Trap / hex bar deadlift",
+  "equipment": "트랩바",
+  "category": "legs",
+  "primary": {
+   "QUAD": 1,
+   "GLU": 1
+  },
+  "secondary": {
+   "HAM": 0.5,
+   "ES": 0.5,
+   "TRAP_U": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   3,
+   8
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG PeerJ 7337",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex186",
+  "name": "굿모닝",
+  "aliases": [],
+  "en": "Good morning",
+  "equipment": "바벨",
+  "category": "legs",
+  "primary": {
+   "HAM": 1,
+   "ES": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   6,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex187",
+  "name": "45° 힙 익스텐션",
+  "aliases": [
+   "힙 강조 백 익스텐션"
+  ],
+  "en": "45° hip extension (hip-dominant)",
+  "equipment": "로만체어",
+  "category": "legs",
+  "primary": {
+   "GLU": 1,
+   "HAM": 1
+  },
+  "secondary": {
+   "ES": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Bourne 2017(BFLH > 노르딕)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex188",
+  "name": "케이블 풀스루",
+  "aliases": [],
+  "en": "Cable pull-through",
+  "equipment": "케이블",
+  "category": "legs",
+  "primary": {
+   "GLU": 1
+  },
+  "secondary": {
+   "HAM": 0.5
+  },
+  "stretch": "partial",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex189",
+  "name": "시티드 레그컬",
+  "aliases": [],
+  "en": "Seated leg curl",
+  "equipment": "머신",
+  "category": "legs",
+  "primary": {
+   "HAM": 1
+  },
+  "secondary": {},
+  "stretch": "S★",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Maeo 2021",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex190",
+  "name": "라잉 레그컬",
+  "aliases": [],
+  "en": "Lying / prone leg curl",
+  "equipment": "머신",
+  "category": "legs",
+  "primary": {
+   "HAM": 1
+  },
+  "secondary": {},
+  "stretch": "partial",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Maeo 2021(시티드보다 열세)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex191",
+  "name": "스탠딩 싱글 레그컬",
+  "aliases": [],
+  "en": "Standing single-leg curl",
+  "equipment": "머신/케이블",
+  "category": "legs",
+  "primary": {
+   "HAM": 1
+  },
+  "secondary": {},
+  "stretch": "partial",
+  "reps": [
+   10,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex192",
+  "name": "노르딕 햄스트링 컬",
+  "aliases": [],
+  "en": "Nordic hamstring curl",
+  "equipment": "맨몸·패드",
+  "category": "legs",
+  "primary": {
+   "HAM": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   3,
+   8
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★비대 Bourne 2017, Van Hooren 2022(역학)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex193",
+  "name": "글루트 햄 레이즈",
+  "aliases": [
+   "GHR"
+  ],
+  "en": "Glute-ham raise",
+  "equipment": "GHD",
+  "category": "legs",
+  "primary": {
+   "HAM": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "S",
+  "reps": [
+   5,
+   10
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex194",
+  "name": "슬라이더/짐볼 레그컬",
+  "aliases": [],
+  "en": "Slider / ball leg curl",
+  "equipment": "볼·슬라이더",
+  "category": "legs",
+  "primary": {
+   "HAM": 1
+  },
+  "secondary": {
+   "GLU": 0.25
+  },
+  "stretch": "partial",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex195",
+  "name": "힙쓰러스트",
+  "aliases": [
+   "바벨 힙쓰러스트",
+   "힙쓰"
+  ],
+  "en": "Barbell hip thrust",
+  "equipment": "바벨+벤치",
+  "category": "legs",
+  "primary": {
+   "GLU": 1
+  },
+  "secondary": {
+   "HAM": 0.5,
+   "QUAD": 0.5,
+   "ADD": 0.25
+  },
+  "stretch": "",
+  "reps": [
+   6,
+   15
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대·EMG Plotkin 2023",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex196",
+  "name": "힙쓰러스트 머신",
+  "aliases": [],
+  "en": "Hip thrust machine",
+  "equipment": "전용 머신",
+  "category": "legs",
+  "primary": {
+   "GLU": 1
+  },
+  "secondary": {
+   "HAM": 0.25
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   15
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex197",
+  "name": "글루트 브릿지",
+  "aliases": [],
+  "en": "Glute bridge",
+  "equipment": "바벨/맨몸",
+  "category": "legs",
+  "primary": {
+   "GLU": 1
+  },
+  "secondary": {
+   "HAM": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex198",
+  "name": "케이블 킥백",
+  "aliases": [
+   "글루트 킥백 머신"
+  ],
+  "en": "Cable glute kickback",
+  "equipment": "케이블·머신",
+  "category": "legs",
+  "primary": {
+   "GLU": 1
+  },
+  "secondary": {
+   "HAM": 0.25
+  },
+  "stretch": "partial",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex199",
+  "name": "이너타이",
+  "aliases": [
+   "힙 어덕션 머신"
+  ],
+  "en": "Hip adduction machine",
+  "equipment": "머신",
+  "category": "legs",
+  "primary": {
+   "ADD": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "명칭 확인(planfit·miso)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex200",
+  "name": "아웃타이",
+  "aliases": [
+   "힙 어브덕션 머신"
+  ],
+  "en": "Hip abduction machine",
+  "equipment": "머신",
+  "category": "legs",
+  "primary": {
+   "ABD": 1
+  },
+  "secondary": {
+   "GLU": 0.5
+  },
+  "stretch": "partial",
+  "reps": [
+   12,
+   25
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "명칭 확인(planfit·miso)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex201",
+  "name": "케이블 힙 어브덕션/어덕션",
+  "aliases": [],
+  "en": "Cable hip abduction/adduction",
+  "equipment": "케이블",
+  "category": "legs",
+  "primary": {
+   "ABD": 1
+  },
+  "secondary": {},
+  "stretch": "partial",
+  "reps": [
+   12,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex202",
+  "name": "사이드 라잉 힙 어브덕션",
+  "aliases": [
+   "밴드 몬스터 워크"
+  ],
+  "en": "Side-lying abduction / banded walk",
+  "equipment": "맨몸·밴드",
+  "category": "legs",
+  "primary": {
+   "ABD": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   15,
+   30
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex203",
+  "name": "스탠딩 카프레이즈",
+  "aliases": [],
+  "en": "Standing calf raise",
+  "equipment": "머신·스미스",
+  "category": "legs",
+  "primary": {
+   "CALF": 1
+  },
+  "secondary": {},
+  "stretch": "S★",
+  "reps": [
+   8,
+   20
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Kinoshita 2023",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex204",
+  "name": "시티드 카프레이즈",
+  "aliases": [],
+  "en": "Seated calf raise",
+  "equipment": "머신",
+  "category": "legs",
+  "primary": {
+   "CALF": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Kinoshita 2023",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex205",
+  "name": "레그프레스 카프레이즈",
+  "aliases": [
+   "카프 프레스"
+  ],
+  "en": "Leg-press calf raise",
+  "equipment": "레그프레스",
+  "category": "legs",
+  "primary": {
+   "CALF": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 10,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex206",
+  "name": "싱글 레그 카프레이즈",
+  "aliases": [
+   "스텝"
+  ],
+  "en": "Single-leg DB calf raise",
+  "equipment": "덤벨+스텝",
+  "category": "legs",
+  "primary": {
+   "CALF": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex207",
+  "name": "동키 카프레이즈",
+  "aliases": [],
+  "en": "Donkey calf raise",
+  "equipment": "머신",
+  "category": "legs",
+  "primary": {
+   "CALF": 1
+  },
+  "secondary": {},
+  "stretch": "S",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex208",
+  "name": "신장 구간 부분 카프레이즈",
+  "aliases": [],
+  "en": "Lengthened-partial calf raise",
+  "equipment": "공통",
+  "category": "legs",
+  "primary": {
+   "CALF": 1
+  },
+  "secondary": {},
+  "stretch": "S★",
+  "reps": [
+   10,
+   20
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Kassiano 2023(JSCR)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex209",
+  "name": "티바 레이즈",
+  "aliases": [
+   "전경골근 레이즈"
+  ],
+  "en": "Tibialis raise",
+  "equipment": "벽·티바바·덤벨",
+  "category": "legs",
+  "primary": {
+   "TIB": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   15,
+   25
+  ],
+  "increment": 1,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex210",
+  "name": "크런치",
+  "aliases": [],
+  "en": "Crunch / curl-up",
+  "equipment": "매트·원판",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG(급성 초음파) IJES 2023",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex211",
+  "name": "케이블 크런치",
+  "aliases": [
+   "로프 크런치"
+  ],
+  "en": "Kneeling cable crunch",
+  "equipment": "케이블",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "중량 진행 쉬움",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex212",
+  "name": "머신 크런치",
+  "aliases": [
+   "앱 크런치 머신"
+  ],
+  "en": "Ab crunch machine",
+  "equipment": "머신",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5,
+   "HF": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex213",
+  "name": "디클라인 싯업",
+  "aliases": [
+   "디클라인 크런치"
+  ],
+  "en": "Decline sit-up / crunch",
+  "equipment": "디클라인 벤치",
+  "category": "core",
+  "primary": {
+   "ABS": 1,
+   "HF": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex214",
+  "name": "싯업",
+  "aliases": [
+   "윗몸일으키기"
+  ],
+  "en": "Bent-knee sit-up",
+  "equipment": "맨몸",
+  "category": "core",
+  "primary": {
+   "ABS": 1,
+   "HF": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG Escamilla 2006 JOSPT(RF 활성 높음, 요통 주의)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex215",
+  "name": "리버스 크런치",
+  "aliases": [
+   "30° 인클라인"
+  ],
+  "en": "Reverse crunch",
+  "equipment": "매트·인클라인",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5,
+   "HF": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG Escamilla 2006 Phys Ther(상위)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex216",
+  "name": "행잉 레그레이즈",
+  "aliases": [
+   "행잉 니레이즈"
+  ],
+  "en": "Hanging leg / knee raise",
+  "equipment": "철봉·스트랩",
+  "category": "core",
+  "primary": {
+   "ABS": 1,
+   "HF": 1
+  },
+  "secondary": {
+   "OBL": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG Escamilla 2006 Phys Ther(상위)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex217",
+  "name": "캡틴스 체어 니레이즈",
+  "aliases": [
+   "파워타워"
+  ],
+  "en": "Captain's chair / vertical knee raise",
+  "equipment": "파워타워",
+  "category": "core",
+  "primary": {
+   "ABS": 1,
+   "HF": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG ACE 2001(복사근 1위)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex218",
+  "name": "라잉 레그레이즈",
+  "aliases": [],
+  "en": "Lying leg raise",
+  "equipment": "매트·벤치",
+  "category": "core",
+  "primary": {
+   "HF": 1,
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "허리 아치 주의",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex219",
+  "name": "앱 롤아웃",
+  "aliases": [
+   "앱휠",
+   "AB 롤아웃"
+  ],
+  "en": "Ab wheel / barbell rollout",
+  "equipment": "앱휠·바벨·짐볼",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5,
+   "LAT": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★비대 Takai 2017, ★EMG Escamilla 2006·2010",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex220",
+  "name": "플랭크",
+  "aliases": [],
+  "en": "Front plank",
+  "equipment": "맨몸",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "hold",
+  "evidence": "★EMG Schoenfeld 2014, 맨몸 프로그램은 ★비대 없음(Takai 2017)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex221",
+  "name": "사이드 플랭크",
+  "aliases": [],
+  "en": "Side plank",
+  "equipment": "맨몸",
+  "category": "core",
+  "primary": {
+   "OBL": 1
+  },
+  "secondary": {
+   "ABD": 0.5
+  },
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "hold",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex222",
+  "name": "코펜하겐 플랭크",
+  "aliases": [],
+  "en": "Copenhagen side plank",
+  "equipment": "벤치",
+  "category": "core",
+  "primary": {
+   "OBL": 1,
+   "ADD": 1
+  },
+  "secondary": {
+   "ABD": 0.5
+  },
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "hold",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex223",
+  "name": "데드버그",
+  "aliases": [],
+  "en": "Dead bug",
+  "equipment": "맨몸·밴드",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex224",
+  "name": "버드독",
+  "aliases": [],
+  "en": "Bird dog",
+  "equipment": "맨몸",
+  "category": "core",
+  "primary": {
+   "ES": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "ABS": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex225",
+  "name": "팔로프 프레스",
+  "aliases": [],
+  "en": "Pallof / anti-rotation press",
+  "equipment": "케이블·밴드",
+  "category": "core",
+  "primary": {
+   "OBL": 1
+  },
+  "secondary": {
+   "ABS": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★EMG 학위논문(예비)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex226",
+  "name": "러시안 트위스트",
+  "aliases": [],
+  "en": "Russian twist",
+  "equipment": "메디신볼·원판",
+  "category": "core",
+  "primary": {
+   "OBL": 1
+  },
+  "secondary": {
+   "ABS": 0.5,
+   "HF": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex227",
+  "name": "케이블 우드찹",
+  "aliases": [],
+  "en": "Cable woodchop",
+  "equipment": "케이블",
+  "category": "core",
+  "primary": {
+   "OBL": 1
+  },
+  "secondary": {
+   "ABS": 0.5,
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex228",
+  "name": "드래곤 플래그",
+  "aliases": [],
+  "en": "Dragon flag",
+  "equipment": "벤치",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5,
+   "LAT": 0.5,
+   "HF": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex229",
+  "name": "바이시클 크런치",
+  "aliases": [],
+  "en": "Bicycle crunch",
+  "equipment": "맨몸",
+  "category": "core",
+  "primary": {
+   "ABS": 1,
+   "OBL": 1
+  },
+  "secondary": {
+   "HF": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG ACE 2001(RA 1위)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex230",
+  "name": "브이업",
+  "aliases": [
+   "잭나이프"
+  ],
+  "en": "V-up / jackknife",
+  "equipment": "맨몸",
+  "category": "core",
+  "primary": {
+   "ABS": 1,
+   "HF": 1
+  },
+  "secondary": {
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex231",
+  "name": "토즈투바",
+  "aliases": [],
+  "en": "Toes-to-bar",
+  "equipment": "철봉",
+  "category": "core",
+  "primary": {
+   "ABS": 1,
+   "HF": 1
+  },
+  "secondary": {
+   "LAT": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex232",
+  "name": "윈드실드 와이퍼",
+  "aliases": [],
+  "en": "Windshield wiper",
+  "equipment": "철봉·바닥",
+  "category": "core",
+  "primary": {
+   "OBL": 1
+  },
+  "secondary": {
+   "ABS": 0.5,
+   "HF": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex233",
+  "name": "짐볼 크런치",
+  "aliases": [
+   "짐볼 롤아웃",
+   "짐볼 파이크"
+  ],
+  "en": "Stability-ball crunch / rollout / pike",
+  "equipment": "짐볼",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "OBL": 0.5,
+   "LAT": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "★EMG Escamilla 2010(롤아웃·파이크 최고)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex234",
+  "name": "덤벨 사이드 벤드",
+  "aliases": [],
+  "en": "Dumbbell side bend",
+  "equipment": "덤벨·케이블",
+  "category": "core",
+  "primary": {
+   "OBL": 1
+  },
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex235",
+  "name": "할로우 바디 홀드",
+  "aliases": [],
+  "en": "Hollow body hold",
+  "equipment": "맨몸",
+  "category": "core",
+  "primary": {
+   "ABS": 1
+  },
+  "secondary": {
+   "HF": 0.5,
+   "OBL": 0.5
+  },
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "hold",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex236",
+  "name": "L-싯",
+  "aliases": [],
+  "en": "L-sit",
+  "equipment": "평행봉·바닥",
+  "category": "core",
+  "primary": {
+   "HF": 1,
+   "ABS": 1
+  },
+  "secondary": {
+   "TRI": 0.5,
+   "TRAP_L": 0.5
+  },
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "hold",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex237",
+  "name": "클린",
+  "aliases": [
+   "스쿼트 클린"
+  ],
+  "en": "Squat clean",
+  "equipment": "바벨",
+  "category": "full",
+  "primary": {},
+  "secondary": {
+   "QUAD": 0.5,
+   "GLU": 0.5,
+   "HAM": 0.5,
+   "TRAP_U": 0.5,
+   "ES": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "★비대 Helland 2017(대퇴 근두께 무변화)",
+  "hypertrophyEvidence": true
+ },
+ {
+  "id": "ex238",
+  "name": "파워클린",
+  "aliases": [
+   "행 파워클린"
+  ],
+  "en": "Power / hang power clean",
+  "equipment": "바벨",
+  "category": "full",
+  "primary": {},
+  "secondary": {
+   "GLU": 0.5,
+   "HAM": 0.5,
+   "QUAD": 0.5,
+   "TRAP_U": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "同",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex239",
+  "name": "스내치",
+  "aliases": [
+   "파워스내치"
+  ],
+  "en": "Snatch / power snatch",
+  "equipment": "바벨",
+  "category": "full",
+  "primary": {},
+  "secondary": {
+   "GLU": 0.5,
+   "HAM": 0.5,
+   "QUAD": 0.5,
+   "DELT_F": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "evidence": "同",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex240",
+  "name": "클린 앤 저크",
+  "aliases": [],
+  "en": "Clean and jerk",
+  "equipment": "바벨",
+  "category": "full",
+  "primary": {},
+  "secondary": {
+   "QUAD": 0.5,
+   "GLU": 0.5,
+   "DELT_F": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex241",
+  "name": "푸시 프레스",
+  "aliases": [
+   "푸시 저크"
+  ],
+  "en": "Push press / push jerk",
+  "equipment": "바벨·덤벨",
+  "category": "full",
+  "primary": {
+   "DELT_F": 1
+  },
+  "secondary": {
+   "TRI": 0.5,
+   "QUAD": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex242",
+  "name": "스러스터",
+  "aliases": [],
+  "en": "Thruster",
+  "equipment": "바벨·덤벨",
+  "category": "full",
+  "primary": {
+   "QUAD": 1,
+   "DELT_F": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex243",
+  "name": "케틀벨 스윙",
+  "aliases": [],
+  "en": "Kettlebell swing (Russian/American)",
+  "equipment": "케틀벨",
+  "category": "full",
+  "primary": {
+   "GLU": 1
+  },
+  "secondary": {
+   "HAM": 0.5,
+   "ES": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "evidence": "★EMG McGill & Marshall 2012(둔근 ~80% MVC)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex244",
+  "name": "케틀벨 스내치",
+  "aliases": [
+   "클린"
+  ],
+  "en": "Kettlebell snatch / clean",
+  "equipment": "케틀벨",
+  "category": "full",
+  "primary": {
+   "GLU": 1
+  },
+  "secondary": {
+   "HAM": 0.5,
+   "DELT_F": 0.5,
+   "TRAP_U": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex245",
+  "name": "터키시 겟업",
+  "aliases": [],
+  "en": "Turkish get-up (TGU)",
+  "equipment": "케틀벨",
+  "category": "full",
+  "primary": {
+   "DELT_F": 1,
+   "OBL": 1
+  },
+  "secondary": {
+   "GLU": 0.5,
+   "TRI": 0.5
+  },
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2,
+  "metric": "weight_reps",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex246",
+  "name": "파머스 워크",
+  "aliases": [
+   "파머스 캐리",
+   "수트케이스 캐리",
+   "바텀업 캐리"
+  ],
+  "en": "Farmer's / suitcase / bottoms-up carry",
+  "equipment": "덤벨·트랩바·핸들",
+  "category": "full",
+  "primary": {
+   "FA": 1,
+   "TRAP_U": 1
+  },
+  "secondary": {
+   "OBL": 0.5,
+   "QUAD": 0.5,
+   "CALF": 0.5
+  },
+  "stretch": "",
+  "reps": null,
+  "increment": 2,
+  "metric": "carry",
+  "evidence": "★EMG McGill & Marshall 2012(바텀업 활성↑)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex247",
+  "name": "썰매 밀기·끌기",
+  "aliases": [
+   "슬레드"
+  ],
+  "en": "Sled push / pull, Prowler",
+  "equipment": "썰매+원판",
+  "category": "full",
+  "primary": {
+   "QUAD": 1,
+   "GLU": 1
+  },
+  "secondary": {
+   "CALF": 0.5,
+   "HAM": 0.5
+  },
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "carry",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex248",
+  "name": "버피",
+  "aliases": [],
+  "en": "Burpee",
+  "equipment": "맨몸",
+  "category": "full",
+  "primary": {},
+  "secondary": {},
+  "stretch": "",
+  "reps": [
+   8,
+   12
+  ],
+  "increment": 2.5,
+  "metric": "bodyweight",
+  "evidence": "세트 집계 제외 권장",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex249",
+  "name": "배틀로프",
+  "aliases": [],
+  "en": "Battle ropes",
+  "equipment": "로프",
+  "category": "full",
+  "primary": {},
+  "secondary": {
+   "DELT_F": 0.5,
+   "FA": 0.5
+  },
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "cardio",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex250",
+  "name": "러닝머신",
+  "aliases": [
+   "트레드밀"
+  ],
+  "en": "Treadmill",
+  "equipment": "기구",
+  "category": "full",
+  "primary": {},
+  "secondary": {},
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "cardio",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex251",
+  "name": "천국의 계단",
+  "aliases": [
+   "스텝밀"
+  ],
+  "en": "StepMill / stair climber",
+  "equipment": "기구",
+  "category": "full",
+  "primary": {},
+  "secondary": {},
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "cardio",
+  "evidence": "명칭 확인(Daum, Vogue Korea); 심장질환자 고강도 경고(머니투데이)",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex252",
+  "name": "로잉머신",
+  "aliases": [
+   "로잉"
+  ],
+  "en": "Rowing ergometer (Concept2)",
+  "equipment": "기구",
+  "category": "full",
+  "primary": {},
+  "secondary": {},
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "cardio",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex253",
+  "name": "어썰트 바이크",
+  "aliases": [
+   "에어바이크"
+  ],
+  "en": "Assault / air / echo bike",
+  "equipment": "기구",
+  "category": "full",
+  "primary": {},
+  "secondary": {},
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "cardio",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex254",
+  "name": "일립티컬 , 아크트레이너",
+  "aliases": [
+   "크로스 트레이너"
+  ],
+  "en": "Elliptical / Arc Trainer",
+  "equipment": "기구",
+  "category": "full",
+  "primary": {},
+  "secondary": {},
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "cardio",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex255",
+  "name": "실내자전거",
+  "aliases": [
+   "스피닝"
+  ],
+  "en": "Stationary / spin bike",
+  "equipment": "기구",
+  "category": "full",
+  "primary": {},
+  "secondary": {},
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "cardio",
+  "hypertrophyEvidence": false
+ },
+ {
+  "id": "ex256",
+  "name": "스키에르그",
+  "aliases": [],
+  "en": "SkiErg",
+  "equipment": "기구",
+  "category": "full",
+  "primary": {},
+  "secondary": {},
+  "stretch": "",
+  "reps": null,
+  "increment": 2.5,
+  "metric": "cardio",
+  "hypertrophyEvidence": false
+ }
+]
