@@ -5,7 +5,7 @@ import { db, saveSettings, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { isStalled, lastEntryFor, suggestNext, workingSets, type Suggestion } from '../lib/progression';
 import { BAR_OPTIONS, barLabel, barPrefFor, isPairedDumbbell, isSmith, platesPerSide, realWeight } from '../lib/equipment';
-import { move, writeBackToRoutine } from '../lib/routines';
+import { diffWithRoutine, move, writeBackWith } from '../lib/routines';
 import { emptySet, entryFor, isFilled, sessionStats } from '../lib/session';
 import { bestBefore, e1rmOf } from '../lib/strength';
 import type { Exercise, Session, SessionEntry, SetLog } from '../types';
@@ -35,17 +35,23 @@ export function LogEditor({ initial, onClose }: { initial: Session; onClose: () 
     await db.sessions.delete(s.id);
     onClose();
   };
+  const [choice, setChoice] = useState<{ changed: number; added: number } | null>(null);
+  const [addNew, setAddNew] = useState(true);
+  const commit = async (toRoutine: boolean) => {
+    const id = await db.sessions.put(s);
+    if (toRoutine) { await writeBackWith({ ...s, id }, { addNew }); toast(`저장했어요 · ‘${s.routineName}’ 루틴에도 반영`); }
+    else toast('저장했어요');
+    onClose();
+  };
   const save = async () => {
     if (st.sets === 0 && s.entries.every((e) => e.sets.every((x) => !isFilled(x)))) {
       alert('입력한 세트가 없어요. 무게·횟수를 적고 저장해 주세요.');
       return;
     }
-    const id = await db.sessions.put(s);
-    const saved = { ...s, id };
-    // 루틴으로 만든 기록이면, 방금 값으로 루틴을 갱신(다음에 불러올 때 최신 값)
-    if (saved.routineId != null && st.sets > 0) { await writeBackToRoutine(saved); toast(`저장했어요 · ‘${s.routineName}’ 루틴도 이 값으로 업데이트`); }
-    else toast('저장했어요');
-    onClose();
+    // 루틴으로 만든 기록인데 루틴 값과 다르게 했으면, 루틴에도 반영할지 묻는다
+    const diff = await diffWithRoutine(s);
+    if (diff && (diff.changed > 0 || diff.added > 0)) { setChoice({ changed: diff.changed, added: diff.added }); return; }
+    await commit(false);
   };
   const close = () => {
     if (dirty && !confirm('저장하지 않은 변경이 있어요. 저장하지 않고 닫을까요?')) return;
@@ -73,6 +79,27 @@ export function LogEditor({ initial, onClose }: { initial: Session; onClose: () 
       <button className="btn soft block lg" onClick={() => setPicking(true)}><Plus size={20} />종목 추가</button>
       {picking && <ExercisePicker onClose={() => setPicking(false)} onDone={(ids) => { update({ ...s, entries: [...s.entries, ...ids.map((i) => map.get(i)).filter(Boolean).map((e) => entryFor(e!))] }); setPicking(false); }} />}
       {info && <ExerciseInfo e={info} onClose={() => setInfo(null)} />}
+      {choice && (
+        <Sheet title="루틴에도 반영할까요?" onClose={() => setChoice(null)}>
+          <p className="small text-2" style={{ marginBottom: 14 }}>
+            ‘{s.routineName}’ 루틴에 정해 둔 값과 다르게 했어요{choice.changed ? ` (바뀐 종목 ${choice.changed}개` : ' ('}{choice.added ? `${choice.changed ? ', ' : ''}새로 넣은 종목 ${choice.added}개` : ''}).
+          </p>
+          <div className="list">
+            <button className="list-item" onClick={() => commit(false)}>
+              <div className="grow"><div className="list-title">이번 기록만 저장</div><div className="list-sub">루틴은 그대로 두고 오늘 기록에만 남겨요</div></div>
+            </button>
+            <button className="list-item" onClick={() => commit(true)}>
+              <div className="grow"><div className="list-title">루틴에도 반영</div><div className="list-sub">다음에 이 루틴을 불러오면 오늘 값으로 나와요</div></div>
+            </button>
+          </div>
+          {choice.added > 0 && (
+            <label className="row small" style={{ gap: 8, padding: '4px 4px 0' }}>
+              <input type="checkbox" checked={addNew} onChange={(e) => setAddNew(e.target.checked)} style={{ width: 18, height: 18, appearance: 'auto' }} />
+              루틴에도 반영할 때, 오늘 새로 넣은 종목 {choice.added}개도 루틴에 추가
+            </label>
+          )}
+        </Sheet>
+      )}
     </Sheet>
   );
 }

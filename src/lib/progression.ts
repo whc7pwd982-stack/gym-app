@@ -85,17 +85,37 @@ export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: 
   const ws = workingSets(last);
   const top = ws.reduce((m, s) => Math.max(m, s.weight ?? 0), 0);
   const topSets = ws.filter((s) => (s.weight ?? 0) === top);
-  const minReps = Math.min(...topSets.map((s) => s.reps ?? s.seconds ?? 0));
+  // "1회 더"의 기준은 가장 잘한 세트(보통 첫 세트) — 가장 못한 세트 기준이면 50·50·30회에서 31회 같은 이상한 목표가 나온다
+  const bestReps = Math.max(...topSets.map((s) => s.reps ?? s.seconds ?? 0));
   if (ex.metric === 'bodyweight' || ex.metric === 'hold' || ex.metric === 'cardio' || ex.metric === 'carry') {
-    return { weight: top || null, reps: minReps + 1, note: ex.metric === 'hold' ? '지난번보다 5초 더 버텨보세요' : '지난번보다 1회 더 해보세요', kind: 'reps' };
+    return { weight: top || null, reps: bestReps + (ex.metric === 'hold' ? 5 : 1), note: ex.metric === 'hold' ? '가장 잘한 세트보다 5초 더 버텨보세요' : '가장 잘한 세트보다 1회 더 해보세요', kind: 'reps' };
   }
   if (ex.metric === 'assisted') {
-    if (minReps >= repMax) return { weight: Math.max(0, top - step), reps: repMin, note: `보조 무게를 ${step}kg 줄여보세요`, kind: 'increase' };
-    return { weight: top, reps: minReps + 1, note: '같은 보조 무게로 1회 더', kind: 'reps' };
+    if (bestReps >= repMax) return { weight: Math.max(0, top - step), reps: repMin, note: `보조 무게를 ${step}kg 줄여보세요`, kind: 'increase' };
+    return { weight: top, reps: bestReps + 1, note: '같은 보조 무게로 가장 잘한 세트보다 1회 더', kind: 'reps' };
   }
   // ── 무게 × 반복 종목: 추정 1RM 기반 ──
   void repMin; void repMax;
   const inc = step;
+
+  // 반복이 효과 구간을 크게 넘었으면(예: 사레레 50회) 무게가 너무 가벼운 것 → 반복을 더 늘리지 말고 무게를 올려 구간 안으로.
+  // 고반복 1RM 환산은 과대평가되기 쉬우므로 한 번에 최대 약 1.5배(최소 1칸)까지만 올리고 다음 기록으로 다시 맞춘다.
+  const bestSet = topSets.reduce((a, b) => ((b.reps ?? 0) > (a.reps ?? 0) ? b : a), topSets[0]);
+  if (top > 0 && bestReps > zone.hi + 2) {
+    const e = e1(top, bestReps, rirOr(bestSet?.rir ?? null));
+    const cap = Math.max(top + inc, Math.ceil((top * 1.5) / inc) * inc);
+    let w = top + inc, r = zone.hi;
+    for (let cand = top + inc; cand <= cap + 1e-9; cand += inc) {
+      w = Math.round(cand * 100) / 100;
+      r = Math.round(30 * (e / w) - 30 - zone.rir);
+      if (r <= zone.hi) break;
+    }
+    r = Math.min(zone.hi, Math.max(zone.lo, r));
+    return {
+      weight: w, reps: r, rir: zone.rir, kind: 'increase',
+      note: `가장 잘한 세트가 ${bestReps}회로 효과 구간(${zone.lo}–${zone.hi}회)보다 많아요. 무게를 올려 ${r}회 근처에서 실패하도록 맞춰보세요.`,
+    };
+  }
   // 지난번 추정 1RM: 작업 세트들의 RIR 보정 e1RM 중 최고(12회 초과 환산은 오차가 커서 제외)
   let cur = 0;
   for (const x of ws) {
@@ -104,7 +124,7 @@ export function suggestNext(ex: Exercise, repMin: number, repMax: number, last: 
     if (w <= 0 || r <= 0 || r + rirOr(x.rir) > 24) continue;
     cur = Math.max(cur, e1(w, r, rirOr(x.rir)));
   }
-  if (!cur) return { weight: top || null, reps: minReps + 1, note: '지난번보다 1회 더 해보세요', kind: 'reps' };
+  if (!cur) return { weight: top || null, reps: bestReps + 1, note: '가장 잘한 세트보다 1회 더 해보세요', kind: 'reps' };
 
   const target = cur * (1 + SESSION_GAIN[opts.level]);
   const lastReps = Math.round(topSets.reduce((s, x) => s + (x.reps ?? 0), 0) / topSets.length);

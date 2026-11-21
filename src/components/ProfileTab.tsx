@@ -1,7 +1,8 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { BookOpen, ChevronRight, Download, Flame, Smartphone, Trash2, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { db, exportAll, importAll, saveSettings, useBodyweight, useSettings } from '../db';
+import { db, exportAll, importAll, saveBodyweight, saveSettings, useBodyweight, useSettings } from '../db';
+import { dateKey } from '../lib/session';
 import { activityFactor, ageOf, bmr, calorieTarget, proteinTarget, weeklyRateTarget } from '../lib/nutrition';
 import type { Exercise, Goal, Level, Phase, Settings, Sex } from '../types';
 import { ExerciseInfo, ExerciseList } from './ExercisePicker';
@@ -15,13 +16,29 @@ function Opt<T extends string>({ value, options, onChange }: { value: T | null; 
   );
 }
 
-function NumField({ label, value, onSave, suffix, placeholder }: { label: string; value: number | null; onSave: (v: number | null) => void; suffix: string; placeholder: string }) {
+/**
+ * 숫자 칸. 아이폰은 버튼을 눌러도 입력칸에서 포커스가 안 빠지는 경우가 있어서(blur 미발생)
+ * 입력을 멈추고 잠깐 지나면(0.8초) 저장하고, 엔터·포커스 해제 때도 저장한다. 범위 밖 값은 저장하지 않는다.
+ */
+function NumField({ label, value, onSave, suffix, placeholder, min, max }: { label: string; value: number | null; onSave: (v: number | null) => void; suffix: string; placeholder: string; min: number; max: number }) {
   const [v, setV] = useState(value == null ? '' : String(value));
   useEffect(() => { setV(value == null ? '' : String(value)); }, [value]);
+  const commit = (text: string) => {
+    const n = Number(text.replace(',', '.'));
+    if (text.trim() === '') { if (value != null) onSave(null); return; }
+    if (n >= min && n <= max && n !== value) onSave(n);
+  };
+  useEffect(() => {
+    if (v === (value == null ? '' : String(value))) return;
+    const t = setTimeout(() => commit(v), 800);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [v]);
   return (
     <label className="field grow" style={{ marginBottom: 0 }}>
       <span className="field-label">{label}</span>
-      <input className="input" inputMode="decimal" placeholder={placeholder} value={v} onChange={(e) => setV(e.target.value)} onBlur={() => onSave(v ? Number(v.replace(',', '.')) || null : null)} />
+      <input className="input" inputMode="decimal" placeholder={placeholder} value={v} onChange={(e) => setV(e.target.value)} onBlur={() => commit(v)}
+        onKeyDown={(e) => { if (e.key === 'Enter') commit(v); }} />
       <span className="tiny muted">{suffix}</span>
     </label>
   );
@@ -84,9 +101,9 @@ export function ProfileTab() {
       <section className="card">
         <div className="field"><span className="field-label">성별</span><Opt<Sex> value={s.sex} options={[['male', '남성'], ['female', '여성']]} onChange={(v) => set({ sex: v })} /></div>
         <div className="row" style={{ gap: 10, alignItems: 'flex-start' }}>
-          <NumField label="출생연도" value={s.birthYear} onSave={(v) => set({ birthYear: v })} suffix={age ? `만 ${age}세` : ''} placeholder="1998" />
-          <NumField label="키" value={s.heightCm} onSave={(v) => set({ heightCm: v })} suffix="cm" placeholder="175" />
-          <NumField label="체중" value={s.bodyweight} onSave={(v) => set({ bodyweight: v })} suffix={bw && bw !== s.bodyweight ? `최근 기록 ${bw}kg` : 'kg'} placeholder="70" />
+          <NumField label="출생연도" min={1920} max={new Date().getFullYear() - 10} value={s.birthYear} onSave={(v) => set({ birthYear: v })} suffix={age ? `만 ${age}세` : ''} placeholder="1998" />
+          <NumField label="키" min={100} max={250} value={s.heightCm} onSave={(v) => set({ heightCm: v })} suffix="cm" placeholder="175" />
+          <NumField label="체중" min={20} max={300} value={bw} onSave={(v) => v != null && saveBodyweight(dateKey(Date.now()), v)} suffix="kg · 오늘 체중으로 기록" placeholder="70" />
         </div>
       </section>
 

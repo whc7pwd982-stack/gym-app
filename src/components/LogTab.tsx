@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { CalendarDays, ChevronLeft, ChevronRight, ClipboardList, Dumbbell, Plus, Scale, TrendingUp } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { db, useSettings } from '../db';
+import { db, saveBodyweight, useLatestBodyweight, useSettings } from '../db';
 import { useExerciseMap } from '../lib/exercises';
 import { inRange, muscleSets, weekStart } from '../lib/feedback';
 import { dateKey, dayStartOf, draftLog, sessionStats } from '../lib/session';
@@ -180,22 +180,37 @@ function MonthCalendar({ sel, setSel, has }: { sel: number; setSel: (t: number) 
 
 function BodyweightRow({ day }: { day: number }) {
   const key = dateKey(day);
+  const isToday = key === dateKey(Date.now());
   const row = useLiveQuery(() => db.bodyweights.get(key), [key]);
+  const latest = useLatestBodyweight(key);
   const [v, setV] = useState('');
-  useEffect(() => { setV(row ? String(row.kg) : ''); }, [row, key]);
+  const [saved, setSaved] = useState(false);
+  useEffect(() => { setV(row ? String(row.kg) : ''); setSaved(false); }, [row, key]);
+  const stored = row ? String(row.kg) : '';
+  const dirty = v.trim() !== stored;
+  const n = Number(v.replace(',', '.'));
+  const valid = v.trim() === '' || (n >= 20 && n <= 300);
   const save = async () => {
-    const n = Number(v.replace(',', '.'));
-    if (!v) { if (row) await db.bodyweights.delete(key); return; }
-    if (!n || n < 20 || n > 300) return;
-    await db.bodyweights.put({ date: key, kg: n });
-    toast('체중을 저장했어요');
+    if (!dirty || !valid) return;
+    await saveBodyweight(key, v.trim() === '' ? null : n);
+    setSaved(true);
+    toast(v.trim() === '' ? '체중 기록을 지웠어요' : '체중을 저장했어요');
   };
+  const label = isToday ? '오늘 체중' : `${new Date(day).getMonth() + 1}월 ${new Date(day).getDate()}일 체중`;
+  const hint = !row && latest ? `최근 ${latest.kg}kg (${Number(latest.date.slice(5, 7))}/${Number(latest.date.slice(8, 10))})` : null;
   return (
     <div className="list mt">
       <div className="list-item with-icon">
         <span className="icon-tile success"><Scale size={20} /></span>
-        <div className="grow"><div className="list-title">체중</div><div className="list-sub">기록하면 추천 칼로리·증량 속도에 반영돼요</div></div>
-        <input className="cell" style={{ width: 84 }} inputMode="decimal" placeholder="kg" value={v} onChange={(e) => setV(e.target.value)} onBlur={save} aria-label="체중 kg" />
+        <div className="grow">
+          <div className="list-title">{label}</div>
+          <div className="list-sub">{saved && !dirty ? <span className="success">✓ 저장됨</span> : row && !dirty ? '저장된 기록이에요' : hint ?? '기록하면 칼로리·증량 속도·프로필에 반영돼요'}</div>
+        </div>
+        <input className="cell" style={{ width: 80 }} inputMode="decimal" placeholder={latest ? String(latest.kg) : 'kg'} value={v}
+          onChange={(e) => { setV(e.target.value); setSaved(false); }}
+          onKeyDown={(e) => { if (e.key === 'Enter') { (e.target as HTMLInputElement).blur(); save(); } }}
+          aria-label={label + ' kg'} />
+        {dirty && <button className="btn primary sm" disabled={!valid} onClick={save}>저장</button>}
       </div>
     </div>
   );

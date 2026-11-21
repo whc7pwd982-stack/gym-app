@@ -88,24 +88,8 @@ export function ExercisePicker({ onClose, onDone, title = '종목 추가' }: { o
   );
 }
 
-export function ExerciseInfo({ e, onClose }: { e: Exercise; onClose: () => void }) {
-  const rows = (codes: Partial<Record<MuscleCode, number>>) =>
-    (Object.entries(codes) as [MuscleCode, number][]).map(([m, w]) => <div key={m} className="kv"><span>{MUSCLES[m].full ?? MUSCLES[m].ko}</span><b>{w}세트</b></div>);
-  return (
-    <Sheet title={e.name} onClose={onClose}>
-      <p className="muted small">{e.en}{e.aliases.length ? ` · ${e.aliases.join(', ')}` : ''}</p>
-      <div className="row wrap mt" style={{ gap: 6 }}><span className="chip">{CATEGORY_KO[e.category]}</span><span className="chip">{e.equipment}</span><StretchBadge e={e} /></div>
-      <div className="card mt">
-        <div className="h3" style={{ marginBottom: 4 }}>1세트 하면 쌓이는 세트</div>
-        {rows(e.primary)}{rows(e.secondary)}
-        <p className="tiny muted mt">주로 쓰는 근육 1세트, 보조로 쓰는 근육 0.5세트로 계산해요 (Pelland 2026).</p>
-      </div>
-      {e.stretch && <div className="card"><div className="h3">스트레칭 자극이란?</div><p className="small text-2 mt">근육이 길게 늘어난 자세에서 힘을 받는 운동이에요. 오버헤드 익스텐션(삼두), 시티드 레그컬(햄스트링)처럼 늘어난 자세에서 하는 운동이 근육을 더 키웠다는 연구들이 있어요{e.stretch === 'S★' ? '. 이 종목은 직접 연구로 확인됐어요' : ''}.</p></div>}
-      {e.reps && <div className="card"><div className="kv"><span>권장 반복</span><b>{e.reps[0]}–{e.reps[1]}회</b></div><div className="kv"><span>한 번에 올리는 무게</span><b>{e.increment}kg</b></div></div>}
-      {e.evidence && <p className="tiny muted">근거 · {e.evidence}</p>}
-    </Sheet>
-  );
-}
+import { ExerciseInfo } from './ExerciseDetail';
+export { ExerciseInfo };
 
 function CustomExerciseForm({ onClose, initialName }: { onClose: () => void; initialName: string }) {
   const [name, setName] = useState(initialName);

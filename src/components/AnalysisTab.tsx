@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { BarChart3, ChevronLeft, ChevronRight, Dumbbell, Search, Trophy } from 'lucide-react';
+import { BarChart3, ChevronLeft, ChevronRight, Dumbbell, Pin, Search, Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { db, useBodyweight, useSettings } from '../db';
@@ -171,6 +171,46 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
         </>
       )}
 
+      <WeightCard mode={mode} />
+    </>
+  );
+}
+
+/** 체중 변화: 주간 보기는 최근 8주, 월간 보기는 최근 6개월 */
+function WeightCard({ mode }: { mode: 'week' | 'month' }) {
+  const all = useLiveQuery(() => db.bodyweights.orderBy('date').toArray(), [], []);
+  const since = mode === 'week' ? Date.now() - 56 * DAY : addMonths(monthStart(), -5);
+  const pts = all.filter((w) => new Date(w.date).getTime() >= since).map((w) => ({ date: `${Number(w.date.slice(5, 7))}/${Number(w.date.slice(8, 10))}`, kg: w.kg }));
+  return (
+    <>
+      <div className="section-label">체중 · 최근 {mode === 'week' ? '8주' : '6개월'}</div>
+      <section className="card">
+        {pts.length === 0 ? <p className="muted small">기록 탭에서 체중을 저장하면 여기에 변화가 그려져요.</p> : (
+          <>
+            <div className="row" style={{ alignItems: 'baseline', gap: 10 }}>
+              <span className="stat-value">{pts[pts.length - 1].kg}<small>kg</small></span>
+              {pts.length > 1 && (() => {
+                const d = Math.round((pts[pts.length - 1].kg - pts[0].kg) * 10) / 10;
+                return <span className={`delta ${d > 0 ? 'up' : 'down'}`} style={{ fontSize: 13 }}>{d > 0 ? '▲' : d < 0 ? '▼' : ''} {Math.abs(d)}kg · {pts[0].date}부터</span>;
+              })()}
+            </div>
+            {pts.length > 1 && (
+              <div className="chart" style={{ marginTop: 10 }}>
+                <ResponsiveContainer width="100%" height={160}>
+                  <AreaChart data={pts} margin={{ top: 6, right: 10, left: -18, bottom: 0 }}>
+                    <defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="var(--success)" stopOpacity={0.22} /><stop offset="100%" stopColor="var(--success)" stopOpacity={0} /></linearGradient></defs>
+                    <CartesianGrid stroke="var(--line)" vertical={false} />
+                    <XAxis dataKey="date" tick={{ fill: 'var(--muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <YAxis domain={['dataMin - 1', 'dataMax + 1']} tick={{ fill: 'var(--muted)', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <Tooltip contentStyle={{ background: 'var(--surface)', border: 'none', borderRadius: 12, boxShadow: 'var(--shadow-lg)', color: 'var(--text)' }} formatter={(v) => [`${v}kg`, '체중']} />
+                    <Area type="monotone" dataKey="kg" stroke="var(--success)" strokeWidth={2.5} fill="url(#gw)" dot={{ r: 3, fill: 'var(--success)' }} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </>
+        )}
+      </section>
     </>
   );
 }
@@ -178,12 +218,25 @@ function PeriodView({ mode, sessions }: { mode: 'week' | 'month'; sessions: Sess
 function LiftView({ sessions }: { sessions: Session[] }) {
   const map = useExerciseMap();
   const bw = useBodyweight();
+  // 1RM 화면 설정: 마지막 본 종목, 최근 본 순서, 고정한 종목 (기기에 저장, 백업에도 포함)
+  const prefRow = useLiveQuery(() => db.kv.get('liftView'), []);
+  const pref = (prefRow?.value as { last?: string; recent?: string[]; pins?: string[] } | undefined) ?? {};
+  const pins = pref.pins ?? [], recent = pref.recent ?? [];
+  const savePref = (p: typeof pref) => db.kv.put({ key: 'liftView', value: { ...pref, ...p } });
+
   const logged = useMemo(() => {
     const count = new Map<string, number>();
     for (const s of sessions) if (s.endedAt) for (const en of s.entries) if (workingSets(en).some((x) => (x.weight ?? 0) > 0)) count.set(en.exerciseId, (count.get(en.exerciseId) ?? 0) + 1);
-    return [...count.entries()].sort((a, b) => b[1] - a[1]).map((x) => x[0]).filter((id) => map.get(id)?.metric === 'weight_reps');
-  }, [sessions, map]);
-  const [exId, setExId] = useState('');
+    const byCount = [...count.entries()].sort((a, b) => b[1] - a[1]).map((x) => x[0]).filter((id) => map.get(id)?.metric === 'weight_reps');
+    // 순서: 고정 → 최근 본 순서 → 나머지(기록 많은 순)
+    const has = new Set(byCount);
+    const head = [...pins.filter((id) => has.has(id)), ...recent.filter((id) => has.has(id) && !pins.includes(id))];
+    return [...head, ...byCount.filter((id) => !head.includes(id))];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessions, map, prefRow]);
+  const [exId, setExIdState] = useState('');
+  const setExId = (id: string) => { setExIdState(id); savePref({ last: id, recent: [id, ...recent.filter((x) => x !== id)].slice(0, 20) }); };
+  const togglePin = (id: string) => savePref({ pins: pins.includes(id) ? pins.filter((x) => x !== id) : [...pins, id] });
   const [q, setQ] = useState('');
   const shown = useMemo(() => {
     if (!q.trim()) return logged;
@@ -191,7 +244,8 @@ function LiftView({ sessions }: { sessions: Session[] }) {
     return logged.filter((id) => hit.has(id));
   }, [logged, q, map]);
   // 검색 중이면 검색 결과 안에서 고른 종목(없으면 첫 결과)을 보여준다
-  const selected = (exId && shown.includes(exId) ? exId : shown[0]) || exId || logged[0] || '';
+  const wanted = exId || (pref.last && logged.includes(pref.last) ? pref.last : '');
+  const selected = (wanted && shown.includes(wanted) ? wanted : shown[0]) || wanted || logged[0] || '';
   const ex = map.get(selected);
   const series = useMemo(() => e1rmSeries(sessions, selected), [sessions, selected]);
 
@@ -208,12 +262,15 @@ function LiftView({ sessions }: { sessions: Session[] }) {
       <SearchBox q={q} setQ={(v) => { setQ(v); }} placeholder={`기록한 종목 ${logged.length}개 중 검색`} />
       {q && shown.length === 0 && <p className="muted small" style={{ margin: '-4px 4px 10px' }}>“{q}”에 맞는 종목 기록이 없어요.</p>}
       <div className="scroll-x">
-        {shown.map((id) => <button key={id} className={`pill ${id === selected ? 'on' : ''}`} onClick={() => setExId(id)}>{map.get(id)?.name}</button>)}
+        {shown.map((id) => <button key={id} className={`pill ${id === selected ? 'on' : ''}`} onClick={() => setExId(id)}>{pins.includes(id) && <Pin size={13} />}{map.get(id)?.name}</button>)}
       </div>
       {latest ? (
         <>
           <section className="card">
-            <div className="stat-label">추정 1RM · 최근 기록 기준</div>
+            <div className="row-between">
+              <div className="stat-label">{ex?.name} · 추정 1RM</div>
+              <button className={`btn sm ${pins.includes(selected) ? 'soft' : ''}`} onClick={() => togglePin(selected)}><Pin size={14} />{pins.includes(selected) ? '고정됨' : '고정'}</button>
+            </div>
             <div className="row" style={{ alignItems: 'baseline', gap: 10 }}>
               <span className="hero-num">{fmtKg(latest.e1rm)}<small>kg</small></span>
               {change != null && <span className={`delta ${change > 0 ? 'up' : 'down'}`} style={{ fontSize: 14 }}>{change > 0 ? '▲' : change < 0 ? '▼' : ''} {fmtKg(Math.abs(change))}kg · 4주</span>}

@@ -65,6 +65,28 @@ export function useSettings(): Settings {
   return useMemo(() => ({ ...DEFAULT_SETTINGS, ...((row?.value as Settings) ?? {}) }), [row]);
 }
 
+/**
+ * 날짜별 체중 저장. 그 날짜가 가장 최근 기록이면 프로필 체중도 같이 맞춘다(체중은 한 곳에서 관리).
+ * kg가 null이면 그 날짜 기록을 지운다.
+ */
+export async function saveBodyweight(date: string, kg: number | null) {
+  if (kg == null) await db.bodyweights.delete(date);
+  else await db.bodyweights.put({ date, kg });
+  const latest = await db.bodyweights.orderBy('date').last();
+  const s = await getSettings();
+  const next = latest?.kg ?? s.bodyweight;
+  if (next !== s.bodyweight) await saveSettings({ ...s, bodyweight: next });
+}
+
+/** 기준 날짜 이전(포함) 가장 최근 체중 기록 */
+export function useLatestBodyweight(onOrBefore?: string) {
+  return useLiveQuery(async () => {
+    const all = await db.bodyweights.orderBy('date').toArray();
+    const list = onOrBefore ? all.filter((w) => w.date <= onOrBefore) : all;
+    return list[list.length - 1] ?? null;
+  }, [onOrBefore]);
+}
+
 /** 가장 최근 체중(체중 기록 → 없으면 프로필 값) */
 export function useBodyweight(): number | null {
   const s = useSettings();

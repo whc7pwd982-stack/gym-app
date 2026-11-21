@@ -1,5 +1,5 @@
 import { db } from '../db';
-import type { Exercise, Goal, PlanSet, Routine, RoutineItem, Session } from '../types';
+import type { Exercise, Goal, PlanSet, Routine, RoutineItem, Session, SessionEntry } from '../types';
 import { defaultRest, isCompound } from './exercises';
 import type { Template } from '../data/templates';
 
@@ -37,19 +37,45 @@ export function planOf(it: RoutineItem): PlanSet[] {
  * 다음에 루틴을 불러올 때 가장 최근 값이 채워지게 한다.
  */
 export async function writeBackToRoutine(s: Session) {
+  return writeBackWith(s, { addNew: false });
+}
+
+const planFrom = (en: SessionEntry): PlanSet[] => en.sets.filter((x) => x.done && !x.warmup).map((x) => ({ weight: x.weight, reps: x.reps, seconds: x.seconds, distance: x.distance }));
+const samePlan = (a: PlanSet[], b: PlanSet[]) => a.length === b.length && a.every((x, i) => (x.weight ?? null) === (b[i].weight ?? null) && (x.reps ?? null) === (b[i].reps ?? null) && (x.seconds ?? null) === (b[i].seconds ?? null) && (x.distance ?? null) === (b[i].distance ?? null));
+
+/** 이 기록이 루틴에 정해 둔 값과 다른지(바뀐 종목 수, 루틴에 없던 새 종목 수) */
+export async function diffWithRoutine(s: Session) {
+  if (s.routineId == null) return null;
+  const r = await db.routines.get(s.routineId);
+  if (!r) return null;
+  let changed = 0;
+  for (const it of r.items) {
+    const en = s.entries.find((e) => e.exerciseId === it.exerciseId);
+    const p = en ? planFrom(en) : [];
+    if (p.length && !samePlan(p, planOf(it))) changed++;
+  }
+  const added = s.entries.filter((e) => !r.items.some((it) => it.exerciseId === e.exerciseId) && planFrom(e).length).length;
+  return { routine: r, changed, added };
+}
+
+/** 루틴을 이 기록 값으로 갱신. addNew면 오늘 새로 넣은 종목도 루틴 끝에 추가 */
+export async function writeBackWith(s: Session, { addNew }: { addNew: boolean }) {
   if (s.routineId == null) return;
   const r = await db.routines.get(s.routineId);
   if (!r) return;
-  let changed = false;
-  const items = r.items.map((it) => {
+  const items: RoutineItem[] = r.items.map((it) => {
     const en = s.entries.find((e) => e.exerciseId === it.exerciseId);
-    const sets = en?.sets.filter((x) => x.done && !x.warmup) ?? [];
-    if (!sets.length) return it;
-    changed = true;
-    const plan = sets.map((x) => ({ weight: x.weight, reps: x.reps, seconds: x.seconds, distance: x.distance }));
-    return { ...it, plan, sets: plan.length };
+    const plan = en ? planFrom(en) : [];
+    return plan.length ? { ...it, plan, sets: plan.length } : it;
   });
-  if (changed) await db.routines.update(r.id!, { items });
+  if (addNew) {
+    for (const en of s.entries) {
+      if (items.some((it) => it.exerciseId === en.exerciseId)) continue;
+      const plan = planFrom(en);
+      if (plan.length) items.push({ uid: uid(), exerciseId: en.exerciseId, sets: plan.length, plan, repMin: en.repMin, repMax: en.repMax, restSec: en.restSec });
+    }
+  }
+  await db.routines.update(r.id!, { items });
 }
 
 export async function nextRoutineName() {
