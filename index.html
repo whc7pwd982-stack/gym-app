@@ -12,8 +12,43 @@
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%icon-v2.svg" />
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon-v2.png" />
     <title>nextrep</title>
+    <style>
+      /* 시작 화면: 로고가 그려지고 → 화살표가 튀어나오고 → 글자가 올라온 뒤 사라진다 */
+      #splash { position: fixed; inset: 0; z-index: 9999; background: #1B1F3B; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; transition: opacity .38s ease, transform .38s ease; }
+      #splash.out { opacity: 0; transform: scale(1.06); pointer-events: none; }
+      #splash svg { width: 96px; height: 96px; overflow: visible; }
+      #splash .stem { stroke-dasharray: 1; stroke-dashoffset: 1; animation: sp-draw .7s cubic-bezier(.65,0,.35,1) .15s forwards; }
+      #splash .tip { opacity: 0; transform-origin: 80px 37px; transform: scale(.4) translate(-8px, 8px); animation: sp-pop .38s cubic-bezier(.34,1.56,.64,1) .78s forwards; }
+      #splash .glow { opacity: 0; animation: sp-glow .9s ease-out .9s forwards; }
+      #splash .word { font: 800 26px/1 -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", sans-serif; letter-spacing: -.02em; color: #fff; opacity: 0; transform: translateY(10px); animation: sp-up .5s cubic-bezier(.2,.8,.2,1) .95s forwards; }
+      #splash .word b { color: #7DF9FF; font-weight: 800; }
+      @keyframes sp-draw { to { stroke-dashoffset: 0; } }
+      @keyframes sp-pop { to { opacity: 1; transform: none; } }
+      @keyframes sp-glow { 0% { opacity: .55; r: 6; } 100% { opacity: 0; r: 34; } }
+      @keyframes sp-up { to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) { #splash * { animation-duration: .01s !important; animation-delay: 0s !important; } }
+    </style>
   </head>
   <body>
+    <div id="splash" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <circle class="glow" cx="80" cy="37" r="6" fill="none" stroke="#7DF9FF" stroke-width="2" />
+        <path class="stem" pathLength="1" d="M36 90V62c0-11.6 8.4-20 19.5-20 8.2 0 14.6 4.6 17.6 11.4L86 31" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+        <path class="tip" d="M72 30h15v15" fill="none" stroke="#7DF9FF" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <div class="word">next<b>rep</b></div>
+    </div>
+    <script>
+      (function () {
+        var t0 = Date.now(), MIN = 1550;
+        function hide() {
+          var el = document.getElementById('splash'); if (!el) return;
+          setTimeout(function () { el.classList.add('out'); setTimeout(function () { el.remove(); }, 420); }, Math.max(0, MIN - (Date.now() - t0)));
+        }
+        if (document.readyState === 'complete') hide(); else window.addEventListener('load', hide);
+        setTimeout(hide, 4000);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
