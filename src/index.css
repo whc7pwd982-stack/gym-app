@@ -319,6 +319,31 @@ select.cell { font-size: 15px; }
 .rm-cell b { display: block; font-size: 15px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
 .rm-cell span { font-size: 11px; color: var(--muted); font-weight: 650; }
 
+/* ───────── 자극 부위 그림 ───────── */
+.mm { margin-top: 6px; }
+.mm-row { display: flex; justify-content: center; gap: 18px; }
+.mm-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.mm-fig svg { width: 132px; height: auto; }
+.mm-fig figcaption { font-size: 12px; font-weight: 650; color: var(--muted); }
+.mm-body path { fill: color-mix(in srgb, var(--text) 5%, var(--surface)); stroke: color-mix(in srgb, var(--text) 28%, transparent); stroke-width: .9; }
+.mm-m path { fill: color-mix(in srgb, var(--text) 13%, var(--surface)); stroke: var(--surface); stroke-width: .9; transition: fill .3s; }
+.mm-m.s path { fill: color-mix(in srgb, var(--accent) 45%, var(--surface)); }
+.mm-m.p path { fill: var(--accent); }
+.mm-list { margin-top: 12px; border-top: 1px solid var(--line); }
+.mm-item { display: flex; align-items: center; gap: 8px; padding: 10px 0; font-size: 14.5px; }
+.mm-item + .mm-item { border-top: 1px solid var(--line); }
+.mm-item .mm-dot { margin-right: 0; flex: none; }
+.mm-item b { min-width: 52px; text-align: right; }
+.cue-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.cue-list li { display: flex; gap: 10px; font-size: 14.5px; line-height: 1.5; color: var(--text); }
+.cue-n { flex: none; width: 22px; height: 22px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--accent); font-size: 12px; font-weight: 700; display: grid; place-items: center; margin-top: 1px; }
+.mm-legend { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; font-size: 12.5px; color: var(--text-2); }
+.mm-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.mm-dot.p { background: var(--accent); }
+.mm-dot.s { background: color-mix(in srgb, var(--accent) 42%, var(--surface-2)); }
+
+/* ───────── 자세 애니메이션 ───────── */
+
 .kv { display: flex; justify-content: space-between; padding: 10px 0; font-size: 14.5px; }
 .kv + .kv { border-top: 1px solid var(--line); }
 .kv b { font-variant-numeric: tabular-nums; }

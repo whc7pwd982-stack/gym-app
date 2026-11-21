@@ -11,11 +11,11 @@ import { workingSets } from '../lib/progression';
 import { e1rmSeries } from '../lib/strength';
 import type { Exercise, MuscleCode } from '../types';
 import { FeedbackList } from './Feedback';
-import { MotionFigure } from './motion/MotionFigure';
+import { patternFor, PATTERNS } from './motion/patterns';
 import { MuscleMap } from './motion/MuscleMap';
 import { fmtDate, fmtKg, Sheet, StretchBadge } from './ui';
 
-/** 종목 상세: 내 기록 → 자세 · 자극 부위 → 설명 */
+/** 종목 상세: 내 기록 → 자극 부위 → 자세 포인트 → 설명 */
 export function ExerciseInfo({ e, onClose }: { e: Exercise; onClose: () => void }) {
   const settings = useSettings();
   const map = useExerciseMap();
@@ -41,8 +41,11 @@ export function ExerciseInfo({ e, onClose }: { e: Exercise; onClose: () => void 
   const setText = (x: { weight: number | null; reps: number | null; seconds: number | null; distance: number | null }) =>
     e.metric === 'hold' ? `${x.seconds ?? 0}초` : e.metric === 'cardio' ? `${Math.round((x.seconds ?? 0) / 60)}분` : `${x.weight ? `${fmtKg(x.weight)}×` : ''}${x.reps ?? x.distance ?? ''}`;
 
-  const rows = (codes: Partial<Record<MuscleCode, number>>) =>
-    (Object.entries(codes) as [MuscleCode, number][]).map(([m, w]) => <div key={m} className="kv"><span>{MUSCLES[m].full ?? MUSCLES[m].ko}</span><b>{w}세트</b></div>);
+  const muscles = [
+    ...(Object.entries(e.primary) as [MuscleCode, number][]).map(([m, w]) => [m, w, 'p'] as const),
+    ...(Object.entries(e.secondary) as [MuscleCode, number][]).map(([m, w]) => [m, w, 's'] as const),
+  ];
+  const cues = useMemo(() => { const p = patternFor(e); return p.exact ? (PATTERNS[p.id]?.cues ?? []) : []; }, [e]);
 
   return (
     <Sheet title={e.name} onClose={onClose} full>
@@ -97,20 +100,35 @@ export function ExerciseInfo({ e, onClose }: { e: Exercise; onClose: () => void 
         </>
       )}
 
-      {/* ── 자세 · 자극 부위 ── */}
-      <div className="section-label">자세와 자극 부위</div>
+      {/* ── 자극 부위 ── */}
+      <div className="section-label">자극 부위</div>
       <section className="card">
-        <MotionFigure e={e} />
         <MuscleMap e={e} />
+        <div className="mm-list">
+          {muscles.map(([m, w, r]) => (
+            <div key={m} className="mm-item">
+              <i className={'mm-dot ' + r} />
+              <span className="grow">{MUSCLES[m].full ?? MUSCLES[m].ko}</span>
+              <span className="tiny muted">{r === 'p' ? '주로 씀' : '보조'}</span>
+              <b className="tnum">{w}세트</b>
+            </div>
+          ))}
+        </div>
+        <p className="tiny muted mt">이 종목 1세트를 하면 각 근육에 쌓이는 세트예요. 주로 쓰는 근육 1세트, 보조 근육 0.5세트 (Pelland 2026).</p>
       </section>
 
+      {/* ── 자세 포인트 ── */}
+      {cues.length > 0 && (
+        <>
+          <div className="section-label">자세 포인트</div>
+          <section className="card">
+            <ol className="cue-list">{cues.map((c, i) => <li key={c}><span className="cue-n">{i + 1}</span>{c}</li>)}</ol>
+          </section>
+        </>
+      )}
+
       {/* ── 설명 ── */}
-      <div className="section-label">종목 정보</div>
-      <section className="card">
-        <div className="h3" style={{ marginBottom: 4 }}>1세트 하면 쌓이는 세트</div>
-        {rows(e.primary)}{rows(e.secondary)}
-        <p className="tiny muted mt">주로 쓰는 근육 1세트, 보조로 쓰는 근육 0.5세트로 계산해요 (Pelland 2026).</p>
-      </section>
+      {(e.stretch || e.metric === 'weight_reps') && <div className="section-label">종목 정보</div>}
       {e.stretch && <section className="card"><div className="h3">스트레칭 자극이란?</div><p className="small text-2 mt">근육이 길게 늘어난 자세에서 힘을 받는 운동이에요. 오버헤드 익스텐션(삼두), 시티드 레그컬(햄스트링)처럼 늘어난 자세에서 하는 운동이 근육을 더 키웠다는 연구들이 있어요{e.stretch === 'S★' ? '. 이 종목은 직접 연구로 확인됐어요' : ''}.</p></section>}
       {e.metric === 'weight_reps' && <section className="card"><div className="kv"><span>한 번에 올리는 무게 (내 헬스장 기준)</span><b>{incrementFor(e, settings)}kg</b></div></section>}
       {e.evidence && <p className="tiny muted">근거 · {e.evidence}</p>}
