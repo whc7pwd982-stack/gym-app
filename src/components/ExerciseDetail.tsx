@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Trophy } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { CATEGORY_KO, MUSCLES } from '../data/muscles';
 import { db, useSettings } from '../db';
@@ -20,6 +20,7 @@ export function ExerciseInfo({ e, onClose }: { e: Exercise; onClose: () => void 
   const settings = useSettings();
   const map = useExerciseMap();
   const sessions = useLiveQuery(() => db.sessions.toArray(), [], []);
+  const [showAll, setShowAll] = useState(false);
 
   const mine = useMemo(() => {
     const list = sessions
@@ -86,7 +87,7 @@ export function ExerciseInfo({ e, onClose }: { e: Exercise; onClose: () => void 
             </section>
           )}
           <div className="list mt">
-            {mine.list.slice(0, 6).map((s) => {
+            {(showAll ? mine.list : mine.list.slice(0, 4)).map((s) => {
               const sets = s.entries.filter((en) => en.exerciseId === e.id).flatMap((en) => workingSets(en));
               return (
                 <div key={s.id} className="list-item" style={{ alignItems: 'flex-start' }}>
@@ -96,6 +97,11 @@ export function ExerciseInfo({ e, onClose }: { e: Exercise; onClose: () => void 
               );
             })}
           </div>
+          {mine.list.length > 4 && (
+            <button className="btn ghost sm block mt" onClick={() => setShowAll((v) => !v)}>
+              {showAll ? '접기' : `더 보기 (${mine.list.length - 4}일 더)`}
+            </button>
+          )}
           {isPairedDumbbell(e) && <p className="tiny muted mt">무게는 한 손(덤벨 1개) 기준, 볼륨은 양손으로 계산해요.</p>}
         </>
       )}
