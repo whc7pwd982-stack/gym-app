@@ -321,12 +321,17 @@ select.cell { font-size: 15px; }
 
 /* ───────── 자극 부위 그림 ───────── */
 .mm { margin-top: 6px; }
-.mm-row { display: flex; justify-content: center; gap: 18px; }
+.mm-row { display: flex; justify-content: center; gap: 6px; }
 .mm-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.mm-fig svg { width: 132px; height: auto; }
+.mm-fig svg { width: min(168px, 42vw); height: auto; overflow: visible; }
 .mm-fig figcaption { font-size: 12px; font-weight: 650; color: var(--muted); }
-.mm-body path { fill: color-mix(in srgb, var(--text) 5%, var(--surface)); stroke: color-mix(in srgb, var(--text) 28%, transparent); stroke-width: .9; }
-.mm-m path { fill: color-mix(in srgb, var(--text) 13%, var(--surface)); stroke: var(--surface); stroke-width: .9; transition: fill .3s; }
+.mm-body > *, .mm-fill path { fill: color-mix(in srgb, var(--text) 4%, var(--surface)); }
+.mm-body > * { stroke: color-mix(in srgb, var(--text) 30%, transparent); stroke-width: 1; }
+.mm-edge path { fill: none; stroke: color-mix(in srgb, var(--text) 30%, transparent); stroke-width: 1; stroke-linejoin: round; }
+.mm-line { fill: none; stroke: color-mix(in srgb, var(--text) 18%, transparent); stroke-width: .8; stroke-linecap: round; }
+.mm-line path { fill: none; }
+.mm-m path { fill: color-mix(in srgb, var(--text) 12%, var(--surface)); stroke: color-mix(in srgb, var(--text) 24%, transparent); stroke-width: .6; stroke-linejoin: round; transition: fill .3s; }
+.mm-m.p path { stroke: color-mix(in srgb, var(--accent) 70%, #000); }
 .mm-m.s path { fill: color-mix(in srgb, var(--accent) 45%, var(--surface)); }
 .mm-m.p path { fill: var(--accent); }
 .mm-list { margin-top: 12px; border-top: 1px solid var(--line); }

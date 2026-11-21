@@ -1,91 +1,140 @@
+import { useId } from 'react';
 import type { Exercise, MuscleCode } from '../../types';
 import { MUSCLES } from '../../data/muscles';
 
 /**
- * 자극 부위 인체 그림 (앞면·뒷면).
+ * 자극 부위 인체 그림 (앞면·뒷면, 해부도 스타일).
  * 진한 색 = 주로 쓰는 근육(1세트), 연한 색 = 보조 근육(0.5세트).
- * 좌우 대칭 근육은 왼쪽 모양만 정의하고 거울 복사한다. viewBox 120 × 250, 몸 중심 x = 60.
+ * 왼쪽 절반만 정의하고 x = 100 기준으로 거울 복사한다. viewBox 200 × 446.
+ * 경로는 절대좌표 M/L/C/Z만 쓴다 (거울 복사가 숫자를 x, y 순서로 번갈아 읽음).
  */
 
-type Shape = { d: string; m: MuscleCode; mirror?: boolean };
+type Shape = { m: MuscleCode; d: string };
 
-const E = (cx: number, cy: number, rx: number, ry: number, rot = 0) => {
-  // 회전된 타원을 path로 (좌우 대칭 복사를 쉽게 하려고)
-  const r = (rot * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
-  const pts = Array.from({ length: 24 }, (_, i) => {
-    const t = (i / 24) * Math.PI * 2, x = rx * Math.cos(t), y = ry * Math.sin(t);
-    return `${(cx + x * c - y * s).toFixed(1)},${(cy + x * s + y * c).toFixed(1)}`;
-  });
-  return `M${pts.join('L')}Z`;
-};
+/** 몸 윤곽 (왼쪽 절반, 목 → 어깨 → 팔 → 옆구리 → 다리 → 발) */
+const OUTLINE =
+  'M100 56 L89.5 56 C89.5 62 89 67 88.5 70 C80 75 70 78 62 81 C50 83 42 92 41 106 C40 116 41 124 43 132 ' +
+  'C40 142 39 156 40 168 C40 174 40 178 40 182 C35 194 33 208 35 222 C36 232 38 240 40 248 ' +
+  'C37 258 38 270 44 276 C48 279 53 276 54 270 C55 262 55 254 53 248 C56 234 59 214 60 198 C61 190 62 184 62 180 ' +
+  'C64 164 66 146 68 124 C70 150 75 180 76 204 C74 216 69 228 67 244 C64 262 64 290 68 314 C70 326 72 334 73 342 ' +
+  'C73 350 72 356 71 362 C66 376 67 394 74 412 C75 418 75 424 74 430 C72 436 78 440 88 440 C93 440 95 436 94 430 ' +
+  'C93 420 93 414 94 406 C98 392 99 376 97 362 C96 354 95 348 95 342 C97 318 99 290 99 270 C99.5 267 100 266 100 266 Z';
+
+/** 윤곽선만 (가운데 세로선이 그려지지 않게 열린 경로) */
+const EDGE = OUTLINE.replace('M100 56 L89.5 56 ', 'M89.5 56 ').replace(' C99.5 267 100 266 100 266 Z', '');
+
+/** 근육은 아니지만 몸처럼 보이게 하는 선 (무릎, 오금 등) */
+const FRONT_LINES = [
+  'M90.5 60 C93 68 96 76 98 84', // 목빗근
+  'M79 340 C83 336 89 336 92 341', // 무릎뼈 위
+  'M78 352 C82 356 88 356 91 350', // 무릎뼈 아래
+];
+const BACK_LINES = [
+  'M78 345 C83 349 89 349 93 345', // 오금
+];
 
 const FRONT: Shape[] = [
-  { m: 'TRAP_U', d: 'M53 40 L44 46 L36 51 L46 52 L54 47 Z', mirror: true },
-  { m: 'DELT_F', d: E(39, 59, 7, 9.5, 15), mirror: true },
-  { m: 'DELT_S', d: E(31.5, 61, 4.2, 9, 10), mirror: true },
-  { m: 'CHEST', d: 'M58.5 52 C50 51 43 54 41 61 C40 68 45 74 52 75 C56 75.5 58.5 73 58.5 70 Z', mirror: true },
-  { m: 'SERR', d: 'M41 76 L46 74 L46 78 L41.5 80 Z M41.5 82 L46 80 L46 84 L42 86 Z', mirror: true },
-  { m: 'BI', d: E(31, 81, 5.2, 11, 8), mirror: true },
-  { m: 'BR', d: E(27.5, 94, 3.2, 5, 15), mirror: true },
-  { m: 'FA', d: E(24, 108, 4.6, 13, 14), mirror: true },
-  { m: 'OBL', d: 'M46 80 C44 88 44 97 47 106 L52 103 C50 95 50 88 51 80 Z', mirror: true },
-  { m: 'ABS', d: 'M52.5 78 L58.8 78 L58.8 116 C56 117 53.5 114 52.5 109 Z', mirror: true },
-  { m: 'HF', d: E(52, 119, 3.5, 6, -25), mirror: true },
-  { m: 'QUAD', d: 'M45 120 C41 132 41 150 44 166 C46 172 51 173 54 168 C56 155 56 135 53 124 Z', mirror: true },
-  { m: 'RF', d: E(49.5, 145, 2.8, 17, 3), mirror: true },
-  { m: 'ADD', d: 'M56 125 C58.5 133 58.5 145 57 155 L55 154 C55.5 143 55 133 53.5 127 Z', mirror: true },
-  { m: 'TIB', d: E(48.5, 197, 2.8, 15, 2), mirror: true },
-  { m: 'CALF', d: E(44, 196, 3.2, 13, -4), mirror: true },
+  { m: 'TRAP_U', d: 'M88.5 70 C80 75 70 78 62.5 81 C70 83 80 84 90 83 C90 79 90 74 89 70 Z' },
+  { m: 'DELT_S', d: 'M62 81 C50 83 42 92 41 106 C40 116 41 124 45 136 L49.5 141 C48 128 48 114 51 102 C53 94 57 86 62 81 Z' },
+  { m: 'DELT_F', d: 'M62 81 C57 86 53 94 51 102 C48 114 48 128 49.5 141 L50.5 141 C56 132 62 118 66 104 C68 96 68 88 63.5 82 Z' },
+  { m: 'CHEST', d: 'M99 85 C90 84 76 84 65 84 C68 90 68 98 66 106 C66 114 67 120 69 124 C76 134 86 139 99 139 Z' },
+  { m: 'SERR', d: 'M69.5 128 L79 134 L78.5 140 L70.5 138 Z M70.5 141 L80 145 L79.5 151 L71.5 150 Z M71.5 153 L81 156 L80.5 162 L72.5 162 Z' },
+  { m: 'OBL', d: 'M73 165 L81.5 160 C84.5 160 86.5 162 86.5 166 L86.5 222 C82 224 78 222 75.5 216 C76.5 200 76 182 73 165 Z' },
+  { m: 'ABS', d: 'M88 143 C88 141 89.5 140.5 91.5 140.5 L99 140.5 L99 160 L88.3 160 C88.1 154 88 148 88 143 Z' },
+  { m: 'ABS', d: 'M88.4 162 L99 162 L99 182 L88.7 182 C88.6 175 88.5 168 88.4 162 Z' },
+  { m: 'ABS', d: 'M88.8 184 L99 184 L99 204 L89.1 204 C89 197 88.9 190 88.8 184 Z' },
+  { m: 'ABS', d: 'M89.2 206 L99 206 L99 248 C95 246 92 240 90.5 232 C89.8 223 89.4 214 89.2 206 Z' },
+  { m: 'HF', d: 'M76.5 224 C81 234 86 245 89.5 255 C85.5 257 80 254 74.5 248 C73.5 240 74.5 232 76.5 224 Z' },
+  { m: 'QUAD', d: 'M67 246 C64 262 64 290 68 314 C70 326 72 334 74 340 C77 338 78 332 78 326 C76 304 75 280 74 262 C72 254 70 248 67 246 Z' },
+  { m: 'RF', d: 'M74.5 252 C77.5 272 79 298 80 324 C82 330 86 330 87 324 C88 300 86 274 82.5 256 C80.5 250 76.5 249 74.5 252 Z' },
+  { m: 'QUAD', d: 'M87.5 296 C92.5 302 95 314 94 328 C93 336 89 338 86.5 334 C85.5 326 85.5 310 87.5 296 Z' },
+  { m: 'ADD', d: 'M84 254 C90 258 96 264 99 270 C98 288 96 300 91 306 C88 290 86 272 84 254 Z' },
+  { m: 'TIB', d: 'M74 356 C72 372 73 390 79 406 L83 406 C82 390 81 372 80 356 C78 353 75 353 74 356 Z' },
+  { m: 'CALF', d: 'M90 352 C96 360 99 374 97 390 C95 398 93 404 92 406 C89 392 87 374 86 360 C86 355 88 352 90 352 Z' },
+  { m: 'CALF', d: 'M71.5 362 C67.5 374 68 388 72.5 400 L75 398 C73 386 73 372 74 360 Z' },
+  { m: 'BI', d: 'M51 142 C47 150 46 162 49 172 C52 178 58 178 61 172 C64 162 64 148 61 138 C58 132 54 134 51 142 Z' },
+  { m: 'BR', d: 'M44 148 C41 158 41 170 43 180 L47 178 C45 168 46 158 48 150 Z' },
+  { m: 'FA', d: 'M41 182 C36 194 34.5 208 36 222 C37 232 39 240 41 246 L45 246 C46 228 48 208 51 192 C52 186 51 182 48 180 C45 179 43 180 41 182 Z' },
+  { m: 'FA', d: 'M51.5 186 C56 186 60 192 60 202 C59 218 56 234 52.5 246 L46.5 246 C47.5 228 49.5 208 51.5 192 Z' },
 ];
 
 const BACK: Shape[] = [
-  { m: 'TRAP_U', d: 'M60 36 L54 42 L42 50 L50 52 L60 54 Z', mirror: true },
-  { m: 'TRAP_L', d: 'M60 66 L54 70 L57 86 L60 92 Z', mirror: true },
-  { m: 'UB', d: 'M60 54 L50 53 L48 60 L54 70 L60 66 Z', mirror: true },
-  { m: 'RC', d: E(46.5, 62, 4.5, 5, -20), mirror: true },
-  { m: 'DELT_R', d: E(38.5, 59, 6.5, 9, -15), mirror: true },
-  { m: 'DELT_S', d: E(31.5, 61, 4.2, 9, 10), mirror: true },
-  { m: 'LAT', d: 'M42 66 C41 76 43 88 48 97 C51 99 54 96 55 92 L54 72 L49 66 Z', mirror: true },
-  { m: 'ES', d: 'M56 86 C55 94 55 104 56 112 L59.5 112 L59.5 86 Z', mirror: true },
-  { m: 'TRI', d: E(31.5, 80, 5.4, 11.5, 6), mirror: true },
-  { m: 'FA', d: E(24, 108, 4.6, 13, 14), mirror: true },
-  { m: 'ABD', d: E(46.5, 115, 5, 5.5, -10), mirror: true },
-  { m: 'GLU', d: 'M59.5 114 C52 113 45 117 45 126 C45 133 51 136 59.5 134 Z', mirror: true },
-  { m: 'HAM', d: 'M45.5 138 C44 148 45 160 47.5 168 C50 171 54 170 55.5 166 C57 156 57 145 56 138 Z', mirror: true },
-  { m: 'ADD', d: 'M57 138 C58.5 145 58.5 152 57.5 158 L56.2 157 C56.5 151 56.5 145 55.6 139 Z', mirror: true },
-  { m: 'CALF', d: 'M44.5 180 C43 189 44 199 47 205 C50 207 53 205 54 200 C55 192 54.5 185 53 180 Z', mirror: true },
+  { m: 'TRAP_U', d: 'M100 57 L89.5 59 C89 66 88.5 70 88 72 C80 76 70 78 62.5 81 C72 86 86 92 100 96 Z' },
+  { m: 'UB', d: 'M100 97 C88 93 76 90 64.5 88 C68 98 76 110 86 120 L100 128 Z' },
+  { m: 'TRAP_L', d: 'M100 129 L87 121.5 C89 138 93 154 100 172 Z' },
+  { m: 'DELT_S', d: 'M62 81 C50 83 42 92 41 106 C40 116 41 124 45 136 L49.5 141 C48 128 48 114 51 102 C53 94 57 86 62 81 Z' },
+  { m: 'DELT_R', d: 'M62 81 C57 86 53 94 51 102 C48 114 48 128 49.5 141 L50.5 141 C56 132 62 118 66 104 C67 96 66 87 63 82 Z' },
+  { m: 'RC', d: 'M66.5 99 C66 108 67 117 69 123 C75 126 81 125 86 120.5 C80 112 74 104 66.5 99 Z' },
+  { m: 'LAT', d: 'M69 125 C72 150 75 178 76 202 C80 210 85 216 90 220 C90.5 204 91.5 188 92.5 174 C93.5 164 95 156 97 150 C93.5 140 90 131 87 122.5 C81 125.5 75 126 69 125 Z' },
+  { m: 'ES', d: 'M93.5 162 C92 178 91 196 91.5 214 C92 224 94 232 97 238 L99 238 L99 166 C97.5 162 95.5 160 93.5 162 Z' },
+  { m: 'TRI', d: 'M45 137 C41 147 40 160 42 170 C45 175 49 172 50 166 C50 156 50 146 50.5 141 Z' },
+  { m: 'TRI', d: 'M52 138 C51 150 51 162 53 172 C56 177 61 174 62.5 166 C64 154 64 144 61.5 134 C59 130 54 131 52 138 Z' },
+  { m: 'FA', d: 'M41 182 C36 194 34.5 208 36 222 C37 232 39 240 41 246 L45 246 C46 228 48 208 51 192 C52 186 51 182 48 180 C45 179 43 180 41 182 Z' },
+  { m: 'FA', d: 'M51.5 186 C56 186 60 192 60 202 C59 218 56 234 52.5 246 L46.5 246 C47.5 228 49.5 208 51.5 192 Z' },
+  { m: 'ABD', d: 'M76 205 C73 216 69 228 67 242 C73 240 80 234 86 228 C83 220 80 212 76 205 Z' },
+  { m: 'GLU', d: 'M99 230 C89 228 78 234 71 246 C67 258 68 270 77 277 C85 281 93 280 99 276 Z' },
+  { m: 'HAM', d: 'M67 282 C65 300 67 318 72 334 C75 339 79 337 80 330 C80 312 79 296 78 282 C75 279 70 279 67 282 Z' },
+  { m: 'HAM', d: 'M80 282 C83 300 85 316 86 333 C88 338 92 336 93 330 C95 314 95 298 92 282 C89 279 83 279 80 282 Z' },
+  { m: 'ADD', d: 'M93.5 280 C97 286 99 296 98 306 L95 304 C95 296 94.5 288 93.5 280 Z' },
+  { m: 'CALF', d: 'M71.5 356 C67.5 368 68 384 73 396 C76 399 80 395 81.5 388 C83 374 82 362 80 354 C77 351 73.5 352 71.5 356 Z' },
+  { m: 'CALF', d: 'M82 354 C86 362 88.5 374 89 386 C90 395 94 398 96.5 390 C98.5 378 98 364 94 354 C91 350.5 85 350.5 82 354 Z' },
+  { m: 'CALF', d: 'M74 399 C77 404 80 407 83 409 L90 409 C92 405 94 399 95 394 C92 400 88 401 85.5 397 C82.5 401 77.5 402 74 399 Z' },
 ];
 
-/** 몸 실루엣 (앞뒤 공통) */
-const SILHOUETTE = [
-  E(60, 22, 11, 13), // 머리
-  'M55 33 L65 33 L66 40 L54 40 Z', // 목
-  'M60 39 C50 40 40 44 33 50 C27 54 26 62 27 70 L28 86 C26 96 22 106 20 118 C19 124 22 126 25 122 C28 112 31 102 34 92 L36 78 L38 86 C39 98 41 108 43 118 C40 138 40 158 43 176 C42 190 42 205 44 214 C44 220 45 226 46 230 L52 230 C53 222 53 212 54 200 C56 186 56 172 57 160 L58 140 L60 128 Z',
-];
-/** 좌우 거울 복사: 경로는 절대좌표 M/L/C/Z만 쓰므로 숫자가 x, y 순서로 번갈아 나온다 */
+/** 좌우 거울 복사 */
 const mirrorPath = (d: string) => {
   let i = 0;
-  return d.replace(/-?\d+(?:\.\d+)?/g, (n) => (i++ % 2 === 0 ? (120 - Number(n)).toFixed(1) : n));
+  return d.replace(/-?\d+(?:\.\d+)?/g, (n) => (i++ % 2 === 0 ? (200 - Number(n)).toFixed(1) : n));
 };
 
-function Body({ shapes, e, label }: { shapes: Shape[]; e: Exercise; label: string }) {
+function Body({ shapes, lines, e, label, face }: { shapes: Shape[]; lines: string[]; e: Exercise; label: string; face?: boolean }) {
   const role = (m: MuscleCode) => (e.primary[m] ? 'p' : e.secondary[m] ? 's' : '');
+  const fid = useId().replace(/:/g, '');
   return (
     <figure className="mm-fig">
-      <svg viewBox="0 0 120 236" role="img" aria-label={`${label} 자극 부위`}>
+      <svg viewBox="0 0 200 446" role="img" aria-label={`${label} 자극 부위`}>
+        <defs>
+          {/* 근육 가장자리에 안쪽 그림자 → 입체감 */}
+          <filter id={fid} x="-10%" y="-10%" width="120%" height="120%">
+            <feComponentTransfer in="SourceAlpha"><feFuncA type="table" tableValues="1 0" /></feComponentTransfer>
+            <feGaussianBlur stdDeviation="2.2" />
+            <feOffset dx="1.2" dy="1.6" result="sh" />
+            <feFlood floodColor="#0b1530" floodOpacity="0.22" />
+            <feComposite in2="sh" operator="in" />
+            <feComposite in2="SourceAlpha" operator="in" result="inner" />
+            <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="inner" /></feMerge>
+          </filter>
+        </defs>
         <g className="mm-body">
-          {SILHOUETTE.map((d, i) => <path key={i} d={d} />)}
-          {SILHOUETTE.slice(2).map((d, i) => <path key={`m${i}`} d={mirrorPath(d)} />)}
+          <ellipse cx="82.5" cy="35" rx="2.6" ry="5.5" />
+          <ellipse cx="117.5" cy="35" rx="2.6" ry="5.5" />
+          <ellipse cx="100" cy="33" rx="17.5" ry="22.5" />
         </g>
+        <g className="mm-fill">
+          <path d={OUTLINE} />
+          <path d={mirrorPath(OUTLINE)} />
+        </g>
+        <g className="mm-edge">
+          <path d={EDGE} />
+          <path d={mirrorPath(EDGE)} />
+        </g>
+        {face && <path className="mm-line" d="M94 41 C97.5 43 102.5 43 106 41" />}
+        <g filter={`url(#${fid})`}>
         {shapes.map((s, i) => {
           const r = role(s.m);
           return (
             <g key={i} className={`mm-m ${r}`}>
-              <path d={s.d}><title>{MUSCLES[s.m].ko}</title></path>
-              {s.mirror && <path d={mirrorPath(s.d)} />}
+              <title>{MUSCLES[s.m].full ?? MUSCLES[s.m].ko}</title>
+              <path d={s.d} />
+              <path d={mirrorPath(s.d)} />
             </g>
           );
         })}
+        </g>
+        <g className="mm-line">
+          {lines.map((d, i) => <path key={i} d={d} />)}
+          {lines.map((d, i) => <path key={`m${i}`} d={mirrorPath(d)} />)}
+        </g>
       </svg>
       <figcaption>{label}</figcaption>
     </figure>
@@ -97,8 +146,8 @@ export function MuscleMap({ e }: { e: Exercise }) {
   return (
     <div className="mm">
       <div className="mm-row">
-        <Body shapes={FRONT} e={e} label="앞" />
-        <Body shapes={BACK} e={e} label="뒤" />
+        <Body shapes={FRONT} lines={FRONT_LINES} e={e} label="앞" face />
+        <Body shapes={BACK} lines={BACK_LINES} e={e} label="뒤" />
       </div>
     </div>
   );
