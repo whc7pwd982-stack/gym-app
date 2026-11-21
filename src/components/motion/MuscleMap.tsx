@@ -11,8 +11,33 @@ import { MUSCLES } from '../../data/muscles';
 
 type Shape = { m: MuscleCode | null; d: string };
 
+/** 구간별 직선 보간 */
+const lerpMap = (pts: [number, number][]) => (v: number) => {
+  if (v <= pts[0][0]) return v - pts[0][0] + pts[0][1];
+  for (let i = 1; i < pts.length; i++) {
+    const [a, fa] = pts[i - 1], [b, fb] = pts[i];
+    if (v <= b) return fa + ((v - a) / (b - a)) * (fb - fa);
+  }
+  const [l, fl] = pts[pts.length - 1];
+  return v - l + fl;
+};
+/** 그린 좌표 → 8등신 비율 (머리 1 : 몸통 3 : 다리 4). 팔은 손끝이 허벅지 중간에 오게 따로 늘린다 */
+const bodyY = lerpMap([[10, 10], [56, 62], [81, 84], [124, 120], [142, 134], [205, 180], [244, 210], [266, 226], [342, 316], [362, 334], [440, 438]]);
+const armY = lerpMap([[124, 120], [182, 172], [248, 246], [280, 278]]);
+const fit = (d: string) => {
+  const nums = d.match(/-?\d+(?:\.\d+)?/g) ?? [];
+  const out: string[] = [];
+  for (let i = 0; i < nums.length; i += 2) {
+    const x = Number(nums[i]), y = Number(nums[i + 1]);
+    const arm = y > 124 && y <= 280 && x < 67.5 && (y < 240 || x < 58);
+    out.push(nums[i], (arm ? armY(y) : bodyY(y)).toFixed(1));
+  }
+  let k = 0;
+  return d.replace(/-?\d+(?:\.\d+)?/g, () => out[k++]);
+};
+
 /** 몸 윤곽 (왼쪽 절반, 목 → 어깨 → 팔 → 옆구리 → 다리 → 발) */
-const OUTLINE =
+const OUTLINE_RAW =
   'M100 56 L89.5 56 C89.5 62 89 67 88.5 70 C80 75 70 78 62 81 C50 83 42 92 41 106 C40 116 41 124 43 132 ' +
   'C40 142 39 156 40 168 C40 174 40 178 40 182 C35 194 33 208 35 222 C36 232 38 240 40 248 ' +
   'C37 258 38 270 44 276 C48 279 53 276 54 270 C55 262 55 254 53 248 C56 234 59 214 60 198 C61 190 62 184 62 180 ' +
@@ -21,7 +46,8 @@ const OUTLINE =
   'C93 420 93 414 94 406 C98 392 99 376 97 362 C96 354 95 348 95 342 C97 318 99 290 99 270 C99.5 267 100 266 100 266 Z';
 
 /** 윤곽선만 (가운데 세로선이 그려지지 않게 열린 경로) */
-const EDGE = OUTLINE.replace('M100 56 L89.5 56 ', 'M89.5 56 ').replace(' C99.5 267 100 266 100 266 Z', '');
+const OUTLINE = fit(OUTLINE_RAW);
+const EDGE = fit(OUTLINE_RAW.replace('M100 56 L89.5 56 ', 'M89.5 56 ').replace(' C99.5 267 100 266 100 266 Z', ''));
 
 /** 근육은 아니지만 몸처럼 보이게 하는 선 (무릎, 오금, 견갑골 가시 등) */
 const FRONT_LINES = [
@@ -87,6 +113,10 @@ const BACK: Shape[] = [
 ];
 
 /** 좌우 거울 복사 */
+const fitAll = (list: Shape[]) => list.map((x) => ({ ...x, d: fit(x.d) }));
+const FRONT_FIT = fitAll(FRONT), BACK_FIT = fitAll(BACK);
+const FRONT_LINES_FIT = FRONT_LINES.map(fit), BACK_LINES_FIT = BACK_LINES.map(fit);
+
 const mirrorPath = (d: string) => {
   let i = 0;
   return d.replace(/-?\d+(?:\.\d+)?/g, (n) => (i++ % 2 === 0 ? (200 - Number(n)).toFixed(1) : n));
@@ -111,9 +141,9 @@ function Body({ shapes, lines, e, label, face }: { shapes: Shape[]; lines: strin
           </filter>
         </defs>
         <g className="mm-body">
-          <ellipse cx="82.5" cy="35" rx="2.6" ry="5.5" />
-          <ellipse cx="117.5" cy="35" rx="2.6" ry="5.5" />
-          <ellipse cx="100" cy="33" rx="17.5" ry="22.5" />
+          <ellipse cx="81" cy="39" rx="2.8" ry="6" />
+          <ellipse cx="119" cy="39" rx="2.8" ry="6" />
+          <ellipse cx="100" cy="36" rx="19" ry="26" />
         </g>
         <g className="mm-fill">
           <path d={OUTLINE} />
@@ -123,7 +153,7 @@ function Body({ shapes, lines, e, label, face }: { shapes: Shape[]; lines: strin
           <path d={EDGE} />
           <path d={mirrorPath(EDGE)} />
         </g>
-        {face && <path className="mm-line" d="M94 41 C97.5 43 102.5 43 106 41" />}
+        {face && <path className="mm-line" d="M93.5 47 C97.5 49.5 102.5 49.5 106.5 47" />}
         <g filter={`url(#${fid})`}>
         {shapes.map((s, i) => {
           const r = role(s.m);
@@ -151,8 +181,8 @@ export function MuscleMap({ e }: { e: Exercise }) {
   return (
     <div className="mm">
       <div className="mm-row">
-        <Body shapes={FRONT} lines={FRONT_LINES} e={e} label="앞" face />
-        <Body shapes={BACK} lines={BACK_LINES} e={e} label="뒤" />
+        <Body shapes={FRONT_FIT} lines={FRONT_LINES_FIT} e={e} label="앞" face />
+        <Body shapes={BACK_FIT} lines={BACK_LINES_FIT} e={e} label="뒤" />
       </div>
     </div>
   );
